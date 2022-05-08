@@ -69,10 +69,15 @@ public class Geraeteverwaltung {
 
     }
 
-    public static void historieZuruecksetzen(Geraet geraet) {
-        if (!geraete.contains(geraet)) return; // TODO Exception
-
+    public void historieZuruecksetzen(Geraet geraet) {
+        for (Geraet g : geraete) {
+            if (g.getGeraeteID().equals(geraet.getGeraeteID())) {
+                g.setHistorie(new ArrayList<>());
+                break;
+            }
+        }
     }
+
 
     public static void geraeteAnzeigen() {
     }
