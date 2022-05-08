@@ -1,4 +1,4 @@
-package server.geraetemodul;
+package server;
 /*
 @author
 Raphael Kleebaum
@@ -11,7 +11,7 @@ Bastian Reichert
 Dennis Kelm
 */
 
-import server.geraetemodul.Geraet;
+import server.Geraet;
 
 import java.util.ArrayList;
 

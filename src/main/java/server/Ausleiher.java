@@ -1,4 +1,4 @@
-package server.geraetemodul;
+package server;
 
 import java.time.LocalDateTime;
 import java.util.Date;
