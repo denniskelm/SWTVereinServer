@@ -1,4 +1,4 @@
-package server;
+package server.dienstleistungsmodul;
 
 import server.users.Mitglied;
 

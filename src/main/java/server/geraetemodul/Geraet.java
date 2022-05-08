@@ -1,4 +1,4 @@
-package server;
+package server.geraetemodul;
 /*
 @author
 Raphael Kleebaum
@@ -14,8 +14,6 @@ Dennis Kelm
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 public class Geraet {
 
@@ -33,7 +31,9 @@ public class Geraet {
     // mitgliedsID: int
     private Status leihstatus; // frei / beansprucht / ausgeliehen
 
-
+    public String getGeraeteID() {
+        return geraeteID;
+    }
 
     public Geraet(String geraeteID, String name, String spenderName, int leihfrist, String kategorie, String beschreibung, String abholort) {
         this.geraeteID = geraeteID;
@@ -51,7 +51,7 @@ public class Geraet {
         Ausleiher ausleiher = new Ausleiher(personenID);
 
         // ausrechnen, wann er das Gerät abholen kann
-        if (reservierungsliste.isEmpty()) {
+        if (leihstatus == Status.FREI) {
             ausleiher.setFristBeginn(LocalDateTime.now());
             leihstatus = Status.BEANSPRUCHT;
         } else {

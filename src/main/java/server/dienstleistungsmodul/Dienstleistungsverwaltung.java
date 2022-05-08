@@ -1,9 +1,9 @@
-package server;
+package server.dienstleistungsmodul;
 
-import com.mysql.cj.x.protobuf.MysqlxDatatypes;
+import server.dienstleistungsmodul.Dienstleistungsangebot;
+import server.dienstleistungsmodul.Dienstleistungsgesuch;
 import server.users.Mitglied;
 
-import java.awt.Image;
 import java.time.LocalDateTime;
 import java.lang.Object;
 
