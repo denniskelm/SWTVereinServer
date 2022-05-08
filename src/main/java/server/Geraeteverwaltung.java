@@ -3,27 +3,28 @@ package server;
 @author
 Raphael Kleebaum
 Jonny Schlutter
-Gabriel Kleebaum
-Mhd Esmail Kanaan
-Gia Huy Hans Tran
-Ole Björn Adelmann
-Bastian Reichert
-Dennis Kelm
+//TODO Gabriel Kleebaum
+//TODO Mhd Esmail Kanaan
+//TODO Gia Huy Hans Tran
+//TODO Ole Björn Adelmann
+//TODO Bastian Reichert
+//TODO Dennis Kelm
 */
 
-import server.Geraet;
+import shared.communication.IGeraeteverwaltung;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public class Geraeteverwaltung {
     private static ArrayList<Geraet> geraete;
     private static long IdCounter = 0;
 
-    public static void geraeteVerwaltungLaden() {
+    public Geraeteverwaltung() {
         geraete = new ArrayList<>();
     }
 
-    public static void geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort) {
+    public void geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort) {
         if (geraete.size() < 50000) return; //TODO Exception
 
         //naechste ID holen
@@ -33,7 +34,7 @@ public class Geraeteverwaltung {
         geraete.add(g);
     }
 
-    public static void geraetReservieren(Geraet geraet, String personenID) {
+    public void geraetReservieren(Geraet geraet, String personenID) {
         if (!geraete.contains(geraet)) return; // TODO Exception
         // TODO Ueberpruefung ob mitglied berechtigt ist (mehr als 3 Geräte ausgeliehen, Ausleihsperre, ...)
 
@@ -42,7 +43,7 @@ public class Geraeteverwaltung {
         }
     }
 
-    public static void geraetAusgeben(Geraet geraet) {
+    public void geraetAusgeben(Geraet geraet) {
         if (!geraete.contains(geraet)) return; // TODO Exception
 
         for (Geraet g : geraete) {
@@ -50,7 +51,7 @@ public class Geraeteverwaltung {
         }
     }
 
-    public static void geraetAnnehmen(Geraet geraet) {
+    public void geraetAnnehmen(Geraet geraet) {
         if (!geraete.contains(geraet)) return; // TODO Exception
 
         for (Geraet g : geraete) {
@@ -58,7 +59,7 @@ public class Geraeteverwaltung {
         }
     }
 
-    public static void geraetEntfernen(Geraet geraet) {
+    public void geraetEntfernen(Geraet geraet) {
         if (!geraete.contains(geraet)) return; // TODO Exception
 
         geraete.remove(geraet);
@@ -79,7 +80,7 @@ public class Geraeteverwaltung {
     }
 
 
-    public static void geraeteAnzeigen() {
+    public void geraeteAnzeigen() {
     }
 
 
