@@ -26,7 +26,7 @@ public class Geraet {
     private String kategorie;
     private String beschreibung;
     private String abholort;
-    private ArrayList<Ausleiher> reservierungsliste;
+    private ArrayList<Ausleiher> reservierungsliste, historie;
     // reservierdatum: LocalDateTime
     // fristbeginn: LocalDateTime
     // abgegeben: boolean
@@ -44,6 +44,7 @@ public class Geraet {
         this.beschreibung = beschreibung;
         this.abholort = abholort;
         reservierungsliste = new ArrayList<>();
+        historie = new ArrayList<>();
         leihstatus = Status.FREI;
     }
 
@@ -84,7 +85,10 @@ public class Geraet {
         LocalDateTime altesAbgabeDatum = reservierungsliste.get(0).getFristBeginn().plusDays(leihfrist);
         long tageZuFrueh = LocalDateTime.now().until(altesAbgabeDatum, ChronoUnit.DAYS);
 
-        // aktuellen Ausleiher entfernen
+        //aktuellen Ausleiher zur Historie hinzufügen
+        historie.add(reservierungsliste.get(0));
+
+        // aktuellen Ausleiher aus Reservierungsliste entfernen
         reservierungsliste.remove(0);
 
         // Fristbeginn der anderen Ausleiher neu berechnen
@@ -92,5 +96,13 @@ public class Geraet {
             a.setFristBeginn(a.getFristBeginn().minusDays(tageZuFrueh));
         }
 
+    }
+
+    public String getGeraeteID() {
+        return geraeteID;
+    }
+
+    public void setHistorie(ArrayList<Ausleiher> historie) {
+        this.historie = historie;
     }
 }

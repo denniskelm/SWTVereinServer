@@ -3,49 +3,62 @@ package server;
 @author
 Raphael Kleebaum
 Jonny Schlutter
-Gabriel Kleebaum
-Mhd Esmail Kanaan
-Gia Huy Hans Tran
-Ole Björn Adelmann
-Bastian Reichert
-Dennis Kelm
+//TODO Gabriel Kleebaum
+//TODO Mhd Esmail Kanaan
+//TODO Gia Huy Hans Tran
+//TODO Ole Björn Adelmann
+//TODO Bastian Reichert
+//TODO Dennis Kelm
 */
 
+import shared.communication.IGeraeteverwaltung;
+
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public class Geraeteverwaltung {
+public class Geraeteverwaltung implements IGeraeteverwaltung {
     private static ArrayList<Geraet> geraete;
 
-    public static void geraeteVerwaltungLaden() {
+    public Geraeteverwaltung() {
         geraete = new ArrayList<>();
     }
 
-    public static void geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort) {
+    public void geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort) {
         if (geraete.size() < 50000) {
             Geraet g = new Geraet("", name, spender, leihfrist, kategorie, beschreibung, abholort);
             geraete.add(g);
         }
     }
 
-    public static void geraetReservieren(Geraet geraet) {
+    public void geraetReservieren(Geraet geraet, String ausleiherID) {
+        geraet.reservierungHinzufuegen(ausleiherID);
     }
 
-    public static void geraetAusgeben(Geraet geraet) {
+    public void geraetAusgeben(Geraet geraet) {
+        geraet.ausgeben();
     }
 
-    public static void geraetAnnehmen(Geraet geraet) {
+    public void geraetAnnehmen(Geraet geraet) {
+        geraet.annehmen();
     }
 
-    public static void geraetEntfernen(Geraet geraet) {
+    public void geraetEntfernen(Geraet geraet) {
+        geraete.remove(geraet);
     }
 
-    public static void geraeteDatenVerwalten(Geraet g, Object attr, Object wert) {
+    public void gereateDatenVerwalten(Geraet g, Object attr, Object wert) {
     }
 
-    public static void historieZuruecksetzen(Geraet geraet) {
+    public void historieZuruecksetzen(Geraet geraet) {
+        for (Geraet g : geraete) {
+            if (g.getGeraeteID().equals(geraet.getGeraeteID())) {
+                g.setHistorie(new ArrayList<>());
+                break;
+            }
+        }
     }
 
-    public static void geraeteAnzeigen() {
+    public void geraeteAnzeigen() {
     }
 
 
