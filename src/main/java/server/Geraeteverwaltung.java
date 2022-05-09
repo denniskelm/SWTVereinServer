@@ -16,7 +16,7 @@ import shared.communication.IGeraeteverwaltung;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public class Geraeteverwaltung {
+public class Geraeteverwaltung implements IGeraeteverwaltung {
     private static ArrayList<Geraet> geraete;
     private static long IdCounter = 0;
 
@@ -39,7 +39,7 @@ public class Geraeteverwaltung {
         // TODO Ueberpruefung ob mitglied berechtigt ist (mehr als 3 Geräte ausgeliehen, Ausleihsperre, ...)
 
         for (Geraet g : geraete) {
-            if (g.getGeraeteID() == geraet.getGeraeteID()) g.reservierungHinzufuegen(personenID);
+            if (g.getGeraeteID().equals(geraet.getGeraeteID())) g.reservierungHinzufuegen(personenID);
         }
     }
 
@@ -47,7 +47,7 @@ public class Geraeteverwaltung {
         if (!geraete.contains(geraet)) return; // TODO Exception
 
         for (Geraet g : geraete) {
-            if (g.getGeraeteID() == geraet.getGeraeteID()) g.ausgeben();
+            if (g.getGeraeteID().equals(geraet.getGeraeteID())) g.ausgeben();
         }
     }
 
@@ -55,7 +55,7 @@ public class Geraeteverwaltung {
         if (!geraete.contains(geraet)) return; // TODO Exception
 
         for (Geraet g : geraete) {
-            if (g.getGeraeteID() == geraet.getGeraeteID()) g.annehmen();
+            if (g.getGeraeteID().equals(geraet.getGeraeteID())) g.annehmen();
         }
     }
 
@@ -65,7 +65,7 @@ public class Geraeteverwaltung {
         geraete.remove(geraet);
     }
 
-    public static void geraeteDatenVerwalten(Geraet g, Object attr, Object wert) {
+    public void geraeteDatenVerwalten(Geraet g, Object attr, Object wert) {
         if (!geraete.contains(g)) return; // TODO Exception
 
     }

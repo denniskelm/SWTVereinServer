@@ -25,7 +25,7 @@ public interface IGeraeteverwaltung extends Remote {
     void geraetAusgeben(Geraet geraet) throws RemoteException;
     void geraetAnnehmen(Geraet geraet) throws RemoteException;
     void geraetEntfernen(Geraet geraet) throws RemoteException;
-    void gereateDatenVerwalten(Geraet g, Object attr, Object wert) throws RemoteException;
+    void geraeteDatenVerwalten(Geraet g, Object attr, Object wert) throws RemoteException;
     void historieZuruecksetzen(Geraet geraet) throws RemoteException;
     void geraeteAnzeigen() throws RemoteException;
 
