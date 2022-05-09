@@ -12,8 +12,8 @@ TODO Bastian Reichert
 TODO Dennis Kelm
 */
 
-import server.Dienstleistungsangebot;
-import server.Dienstleistungsgesuch;
+import server.dienstleistungsmodul.Dienstleistungsangebot;
+import server.dienstleistungsmodul.Dienstleistungsgesuch;
 import server.users.Mitglied;
 
 import java.awt.*;

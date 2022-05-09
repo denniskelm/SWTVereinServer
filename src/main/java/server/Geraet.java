@@ -14,8 +14,6 @@ Dennis Kelm
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 public class Geraet {
 
@@ -26,14 +24,12 @@ public class Geraet {
     private String kategorie;
     private String beschreibung;
     private String abholort;
-    private ArrayList<Ausleiher> reservierungsliste;
+    private ArrayList<Ausleiher> reservierungsliste, historie;
     // reservierdatum: LocalDateTime
     // fristbeginn: LocalDateTime
     // abgegeben: boolean
     // mitgliedsID: int
     private Status leihstatus; // frei / beansprucht / ausgeliehen
-
-
 
     public Geraet(String geraeteID, String name, String spenderName, int leihfrist, String kategorie, String beschreibung, String abholort) {
         this.geraeteID = geraeteID;
@@ -44,6 +40,7 @@ public class Geraet {
         this.beschreibung = beschreibung;
         this.abholort = abholort;
         reservierungsliste = new ArrayList<>();
+        historie = new ArrayList<>();
         leihstatus = Status.FREI;
     }
 
@@ -51,7 +48,7 @@ public class Geraet {
         Ausleiher ausleiher = new Ausleiher(personenID);
 
         // ausrechnen, wann er das Gerät abholen kann
-        if (reservierungsliste.isEmpty()) {
+        if (leihstatus == Status.FREI) {
             ausleiher.setFristBeginn(LocalDateTime.now());
             leihstatus = Status.BEANSPRUCHT;
         } else {
@@ -84,7 +81,10 @@ public class Geraet {
         LocalDateTime altesAbgabeDatum = reservierungsliste.get(0).getFristBeginn().plusDays(leihfrist);
         long tageZuFrueh = LocalDateTime.now().until(altesAbgabeDatum, ChronoUnit.DAYS);
 
-        // aktuellen Ausleiher entfernen
+        //aktuellen Ausleiher zur Historie hinzufügen
+        historie.add(reservierungsliste.get(0));
+
+        // aktuellen Ausleiher aus Reservierungsliste entfernen
         reservierungsliste.remove(0);
 
         // Fristbeginn der anderen Ausleiher neu berechnen
@@ -92,5 +92,13 @@ public class Geraet {
             a.setFristBeginn(a.getFristBeginn().minusDays(tageZuFrueh));
         }
 
+    }
+
+    public String getGeraeteID() {
+        return geraeteID;
+    }
+
+    public void setHistorie(ArrayList<Ausleiher> historie) {
+        this.historie = historie;
     }
 }
