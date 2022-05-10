@@ -11,6 +11,7 @@ TODO Bastian Reichert
 Dennis Kelm
 */
 
+import shared.communication.IDienstleistungsverwaltung;
 import shared.communication.IGeraeteverwaltung;
 
 import java.rmi.AlreadyBoundException;
@@ -24,21 +25,27 @@ public class RMIServerTest {
 
     public static void main(String[] args) {
         Geraeteverwaltung geraeteverwaltung = new Geraeteverwaltung();
+        Dienstleistungsverwaltung dienstleistungsverwaltung = new Dienstleistungsverwaltung();
 
         //Klassen zur Kommunikation mit dem Server vorbereiten
+        //System.setProperty("java.rmi.server.hostname", "meta.informatik.uni-rostock.de");
         System.setProperty("java.rmi.server.hostname", "127.0.0.1");
-        //TODO IP ist meta.informatik.uni-rostock.de
+
         try {
             //Objekte ins Interface exportieren - jedes Objekt
             IGeraeteverwaltung gVerwaltungInterface = (IGeraeteverwaltung) UnicastRemoteObject.exportObject(geraeteverwaltung, 0);
-
+            IDienstleistungsverwaltung dVerwaltungInterface = (IDienstleistungsverwaltung) UnicastRemoteObject.exportObject(dienstleistungsverwaltung, 0);
 
             //Einmalig - Objekte im Registry registrieren, damit RMI vom Client aus ausgeführt werden kann
             Registry registry = LocateRegistry.createRegistry(1234);
 
+            //Interfaces mit Namen auf Server registrieren, damit der Client sie finden kann - jedes Objekt
             registry.bind("Geraeteverwaltung", gVerwaltungInterface);
-        } catch (RemoteException | AlreadyBoundException e) {
+            registry.bind("Dienstleistungsverwaltung", dVerwaltungInterface);
+        } catch (RemoteException e) {
             throw new RuntimeException(e);
+        } catch (AlreadyBoundException e) { //Sollte nicht weiter schlimm sein
+            System.err.println(e.getMessage());
         }
     }
 

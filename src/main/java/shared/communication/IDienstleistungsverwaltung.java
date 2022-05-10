@@ -24,14 +24,13 @@ import java.time.LocalDateTime;
 // Interface, um RMI für Klasse Dienstleistungsverwaltung zu ermöglichen
 public interface IDienstleistungsverwaltung extends Remote {
 
-    //TODO Statt Image[]: String der URL
-    void gesuchErstellen(String titel, String beschreibung, String kategorie, Image[] bilder, String ersteller) throws RemoteException;
-    void angebotErstellen(String titel, String beschreibung, String kategorie, LocalDateTime ab, LocalDateTime bis, Mitglied ersteller) throws RemoteException;
-    void gesuchLoeschen(Dienstleistungsgesuch gesuch) throws RemoteException;
-    void angebotLoeschen(Dienstleistungsangebot angebot) throws RemoteException;
-    void gesuchAendern(Dienstleistungsgesuch gesuch, Object attr, Object wert) throws RemoteException;
-    void angebotAendern(Dienstleistungsangebot angebot, Object attr, Object wert) throws RemoteException;
-    void gesuchAnnehmen(Dienstleistungsgesuch gesuch, String ersteller, String nutzer, int stunden) throws RemoteException;
-    void angebotAnfragen(Dienstleistungsangebot angebot, String ersteller, String fragender) throws RemoteException;
+    void gesuchErstellen(String titel, String beschreibung, String kategorie, String imageUrl, String ersteller) throws RemoteException, Exception;
+    void angebotErstellen(String titel, String beschreibung, String kategorie, LocalDateTime ab, LocalDateTime bis, String ersteller) throws RemoteException, Exception;
+    void gesuchLoeschen(String gesuchsID) throws RemoteException;
+    void angebotLoeschen(String angebotsID) throws RemoteException;
+    void gesuchAendern(String gesuchsID, Object attr, Object wert) throws RemoteException;
+    void angebotAendern(String angebotsID, Object attr, Object wert) throws RemoteException;
+    void gesuchAnnehmen(String gesuchsID, String ersteller, String nutzer, int stunden) throws RemoteException, Exception;
+    void angebotAnfragen(String angebotsID, String ersteller, String fragender) throws RemoteException;
 
 }

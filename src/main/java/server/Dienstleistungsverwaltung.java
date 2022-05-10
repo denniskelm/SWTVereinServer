@@ -2,6 +2,7 @@ package server;
 
 import com.mysql.cj.x.protobuf.MysqlxDatatypes;
 import server.users.Mitglied;
+import shared.communication.IDienstleistungsverwaltung;
 
 import java.awt.Image;
 import java.time.LocalDateTime;
@@ -10,22 +11,27 @@ import java.util.ArrayList;
 
 /*
 @author
-Raphael Kleebaum
+//TODO Raphael Kleebaum
 Jonny Schlutter
 Gabriel Kleebaum
-Mhd Esmail Kanaan
-Gia Huy Hans Tran
+//TODO Mhd Esmail Kanaan
+//TODO Gia Huy Hans Tran
 Ole Björn Adelmann
-Bastian Reichert
-Dennis Kelm
+//TODO Bastian Reichert
+//TODO Dennis Kelm
 */
 
-public class Dienstleistungsverwaltung {
+public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
-    private static ArrayList<Dienstleistungsangebot> angebote;
-    private static ArrayList<Dienstleistungsgesuch> gesuche;
+    private ArrayList<Dienstleistungsangebot> angebote;
+    private ArrayList<Dienstleistungsgesuch> gesuche;
 
-    public static void gesuchErstellen(String titel, String beschreibung, String kategorie, Mitglied ersteller) throws Exception {
+    public Dienstleistungsverwaltung() {
+        angebote = new ArrayList<>();
+        gesuche = new ArrayList<>();
+    }
+
+    public void gesuchErstellen(String titel, String beschreibung, String kategorie, String imageUrl, String ersteller) throws Exception {
         int anzahl = gesuche.size();
         String gesuch_ID;
 
@@ -46,7 +52,7 @@ public class Dienstleistungsverwaltung {
         gesuche.add(g);
     }
 
-    public static void angebotErstellen(String titel, String beschreibung, String kategorie, LocalDateTime ab, LocalDateTime bis , String personen_ID) throws Exception {
+    public void angebotErstellen(String titel, String beschreibung, String kategorie, LocalDateTime ab, LocalDateTime bis , String personen_ID) throws Exception {
         int anzahl = angebote.size();
         String angebot_ID;
 
@@ -67,7 +73,7 @@ public class Dienstleistungsverwaltung {
         angebote.add(g);
     }
 
-    public static void gesuchLoeschen(String gesuch_ID) {
+    public void gesuchLoeschen(String gesuch_ID) {
         for (Dienstleistungsgesuch g : gesuche){
             if(g.getGesuch_ID() == gesuch_ID)
                 gesuche.remove(g);
@@ -75,7 +81,7 @@ public class Dienstleistungsverwaltung {
 
     }
 
-    public static void angebotLoeschen(String angebots_ID) {
+    public void angebotLoeschen(String angebots_ID) {
         for (Dienstleistungsangebot a : angebote){
             if(a.getAngebots_ID() == angebots_ID)
                 angebote.remove(a);
@@ -83,15 +89,15 @@ public class Dienstleistungsverwaltung {
 
     }
 
-    public static void gesuchAendern(Dienstleistungsgesuch gesuch, Object attr, Object wert) {
+    public void gesuchAendern(String gesuchsID, Object attr, Object wert) {
 
     }
 
-    public static void angebotAendern(Dienstleistungsangebot angebot, Object attr, Object wert) {
+    public void angebotAendern(String angebotsID, Object attr, Object wert) {
 
     }
 
-    public static void gesuchAnnehmen(String gesuchs_ID, String nutzer_ID, int stunden) throws Exception{
+    public void gesuchAnnehmen(String gesuchs_ID, String ersteller_ID, String nutzer_ID, int stunden) throws Exception{
         Dienstleistungsgesuch gesuch;
         int anzahl = gesuche.size();
         int counter = 0;
@@ -99,7 +105,7 @@ public class Dienstleistungsverwaltung {
         for(Dienstleistungsgesuch g : gesuche) {
             if (g.getGesuch_ID() == gesuchs_ID && counter <= anzahl) {
                 gesuch = g;
-                g.getSuchender().veraendereStundenkonto(-stunden);
+                //TODO g.getSuchender().veraendereStundenkonto(-stunden);
             }
             else
                 throw new Exception();
@@ -108,7 +114,7 @@ public class Dienstleistungsverwaltung {
 
         }
 
-    public static void angebotAnfragen(Dienstleistungsangebot angebot, String ersteller, String fragender) {
+    public void angebotAnfragen(String angebotsID, String ersteller, String fragender) {
 
     }
 
