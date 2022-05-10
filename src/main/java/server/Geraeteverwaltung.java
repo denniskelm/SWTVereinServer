@@ -91,5 +91,15 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     public void geraeteAnzeigen() {
     }
 
+    //Zum Testen der Geraeteverwaltung
+    public String geraeteDatenAusgeben(String geraeteID) {
+        Geraet geraet = fetch(geraeteID);
+        StringBuilder str = new StringBuilder();
+
+        str.append("ID: " + geraet.getGeraeteID());
+        //TODO: Alle anderen Daten ausgeben
+
+        return str.toString();
+    }
 
 }

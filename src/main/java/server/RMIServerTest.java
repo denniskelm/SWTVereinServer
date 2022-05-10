@@ -34,7 +34,7 @@ public class RMIServerTest {
 
 
             //Einmalig - Objekte im Registry registrieren, damit RMI vom Client aus ausgeführt werden kann
-            Registry registry = LocateRegistry.getRegistry(1234);
+            Registry registry = LocateRegistry.createRegistry(1234);
 
             registry.bind("Geraeteverwaltung", gVerwaltungInterface);
         } catch (RemoteException | AlreadyBoundException e) {
