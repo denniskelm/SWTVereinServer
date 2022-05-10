@@ -1,5 +1,7 @@
 package shared.communication;
 
+import server.Geraetedaten;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -23,7 +25,7 @@ public interface IGeraeteverwaltung extends Remote {
     void geraetAusgeben(String geraeteID) throws RemoteException;
     void geraetAnnehmen(String geraeteID) throws RemoteException;
     void geraetEntfernen(String geraeteID) throws RemoteException;
-    void geraeteDatenVerwalten(String geraeteID, Object attr, Object wert) throws RemoteException;
+    void geraeteDatenVerwalten(String geraeteID, Geraetedaten attr, Object wert) throws RemoteException;
     void historieZuruecksetzen(String geraeteID) throws RemoteException;
     void geraeteAnzeigen() throws RemoteException;
 

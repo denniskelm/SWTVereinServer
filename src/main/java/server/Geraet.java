@@ -101,4 +101,29 @@ public class Geraet {
     public void setHistorie(ArrayList<Ausleiher> historie) {
         this.historie = historie;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSpenderName(String spenderName) {
+        this.spenderName = spenderName;
+    }
+
+    public void setLeihfrist(int leihfrist) {
+        this.leihfrist = leihfrist;
+    }
+
+    public void setKategorie(String kategorie) {
+        this.kategorie = kategorie;
+    }
+
+    public void setBeschreibung(String beschreibung) {
+        this.beschreibung = beschreibung;
+    }
+
+    public void setAbholort(String abholort) {
+        this.abholort = abholort;
+    }
+
 }

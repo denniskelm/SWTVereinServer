@@ -63,8 +63,16 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         geraete.remove(geraet);
     }
 
-    public void geraeteDatenVerwalten(String geraeteID, Object attr, Object wert) {
+    public void geraeteDatenVerwalten(String geraeteID, Geraetedaten attr, Object wert) {
         Geraet g = fetch(geraeteID);
+
+        switch (attr) {
+            case NAME:
+                g.setName(wert.toString());
+                break;
+
+        }
+
     }
 
     public void historieZuruecksetzen(String geraeteID) {
