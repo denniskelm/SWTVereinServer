@@ -25,7 +25,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     }
 
     public void geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort) {
-        if (geraete.size() < 50000) return; //TODO Exception
+        if (geraete.size() >= 50000) return; /*  */ //TODO Exception
 
         //naechste ID holen
         String geraeteID = Long.toString(IdCounter++);
@@ -57,8 +57,8 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         this.fetch(geraeteID).annehmen();
     }
 
-    public void geraetEntfernen(Geraet geraet) {
-        if (!geraete.contains(geraet)) return; // TODO Exception
+    public void geraetEntfernen(String geraeteID) {
+        Geraet geraet = fetch(geraeteID);
 
         geraete.remove(geraet);
     }
