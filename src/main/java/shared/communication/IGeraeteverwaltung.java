@@ -1,7 +1,5 @@
 package shared.communication;
 
-import server.Geraet;
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -21,12 +19,12 @@ TODO Dennis Kelm
 public interface IGeraeteverwaltung extends Remote {
 
     void geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort) throws RemoteException;
-    void geraetReservieren(Geraet geraet, String ausleiherID) throws RemoteException;
-    void geraetAusgeben(Geraet geraet) throws RemoteException;
-    void geraetAnnehmen(Geraet geraet) throws RemoteException;
-    void geraetEntfernen(Geraet geraet) throws RemoteException;
-    void geraeteDatenVerwalten(Geraet g, Object attr, Object wert) throws RemoteException;
-    void historieZuruecksetzen(Geraet geraet) throws RemoteException;
+    void geraetReservieren(String geraeteID, String ausleiherID) throws RemoteException;
+    void geraetAusgeben(String geraeteID) throws RemoteException;
+    void geraetAnnehmen(String geraeteID) throws RemoteException;
+    void geraetEntfernen(String geraeteID) throws RemoteException;
+    void geraeteDatenVerwalten(String geraeteID, Object attr, Object wert) throws RemoteException;
+    void historieZuruecksetzen(String geraeteID) throws RemoteException;
     void geraeteAnzeigen() throws RemoteException;
 
 }

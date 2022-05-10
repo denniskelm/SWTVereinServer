@@ -34,8 +34,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         geraete.add(g);
     }
 
-    public void geraetReservieren(Geraet geraet, String personenID) {
-        if (!geraete.contains(geraet)) return; // TODO Exception
+    public void geraetReservieren(String geraeteID, String personenID) {
         // TODO Ueberpruefung ob mitglied berechtigt ist (mehr als 3 Geräte ausgeliehen, Ausleihsperre, ...)
 
         for (Geraet g : geraete) {
@@ -47,12 +46,8 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         this.fetch(geraeteID).ausgeben();
     }
 
-    public void geraetAnnehmen(Geraet geraet) {
-        if (!geraete.contains(geraet)) return; // TODO Exception
-
-        for (Geraet g : geraete) {
-            if (g.getGeraeteID().equals(geraet.getGeraeteID())) g.annehmen();
-        }
+    public void geraetAnnehmen(String geraeteID) {
+        this.fetch(geraeteID).annehmen();
     }
 
     public void geraetEntfernen(Geraet geraet) {
@@ -61,12 +56,12 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         geraete.remove(geraet);
     }
 
-    public void geraeteDatenVerwalten(Geraet g, Object attr, Object wert) {
-        if (!geraete.contains(g)) return; // TODO Exception
-
+    public void geraeteDatenVerwalten(String geraeteID, Object attr, Object wert) {
+        Geraet g = fetch(geraeteID);
     }
 
-    public void historieZuruecksetzen(Geraet geraet) {
+    public void historieZuruecksetzen(String geraeteID) {
+        Geraet geraet = fetch(geraeteID);
         for (Geraet g : geraete) {
             if (g.getGeraeteID().equals(geraet.getGeraeteID())) {
                 g.setHistorie(new ArrayList<>());
