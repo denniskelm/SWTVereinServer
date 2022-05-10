@@ -27,14 +27,14 @@ public class RMIServerTest {
 
         //Klassen zur Kommunikation mit dem Server vorbereiten
         System.setProperty("java.rmi.server.hostname", "127.0.0.1");
-
+        //TODO IP ist meta.informatik.uni-rostock.de
         try {
-            //Objekte ins Interface exportieren
+            //Objekte ins Interface exportieren - jedes Objekt
             IGeraeteverwaltung gVerwaltungInterface = (IGeraeteverwaltung) UnicastRemoteObject.exportObject(geraeteverwaltung, 0);
 
 
-            //Objekte im Registry registrieren, damit RMI vom Client aus ausgeführt werden kann
-            Registry registry = LocateRegistry.getRegistry("127.0.0.1", 1234);
+            //Einmalig - Objekte im Registry registrieren, damit RMI vom Client aus ausgeführt werden kann
+            Registry registry = LocateRegistry.getRegistry(1234);
 
             registry.bind("Geraeteverwaltung", gVerwaltungInterface);
         } catch (RemoteException | AlreadyBoundException e) {

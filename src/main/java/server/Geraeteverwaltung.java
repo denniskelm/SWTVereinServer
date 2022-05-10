@@ -43,12 +43,8 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         }
     }
 
-    public void geraetAusgeben(Geraet geraet) {
-        if (!geraete.contains(geraet)) return; // TODO Exception
-
-        for (Geraet g : geraete) {
-            if (g.getGeraeteID().equals(geraet.getGeraeteID())) g.ausgeben();
-        }
+    public void geraetAusgeben(String geraeteID) {
+        this.fetch(geraeteID).ausgeben();
     }
 
     public void geraetAnnehmen(Geraet geraet) {

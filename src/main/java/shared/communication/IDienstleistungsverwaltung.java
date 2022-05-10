@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 // Interface, um RMI für Klasse Dienstleistungsverwaltung zu ermöglichen
 public interface IDienstleistungsverwaltung extends Remote {
 
+    //TODO Statt Image[]: String der URL
     void gesuchErstellen(String titel, String beschreibung, String kategorie, Image[] bilder, String ersteller) throws RemoteException;
     void angebotErstellen(String titel, String beschreibung, String kategorie, LocalDateTime ab, LocalDateTime bis, Mitglied ersteller) throws RemoteException;
     void gesuchLoeschen(Dienstleistungsgesuch gesuch) throws RemoteException;
