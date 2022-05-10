@@ -34,12 +34,19 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         geraete.add(g);
     }
 
+    public Geraet fetch(String geraeteID){
+        for (Geraet g : geraete) {
+            if (g.getGeraeteID().equals(geraeteID)) return g;
+        }
+
+        return null; // TODO Exception zurückgeben
+    }
+
     public void geraetReservieren(String geraeteID, String personenID) {
         // TODO Ueberpruefung ob mitglied berechtigt ist (mehr als 3 Geräte ausgeliehen, Ausleihsperre, ...)
 
-        for (Geraet g : geraete) {
-            if (g.getGeraeteID().equals(geraet.getGeraeteID())) g.reservierungHinzufuegen(personenID);
-        }
+        fetch(geraeteID).reservierungHinzufuegen(personenID);
+
     }
 
     public void geraetAusgeben(String geraeteID) {
