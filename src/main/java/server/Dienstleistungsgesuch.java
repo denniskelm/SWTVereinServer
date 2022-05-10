@@ -19,5 +19,27 @@ public class Dienstleistungsgesuch {
         String anfrage = "insert into  Dienstleitunsgesuch(angebots_ID, PersonenID, Titel, Beschreibung, Kategorie) values (" + gesuch_ID + ", " + suchender.getPersonenID() + ", " + titel + ", "+ beschreibung + ", " + kategorie + ", " + suchender + ");";
     }
 
+    public String getGesuch_ID() {
+        return gesuch_ID;
+    }
 
+    public Mitglied getSuchender() {
+        return suchender;
+    }
+
+    public void setTitel(String titel) {
+        this.titel = titel;
+    }
+
+    public void setBeschreibung(String beschreibung) {
+        this.beschreibung = beschreibung;
+    }
+
+    public void setKategorie(String kategorie) {
+        this.kategorie = kategorie;
+    }
+
+    public void setSuchender(Mitglied suchender) {
+        this.suchender = suchender;
+    }
 }

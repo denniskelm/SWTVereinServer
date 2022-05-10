@@ -10,6 +10,7 @@ public class Mitglied extends Gast {
     private LocalDateTime mitglied_seit;
 
     public Mitglied(String personenID, String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, int telefonnummer, boolean spender/*, Mahnungsverwaltung mahnungen, Profilseite profilseite */, LocalDateTime mitglied_seit){
+
         super(personenID, nachname, vorname, email, password, anschrift, mitgliedsnr, telefonnummer, spender);
         this.stundenkonto = 0;
     //    this.mahnungen = mahnungen;
@@ -18,5 +19,7 @@ public class Mitglied extends Gast {
         this.mitglied_seit = mitglied_seit;
     }
 
-
+    public void veraendereStundenkonto(int change) {
+        this.stundenkonto += change;
+    }
 }
