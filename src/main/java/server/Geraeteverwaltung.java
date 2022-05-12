@@ -11,8 +11,10 @@ Jonny Schlutter
 //TODO Dennis Kelm
 */
 
+import server.users.Rollenverwaltung;
 import shared.communication.IGeraeteverwaltung;
 
+import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
@@ -25,7 +27,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     }
 
     public void geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort) {
-        if (geraete.size() >= 50000) return; //TODO Exception
+        if (geraete.size() >= 50000) throw new ArrayIndexOutOfBoundsException(); //TODO Exception
 
         //naechste ID holen
         String geraeteID = Long.toString(IdCounter++);
@@ -34,36 +36,36 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         geraete.add(g);
     }
 
-    public Geraet fetch(String geraeteID){ // warum heißt das nicht getGeraet
+    public Geraet fetch(String geraeteID) throws NoSuchObjectException { // warum heißt das nicht getGeraet
         for (Geraet g : geraete) {
             if (g.getGeraeteID().equals(geraeteID)) return g;
         }
 
-        return null; // TODO Exception zurückgeben
+        throw new NoSuchObjectException("");
     }
 
-    public void geraetReservieren(String geraeteID, String personenID) {
+    public void geraetReservieren(String geraeteID, String personenID) throws NoSuchObjectException {
         // TODO Ueberpruefung ob mitglied berechtigt ist (mehr als 3 Geräte ausgeliehen, Ausleihsperre, ...)
 
         fetch(geraeteID).reservierungHinzufuegen(personenID);
 
     }
 
-    public void geraetAusgeben(String geraeteID) {  //Mitarbeiter gibt Gerät fur mitglied
+    public void geraetAusgeben(String geraeteID) throws NoSuchObjectException {  //Mitarbeiter gibt Gerät fur mitglied
         this.fetch(geraeteID).ausgeben();
     }
 
-    public void geraetAnnehmen(String geraeteID) {
+    public void geraetAnnehmen(String geraeteID) throws NoSuchObjectException {
         this.fetch(geraeteID).annehmen();
     } //rueckgabe des geraets
 
-    public void geraetEntfernen(String geraeteID) {
+    public void geraetEntfernen(String geraeteID) throws NoSuchObjectException {
         Geraet geraet = fetch(geraeteID);
 
         geraete.remove(geraet);
     }
 
-    public void geraeteDatenVerwalten(String geraeteID, Geraetedaten attr, Object wert) {
+    public void geraeteDatenVerwalten(String geraeteID, Geraetedaten attr, Object wert) throws NoSuchObjectException {
         Geraet g = fetch(geraeteID);
 
         switch (attr) { //wie setter methoden
@@ -77,7 +79,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
 
     }
 
-    public void historieZuruecksetzen(String geraeteID) {
+    public void historieZuruecksetzen(String geraeteID) throws NoSuchObjectException {
         Geraet geraet = fetch(geraeteID);
         for (Geraet g : geraete) {
             if (g.getGeraeteID().equals(geraet.getGeraeteID())) {
@@ -92,7 +94,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     }
 
     //Zum Testen der Geraeteverwaltung
-    public String geraeteDatenAusgeben(String geraeteID) {
+    public String geraeteDatenAusgeben(String geraeteID) throws NoSuchObjectException {
         Geraet geraet = fetch(geraeteID);
         StringBuilder str = new StringBuilder(); //Stringvuilder klasse ist in Java integriert und kann die Woerter bsser hintereinander haengen
 
