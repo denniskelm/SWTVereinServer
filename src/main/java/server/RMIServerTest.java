@@ -13,6 +13,7 @@ Dennis Kelm
 
 import shared.communication.IDienstleistungsverwaltung;
 import shared.communication.IGeraeteverwaltung;
+import shared.communication.IMahnungsverwaltung;
 
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
@@ -26,6 +27,7 @@ public class RMIServerTest {
     public static void main(String[] args) {
         Geraeteverwaltung geraeteverwaltung = new Geraeteverwaltung();
         Dienstleistungsverwaltung dienstleistungsverwaltung = new Dienstleistungsverwaltung();
+        Mahnungsverwaltung mahnungsverwaltung = new Mahnungsverwaltung();
 
         //Klassen zur Kommunikation mit dem Server vorbereiten
         //System.setProperty("java.rmi.server.hostname", "meta.informatik.uni-rostock.de");
@@ -35,6 +37,7 @@ public class RMIServerTest {
             //Objekte ins Interface exportieren - jedes Objekt
             IGeraeteverwaltung gVerwaltungInterface = (IGeraeteverwaltung) UnicastRemoteObject.exportObject(geraeteverwaltung, 0);
             IDienstleistungsverwaltung dVerwaltungInterface = (IDienstleistungsverwaltung) UnicastRemoteObject.exportObject(dienstleistungsverwaltung, 0);
+            IMahnungsverwaltung mVerwaltungInterface = (IMahnungsverwaltung) UnicastRemoteObject.exportObject(mahnungsverwaltung, 0);
 
             //Einmalig - Objekte im Registry registrieren, damit RMI vom Client aus ausgeführt werden kann
             Registry registry = LocateRegistry.createRegistry(1234);
@@ -42,6 +45,7 @@ public class RMIServerTest {
             //Interfaces mit Namen auf Server registrieren, damit der Client sie finden kann - jedes Objekt
             registry.bind("Geraeteverwaltung", gVerwaltungInterface);
             registry.bind("Dienstleistungsverwaltung", dVerwaltungInterface);
+            registry.bind("Mahnungsverwaltung", mVerwaltungInterface);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         } catch (AlreadyBoundException e) { //Sollte nicht weiter schlimm sein

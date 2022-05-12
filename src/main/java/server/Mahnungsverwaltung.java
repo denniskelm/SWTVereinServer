@@ -1,16 +1,25 @@
 package server;
 
-import server.users.Mitglied;
+import shared.communication.IMahnungsverwaltung;
 
+import java.rmi.NoSuchObjectException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Mahnungsverwaltung {
+public class Mahnungsverwaltung implements IMahnungsverwaltung {
 
     public ArrayList<Mahnung> mahnungen;
 
     public Mahnungsverwaltung(){
         mahnungen = new ArrayList<>();
+    }
+
+    public Mahnung fetch(String mahnungsID) throws NoSuchObjectException {
+        for (Mahnung m : mahnungen) {
+            if (m.getMahnungsID().equals(mahnungsID)) return m;
+        }
+
+        throw new NoSuchObjectException("");
     }
 
     public void mahnungErstellen(String mitgliedsID, String grund, LocalDateTime verfallsdatum){
@@ -19,8 +28,13 @@ public class Mahnungsverwaltung {
         mahnungen.add(m);
     }
 
-    public void mahnungLoeschen(Mahnung m){
-        mahnungen.remove(m);
-        String anfrage = "delete from mahnung where MahnungsID = " + m.getMahnungsID();
+    public void mahnungLoeschen(String mahnungsID){
+        try {
+            Mahnung m = fetch(mahnungsID);
+            mahnungen.remove(m);
+            String anfrage = "delete from mahnung where MahnungsID = " + m.getMahnungsID();
+        } catch (NoSuchObjectException e) {
+            e.printStackTrace();
+        }
     }
 }
