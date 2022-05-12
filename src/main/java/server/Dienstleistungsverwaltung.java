@@ -31,7 +31,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         gesuche = new ArrayList<>();
     }
 
-    public void gesuchErstellen(String titel, String beschreibung, String kategorie, String imageUrl, String ersteller) throws Exception {
+    public String gesuchErstellen(String titel, String beschreibung, String kategorie, String imageUrl, String ersteller) throws Exception {
         int anzahl = gesuche.size();
         String gesuch_ID;
 
@@ -50,9 +50,10 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
         Dienstleistungsgesuch g = new Dienstleistungsgesuch(gesuch_ID, titel, beschreibung, kategorie, ersteller);
         gesuche.add(g);
+        return gesuch_ID;
     }
 
-    public void angebotErstellen(String titel, String beschreibung, String kategorie, LocalDateTime ab, LocalDateTime bis , String personen_ID) throws Exception {
+    public String angebotErstellen(String titel, String beschreibung, String kategorie, LocalDateTime ab, LocalDateTime bis , String personen_ID) throws Exception {
         int anzahl = angebote.size();
         String angebot_ID;
 
@@ -71,6 +72,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
         Dienstleistungsangebot g = new Dienstleistungsangebot(angebot_ID, titel, beschreibung, kategorie, ab, bis, personen_ID);
         angebote.add(g);
+        return angebot_ID;
     }
 
     public void gesuchLoeschen(String gesuch_ID) {

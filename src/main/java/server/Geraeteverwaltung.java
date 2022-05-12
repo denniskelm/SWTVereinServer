@@ -26,14 +26,15 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         geraete = new ArrayList<>();
     }
 
-    public void geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort) {
+    public String geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort) {
         if (geraete.size() >= 50000) throw new ArrayIndexOutOfBoundsException(); //TODO Exception
 
         //naechste ID holen
-        String geraeteID = Long.toString(IdCounter++);
+        String geraeteID = Long.toString(IdCounter++).toString();
 
         Geraet g = new Geraet(geraeteID, name, spender, leihfrist, kategorie, beschreibung, abholort);
         geraete.add(g);
+        return geraeteID;
     }
 
     public Geraet fetch(String geraeteID) throws NoSuchObjectException { // warum heißt das nicht getGeraet
