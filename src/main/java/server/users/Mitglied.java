@@ -22,4 +22,9 @@ public class Mitglied extends Gast {
     public void veraendereStundenkonto(int change) {
         this.stundenkonto += change;
     }
+
+    public boolean isGesperrt() {
+        return ist_gesperrt;
+    }
+
 }
