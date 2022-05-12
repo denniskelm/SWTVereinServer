@@ -34,7 +34,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         geraete.add(g);
     }
 
-    public Geraet fetch(String geraeteID){
+    public Geraet fetch(String geraeteID){ // warum heißt das nicht getGeraet
         for (Geraet g : geraete) {
             if (g.getGeraeteID().equals(geraeteID)) return g;
         }
@@ -49,13 +49,13 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
 
     }
 
-    public void geraetAusgeben(String geraeteID) {
+    public void geraetAusgeben(String geraeteID) {  //Mitarbeiter gibt Gerät fur mitglied
         this.fetch(geraeteID).ausgeben();
     }
 
     public void geraetAnnehmen(String geraeteID) {
         this.fetch(geraeteID).annehmen();
-    }
+    } //rueckgabe des geraets
 
     public void geraetEntfernen(String geraeteID) {
         Geraet geraet = fetch(geraeteID);
@@ -66,7 +66,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     public void geraeteDatenVerwalten(String geraeteID, Geraetedaten attr, Object wert) {
         Geraet g = fetch(geraeteID);
 
-        switch (attr) {
+        switch (attr) { //wie setter methoden
             case NAME -> g.setName(wert.toString());
             case SPENDERNAME -> g.setSpenderName(wert.toString());
             case LEIHFRIST -> g.setLeihfrist(Integer.parseInt(wert.toString()));
@@ -88,16 +88,16 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     }
 
 
-    public void geraeteAnzeigen() {
+    public void geraeteAnzeigen() { //geraet Fenester anzeigen
     }
 
     //Zum Testen der Geraeteverwaltung
     public String geraeteDatenAusgeben(String geraeteID) {
         Geraet geraet = fetch(geraeteID);
-        StringBuilder str = new StringBuilder();
+        StringBuilder str = new StringBuilder(); //Stringvuilder klasse ist in Java integriert und kann die Woerter bsser hintereinander haengen
 
         str.append("ID: " + geraet.getGeraeteID());
-        //TODO: Alle anderen Daten ausgeben
+        //TODO: Alle anderen Daten anhaengen
 
         return str.toString();
     }

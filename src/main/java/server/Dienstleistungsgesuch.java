@@ -8,7 +8,7 @@ public class Dienstleistungsgesuch {
     private String titel;
     private String beschreibung;
     private String kategorie;
-    private String suchenderID;
+    private String suchenderID; //MitgliedID z.b
 
     public Dienstleistungsgesuch(String gesuch_ID, String titel, String beschreibung, String kategorie, String suchenderID){
         this.gesuch_ID = gesuch_ID;
@@ -23,6 +23,8 @@ public class Dienstleistungsgesuch {
         String anfrage = String.format("insert into Dienstleistungsgesuch(angebots_ID, PersonenID, Titel, Beschreibung, Kategorie) values \"%s\", \"%s\", \"%s\", \"%s\", \"%s\");", gesuch_ID, suchenderID, titel, beschreibung, kategorie);
     }
 
+
+    //Anmerkung : es kann sein dass die Getter Public sind, aber es macht fuer Esmail kein Sinn dass Setter auch public sind
     public String getGesuch_ID() {
         return gesuch_ID;
     }
