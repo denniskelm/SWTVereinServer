@@ -12,8 +12,10 @@ Bastian Reichert
 Dennis Kelm
 */
 
+import server.Geraet;
 import shared.communication.IRollenverwaltung;
 
+import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
@@ -30,6 +32,22 @@ public class Rollenverwaltung implements IRollenverwaltung {
          mitarbeiter = new ArrayList();
          vorsitze = new ArrayList();
      }
+
+    public Mitglied fetch(String mitgliederID) throws NoSuchObjectException { // warum heißt das nicht getGeraet
+        for (Mitglied m : mitglieder) {
+            if (m.getPersonenID().equals(mitgliederID)) return m;
+        }
+
+        for (Mitglied m : mitarbeiter) {
+            if (m.getPersonenID().equals(mitgliederID)) return m;
+        }
+
+        for (Mitglied m : vorsitze) {
+            if (m.getPersonenID().equals(mitgliederID)) return m;
+        }
+
+        throw new NoSuchObjectException("");
+    }
 
     public static ArrayList<Mitglied> getMitglieder() {
         return mitglieder;

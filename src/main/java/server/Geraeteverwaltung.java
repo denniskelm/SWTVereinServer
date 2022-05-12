@@ -11,9 +11,11 @@ Jonny Schlutter
 //TODO Dennis Kelm
 */
 
+import server.users.Mitglied;
 import server.users.Rollenverwaltung;
 import shared.communication.IGeraeteverwaltung;
 
+import javax.naming.NoPermissionException;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -45,11 +47,29 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         throw new NoSuchObjectException("");
     }
 
-    public void geraetReservieren(String geraeteID, String personenID) throws NoSuchObjectException {
-        // TODO Ueberpruefung ob mitglied berechtigt ist (mehr als 3 Geräte ausgeliehen, Ausleihsperre, ...)
+    public void geraetReservieren(String geraeteID, String personenID) throws Exception {
+        int reservierungen = 0;
+        Mitglied m = new Rollenverwaltung().fetch(personenID); // TODO später die richtige Rollenverwaltung nehmen
+
+        for (Geraet g : geraete) {
+            for (Ausleiher a : g.getReservierungsliste()) {
+                if (a.getMitlgiedsID().equals(personenID)) {
+                    reservierungen++;
+
+                    if (reservierungen == 3)
+                        break; // damit man bestenfalls nicht durch alle Geräte iterieren muss
+
+                }
+            }
+        }
+
+        if (reservierungen == 3)
+            throw new ArrayIndexOutOfBoundsException();
+
+        if (m.isGesperrt())
+            throw new NoPermissionException();
 
         fetch(geraeteID).reservierungHinzufuegen(personenID);
-
     }
 
     public void geraetAusgeben(String geraeteID) throws NoSuchObjectException {  //Mitarbeiter gibt Gerät fur mitglied

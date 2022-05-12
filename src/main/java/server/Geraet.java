@@ -126,4 +126,8 @@ public class Geraet {
         this.abholort = abholort;
     }
 
+    public ArrayList<Ausleiher> getReservierungsliste() {
+        return reservierungsliste;
+    }
+
 }

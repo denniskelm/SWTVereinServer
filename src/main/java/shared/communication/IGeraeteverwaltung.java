@@ -21,7 +21,7 @@ TODO Dennis Kelm
 public interface IGeraeteverwaltung extends Remote {
 
     String geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort) throws RemoteException;
-    void geraetReservieren(String geraeteID, String ausleiherID) throws RemoteException;
+    void geraetReservieren(String geraeteID, String ausleiherID) throws Exception;
     void geraetAusgeben(String geraeteID) throws RemoteException;
     void geraetAnnehmen(String geraeteID) throws RemoteException;
     void geraetEntfernen(String geraeteID) throws RemoteException;
