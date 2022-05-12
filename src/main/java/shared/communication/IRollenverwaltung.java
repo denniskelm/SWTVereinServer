@@ -26,7 +26,7 @@ public interface IRollenverwaltung extends Remote {
     void mitarbeiterListeAnzeigen() throws RemoteException;
     void vorsitzListeAnzeigen() throws RemoteException;
     void rolleAendern(Mitglied mitglied, Rolle rolle) throws RemoteException;
-    void nutzereintragAendern(Mitglied mitglied, Object attr, Object wert) throws RemoteException;
-    void mahnungsverwaltungAnzeigne() throws RemoteException;
+    void nutzereintragAendern(String mitgliedsID, Object attr, Object wert) throws RemoteException;
+    void mahnungsverwaltungAnzeigen() throws RemoteException;
 
 }
