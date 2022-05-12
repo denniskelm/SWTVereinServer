@@ -17,7 +17,6 @@ import shared.communication.IGeraeteverwaltung;
 
 import javax.naming.NoPermissionException;
 import java.rmi.NoSuchObjectException;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public class Geraeteverwaltung implements IGeraeteverwaltung {
@@ -57,14 +56,10 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
                     reservierungen++;
 
                     if (reservierungen == 3)
-                        break; // damit man bestenfalls nicht durch alle Geräte iterieren muss
-
+                        throw new ArrayIndexOutOfBoundsException(); // damit man bestenfalls nicht durch alle Geräte iterieren muss
                 }
             }
         }
-
-        if (reservierungen == 3)
-            throw new ArrayIndexOutOfBoundsException();
 
         if (m.isGesperrt())
             throw new NoPermissionException();
@@ -111,7 +106,8 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     }
 
 
-    public void geraeteAnzeigen() { //geraet Fenester anzeigen
+    public Object[] geraeteAnzeigen() { //geraet Fenester anzeigen
+        return geraete.toArray();
     }
 
     //Zum Testen der Geraeteverwaltung
