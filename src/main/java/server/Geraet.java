@@ -3,12 +3,12 @@ package server;
 @author
 Raphael Kleebaum
 Jonny Schlutter
-Gabriel Kleebaum
+//TODO Gabriel Kleebaum
 Mhd Esmail Kanaan
-Gia Huy Hans Tran
-Ole Björn Adelmann
-Bastian Reichert
-Dennis Kelm
+//TODO Gia Huy Hans Tran
+//TODO Ole Björn Adelmann
+//TODO Bastian Reichert
+//TODO Dennis Kelm
 */
 
 import java.time.LocalDateTime;
@@ -20,11 +20,19 @@ public class Geraet {
     private String geraeteID;
     private String name;
     private String spenderName;
+
+
+
     private int leihfrist; // muss in Tagen angegeben werden
     private String kategorie;
     private String beschreibung;
     private String abholort;
     private ArrayList<Ausleiher> reservierungsliste, historie;
+
+    public ArrayList<Ausleiher> getHistorie() {
+        return historie;
+    }
+
     // reservierdatum: LocalDateTime
     // fristbeginn: LocalDateTime
     // abgegeben: boolean
@@ -102,6 +110,20 @@ public class Geraet {
     public String getSpenderName() {
         return spenderName;
     }
+
+    public String getGeraetName() {
+        return name;
+    }
+
+    public String getGeraetAbholort() {
+        return abholort;
+    }
+
+    public String getGeraetBeschreibung() {
+        return beschreibung;
+    }
+
+
 
     public int getLeihfrist() {
         return leihfrist;

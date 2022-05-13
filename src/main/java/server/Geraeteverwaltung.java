@@ -4,7 +4,7 @@ package server;
 Raphael Kleebaum
 Jonny Schlutter
 //TODO Gabriel Kleebaum
-//TODO Mhd Esmail Kanaan
+ Mhd Esmail Kanaan
 //TODO Gia Huy Hans Tran
 //TODO Ole Björn Adelmann
 //TODO Bastian Reichert
@@ -18,6 +18,11 @@ import java.util.ArrayList;
 
 public class Geraeteverwaltung implements IGeraeteverwaltung {
     private static ArrayList<Geraet> geraete;
+
+    public static ArrayList<Geraet> getGeraeteArrayList() {
+        return geraete;
+    }
+
     private static long IdCounter = 0;
 
     public Geraeteverwaltung() {
@@ -30,9 +35,12 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         IdCounter++;// ansonst IdCounter nicht verändert
         //naechste ID holen
         String geraeteID = Long.toString(IdCounter);
+        System.out.println(IdCounter);
 
         Geraet g = new Geraet(geraeteID, name, spender, leihfrist, kategorie, beschreibung, abholort);
         geraete.add(g);
+        System.out.println("Geraet " +  g.getGeraeteID() + "is added ");
+        System.out.println("Geraet size methode " +  geraete.size() + " ");
         return geraeteID;
     }
 
@@ -110,14 +118,14 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
 
     public Object[] geraeteAnzeigen() { //geraet Fenester anzeigen
         return geraete.toArray();
-    }
+    } //TODO: warum die Rückgabe object[] ist ?
 
     //Zum Testen der Geraeteverwaltung
     public String geraeteDatenAusgeben(String geraeteID) throws NoSuchObjectException {
         Geraet geraet = fetch(geraeteID);
         StringBuilder str = new StringBuilder(); //Stringvuilder klasse ist in Java integriert und kann die Woerter bsser hintereinander haengen
 
-        str.append("ID: " + geraet.getGeraeteID());
+        str.append("ID: " + geraet.getGeraeteID()); //TODO wo sind die anderen Daten ?
         //TODO: Alle anderen Daten anhaengen
 
         return str.toString();
