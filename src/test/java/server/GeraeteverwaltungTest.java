@@ -1,16 +1,14 @@
-package server.tests;
+package server;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import server.Geraet;
-import server.Geraeteverwaltung;
-import server.Status;
 
 import java.rmi.NoSuchObjectException;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class GeraeteverwaltungTest {
 
@@ -38,7 +36,7 @@ class GeraeteverwaltungTest {
         Throwable exception = assertThrows(IllegalArgumentException.class, () -> gv.fetch("0"));
         assertEquals("Geraet mit ID: 0 nicht vorhanden.", exception.getMessage());
 
-        Geraet g = null;
+        Geraet g;
         try {
             g = gv.fetch("1");
         } catch (NoSuchObjectException e) {
@@ -53,25 +51,28 @@ class GeraeteverwaltungTest {
     @Test
     void geraetReservieren() {
         Geraeteverwaltung gv = new Geraeteverwaltung();
-        String Id = gv.geraetHinzufuegen("jojo", "spender", 15, "spiel", "beschreibung", "abholort");
+        gv.geraetHinzufuegen("jojo", "spender", 15, "spiel", "beschreibung", "abholort");
 
-        Throwable exception = assertThrows(IllegalArgumentException.class, () -> gv.geraetReservieren("0","1"));
+        Throwable exception = assertThrows(NoSuchObjectException.class, () -> gv.geraetReservieren("0","1"));
         assertEquals("Geraet mit ID: 0 nicht vorhanden.", exception.getMessage());
 
-        Geraet g = null;
+        Geraet g;
         try {
+            gv.geraetReservieren("1","1");
             g = gv.fetch("1");
         } catch (NoSuchObjectException e) {
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        Assertions.assertEquals(g.getLeihstatus(), Status.BEANSPRUCHT);
+        Assertions.assertEquals(Status.BEANSPRUCHT, g.getLeihstatus());
 
     }
 
     @Test
     void geraetAusgeben() {
         Geraeteverwaltung gv = new Geraeteverwaltung();
-        String Id = gv.geraetHinzufuegen("jojo", "spender", 15, "spiel", "beschreibung", "abholort");
+        gv.geraetHinzufuegen("jojo", "spender", 15, "spiel", "beschreibung", "abholort");
 
         try {
             gv.geraetReservieren("1","1");
@@ -79,7 +80,7 @@ class GeraeteverwaltungTest {
             throw new RuntimeException(e);
         }
 
-        Geraet g = null;
+        Geraet g;
         try {
             g = gv.fetch("1");
         } catch (NoSuchObjectException e) {
@@ -98,7 +99,7 @@ class GeraeteverwaltungTest {
     @Test
     void geraetAnnehmen() {
         Geraeteverwaltung gv = new Geraeteverwaltung();
-        String Id = gv.geraetHinzufuegen("jojo", "spender", 15, "spiel", "beschreibung", "abholort");
+        gv.geraetHinzufuegen("jojo", "spender", 15, "spiel", "beschreibung", "abholort");
 
         try {
             gv.geraetReservieren("1","1");
@@ -106,7 +107,7 @@ class GeraeteverwaltungTest {
             throw new RuntimeException(e);
         }
 
-        Geraet g = null;
+        Geraet g;
         try {
             g = gv.fetch("1");
         } catch (NoSuchObjectException e) {
@@ -131,13 +132,16 @@ class GeraeteverwaltungTest {
     @Test
     void geraetEntfernen() {
         Geraeteverwaltung gv = new Geraeteverwaltung();
-        String Id = gv.geraetHinzufuegen("jojo", "spender", 15, "spiel", "beschreibung", "abholort");
+        gv.geraetHinzufuegen("jojo", "spender", 15, "spiel", "beschreibung", "abholort");
 
         try {
             gv.geraetEntfernen("1");
         } catch (NoSuchObjectException e) {
             throw new RuntimeException(e);
         }
+
+        assertEquals(geraete.size(),0);
+
     }
 
     @Test

@@ -72,6 +72,7 @@ public class Geraet {
     }
 
     public void ausgeben() {
+        // what would happen if the device Status was AUSGELIEGEN ? where is the fehlerbehandlung
         leihstatus = Status.AUSGELIEHEN;
     }
 

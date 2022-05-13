@@ -22,6 +22,8 @@ class DienstleistungsverwaltungTest {
 
     @Test
     void gesuchErstellenTest() {
+        // check if the id correct
+        // check if gesuch is erstellt
 
         String expectedGesuchID = "dg00001";
 
@@ -30,22 +32,30 @@ class DienstleistungsverwaltungTest {
 
     @Test
     void angebotErstellen() {
+        // check if the id correct
+        // check if angebot is made
+
     }
 
     @Test
     void gesuchLoeschen() {
+        // check if gesuch is deleted
     }
 
     @Test
     void angebotLoeschen() {
+        // check if angebot is deleted
     }
 
     @Test
     void gesuchAendern() {
+        // check if Attributs are chaged
+
     }
 
     @Test
     void angebotAendern() {
+        // check if Attributs are chaged
     }
 
     @Test

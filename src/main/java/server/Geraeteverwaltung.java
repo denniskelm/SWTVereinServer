@@ -11,11 +11,8 @@ Jonny Schlutter
 //TODO Dennis Kelm
 */
 
-import server.users.Mitglied;
-import server.users.Rollenverwaltung;
 import shared.communication.IGeraeteverwaltung;
 
-import javax.naming.NoPermissionException;
 import java.rmi.NoSuchObjectException;
 import java.util.ArrayList;
 
@@ -30,8 +27,9 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     public String geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort) {
         if (geraete.size() >= 50000) throw new ArrayIndexOutOfBoundsException(); //TODO Exception
 
+        IdCounter++;// ansonst IdCounter nicht verändert
         //naechste ID holen
-        String geraeteID = Long.toString(IdCounter++);
+        String geraeteID = Long.toString(IdCounter);
 
         Geraet g = new Geraet(geraeteID, name, spender, leihfrist, kategorie, beschreibung, abholort);
         geraete.add(g);
@@ -43,12 +41,12 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
             if (g.getGeraeteID().equals(geraeteID)) return g;
         }
 
-        throw new NoSuchObjectException("Geraet mit ID:" + geraeteID + " nicht vorhanden.");
+        throw new NoSuchObjectException("Geraet mit ID: " + geraeteID + " nicht vorhanden.");
     }
 
     public void geraetReservieren(String geraeteID, String personenID) throws Exception {
         int reservierungen = 0;
-        Mitglied m = new Rollenverwaltung().fetch(personenID); // TODO später die richtige Rollenverwaltung nehmen
+        //Mitglied m = new Rollenverwaltung().fetch(personenID); // TODO später die richtige Rollenverwaltung nehmen
 
         for (Geraet g : geraete) {
             for (Ausleiher a : g.getReservierungsliste()) {
@@ -56,13 +54,17 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
                     reservierungen++;
 
                     if (reservierungen == 3)
-                        throw new ArrayIndexOutOfBoundsException(); // damit man bestenfalls nicht durch alle Geräte iterieren muss
+                        break; // damit man bestenfalls nicht durch alle Geräte iterieren muss
+
                 }
             }
         }
 
-        if (m.isGesperrt())
-            throw new NoPermissionException();
+        if (reservierungen == 3)
+            throw new ArrayIndexOutOfBoundsException();
+
+//        if (m.isGesperrt())
+//            throw new NoPermissionException();
 
         fetch(geraeteID).reservierungHinzufuegen(personenID);
     }

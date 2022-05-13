@@ -14,7 +14,7 @@ import java.util.ArrayList;
 //TODO Raphael Kleebaum
 Jonny Schlutter
 Gabriel Kleebaum
-//TODO Mhd Esmail Kanaan
+Mhd Esmail Kanaan
 //TODO Gia Huy Hans Tran
 Ole Björn Adelmann
 //TODO Bastian Reichert
@@ -30,6 +30,8 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         angebote = new ArrayList<>();
         gesuche = new ArrayList<>();
     }
+
+
 
     public String gesuchErstellen(String titel, String beschreibung, String kategorie, String imageUrl, String ersteller) throws Exception {
         int anzahl = gesuche.size();
