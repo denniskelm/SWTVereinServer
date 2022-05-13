@@ -98,6 +98,18 @@ public class Geraet {
         return geraeteID;
     }
 
+    public String getSpenderName() {
+        return spenderName;
+    }
+
+    public int getLeihfrist() {
+        return leihfrist;
+    }
+
+    public Status getLeihstatus() {
+        return leihstatus;
+    }
+
     public void setHistorie(ArrayList<Ausleiher> historie) {
         this.historie = historie;
     }

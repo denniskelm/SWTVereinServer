@@ -31,7 +31,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         if (geraete.size() >= 50000) throw new ArrayIndexOutOfBoundsException(); //TODO Exception
 
         //naechste ID holen
-        String geraeteID = Long.toString(IdCounter++).toString();
+        String geraeteID = Long.toString(IdCounter++);
 
         Geraet g = new Geraet(geraeteID, name, spender, leihfrist, kategorie, beschreibung, abholort);
         geraete.add(g);
@@ -43,7 +43,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
             if (g.getGeraeteID().equals(geraeteID)) return g;
         }
 
-        throw new NoSuchObjectException("");
+        throw new NoSuchObjectException("Geraet mit ID:" + geraeteID + " nicht vorhanden.");
     }
 
     public void geraetReservieren(String geraeteID, String personenID) throws Exception {
