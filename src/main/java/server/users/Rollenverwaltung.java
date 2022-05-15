@@ -92,5 +92,5 @@ public class Rollenverwaltung implements IRollenverwaltung {
         }
     }
 
-    public Object[] mahnungsverwaltungAnzeigen() { return mahnungen.toArray()}
+    public Object[] mahnungsverwaltungAnzeigen() { return mahnungen.toArray(); }
 }
