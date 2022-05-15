@@ -1,15 +1,15 @@
 package server.users;
 
 public class Gast {
-    private String personenID;
-    private String nachname;
-    private String vorname;
-    private String email;
-    private int password;
-    private String anschrift;
-    private String mitgliedsnr;
-    private int telefonnummer;
-    private boolean spender;
+    String personenID;
+    String nachname;
+    String vorname;
+    String email;
+    int password;
+    String anschrift;
+    String mitgliedsnr;
+    int telefonnummer;
+    boolean spender;
 
     public Gast(String personenID, String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, int telefonnummer, boolean spender ){
         this.personenID = personenID;
@@ -62,5 +62,23 @@ public class Gast {
     public void setSpender(boolean spender) {
         this.spender = spender;
     }
+
+    public void datenVerwalten(Personendaten attr, Object wert) {
+        switch (attr) {
+            case ID -> this.personenID = wert.toString();
+            case NACHNAME -> this.nachname = wert.toString();
+            case VORNAME -> this.vorname = wert.toString();
+            case EMAIL -> this.email = wert.toString();
+            case PASSWORT -> this.password = Integer.parseInt(wert.toString());
+            case ANSCHRIFT -> this.anschrift = wert.toString();
+            case MITGLIEDSNUMMER -> this.mitgliedsnr = wert.toString();
+            case TELEFONNUMMER -> this.telefonnummer = Integer.parseInt(wert.toString());
+            case SPENDERSTATUS -> this.spender = Boolean.parseBoolean(wert.toString());
+
+            //Attribut kann für diese Rolle nicht geändert werden
+            default -> {return;}
+        }
+    }
+
 }
 

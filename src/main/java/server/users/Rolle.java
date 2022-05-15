@@ -2,8 +2,9 @@ package server.users;
 
 public enum Rolle {
 
+    GAST,
+    MITGLIED,
     MITARBEITER,
-    VORSTAND,
-    MITGLIED
+    VORSITZ
 
 }
