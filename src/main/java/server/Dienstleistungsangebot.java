@@ -30,4 +30,32 @@ public class Dienstleistungsangebot {
     public String getAngebots_ID() {
         return angebots_ID;
     }
+
+    public void setAngebots_ID(String angebots_ID) {
+        this.angebots_ID = angebots_ID;
+    }
+
+    public void setTitel(String titel) {
+        this.titel = titel;
+    }
+
+    public void setBeschreibung(String beschreibung) {
+        this.beschreibung = beschreibung;
+    }
+
+    public void setKategorie(String kategorie) {
+        this.kategorie = kategorie;
+    }
+
+    public void setAb(LocalDateTime ab) {
+        this.ab = ab;
+    }
+
+    public void setBis(LocalDateTime bis) {
+        this.bis = bis;
+    }
+
+    public void setPersonenID(String personenID) {
+        this.personenID = personenID;
+    }
 }
