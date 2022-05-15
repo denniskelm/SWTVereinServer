@@ -1,12 +1,8 @@
 package server;
 
-import com.mysql.cj.x.protobuf.MysqlxDatatypes;
-import server.users.Mitglied;
 import shared.communication.IDienstleistungsverwaltung;
 
-import java.awt.Image;
 import java.time.LocalDateTime;
-import java.lang.Object;
 import java.util.ArrayList;
 
 /*
@@ -26,6 +22,14 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     private ArrayList<Dienstleistungsangebot> angebote;
     private ArrayList<Dienstleistungsgesuch> gesuche;
 
+    public ArrayList<Dienstleistungsangebot> getAngeboteArrayList() {
+        return angebote;
+    }
+
+    public ArrayList<Dienstleistungsgesuch> getGesucheArrayList() {
+        return gesuche;
+    }
+
     public Dienstleistungsverwaltung() {
         angebote = new ArrayList<>();
         gesuche = new ArrayList<>();
@@ -37,16 +41,16 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         int anzahl = gesuche.size();
         String gesuch_ID;
 
-        if (anzahl < 9)
-            gesuch_ID = "dg0000" + anzahl + 1;
+        if (anzahl < 9)  // todo : nach dem testen ist die Rueckgabe nicht wie gewunscht
+            gesuch_ID = "dg0000" + (anzahl + 1); // klammern hinzugefügt damit test richtig
         else if (anzahl < 99)
-            gesuch_ID = "dg000" + anzahl + 1;
+            gesuch_ID = "dg000" + (anzahl + 1);
         else if (anzahl < 999)
-            gesuch_ID = "dg00" + anzahl + 1;
+            gesuch_ID = "dg00" + (anzahl + 1);
         else if (anzahl < 9999)
-            gesuch_ID = "dg0" + anzahl + 1;
+            gesuch_ID = "dg0" + (anzahl + 1);
         else if (anzahl < 50000)
-            gesuch_ID = "dg" + anzahl + 1;
+            gesuch_ID = "dg" + (anzahl + 1);
         else
             throw new Exception();
 
@@ -60,15 +64,15 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         String angebot_ID;
 
         if (anzahl < 9)
-            angebot_ID = "da0000" + anzahl + 1;
+            angebot_ID = "da0000" + (anzahl + 1); //klammern hinzugefügt damit test richtig
         else if (anzahl < 99)
-            angebot_ID = "da000" + anzahl + 1;
+            angebot_ID = "da000" + (anzahl + 1);
         else if (anzahl < 999)
-            angebot_ID = "da00" + anzahl + 1;
+            angebot_ID = "da00" + (anzahl + 1);
         else if (anzahl < 9999)
-            angebot_ID = "da0" + anzahl + 1;
+            angebot_ID = "da0" + (anzahl + 1);
         else if (anzahl < 50000)
-            angebot_ID = "da" + anzahl + 1;
+            angebot_ID = "da" + (anzahl + 1);
         else
             throw new Exception();
 
