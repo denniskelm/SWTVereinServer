@@ -29,14 +29,12 @@ public class Dienstleistungsgesuch {
         return gesuch_ID;
     }
 
-    /*public Mitglied getSuchender() {
-        return suchender;
-    } */
 
     public String getSuchender() {
         return suchenderID;
     }
 
+    public void setGesuch_ID(String gesuch_ID) { this.gesuch_ID = gesuch_ID; }
 
     public void setTitel(String titel) {
         this.titel = titel;
@@ -54,7 +52,7 @@ public class Dienstleistungsgesuch {
         this.suchender = suchender;
     } */
 
-    public void setSuchender(String suchenderID) {
+    public void setSuchender_ID(String suchenderID) {
         this.suchenderID = suchenderID;
     }
 }

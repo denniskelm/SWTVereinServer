@@ -83,26 +83,53 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     public void gesuchLoeschen(String gesuch_ID) {
         for (Dienstleistungsgesuch g : gesuche){
-            if(g.getGesuch_ID() == gesuch_ID)
+            if(g.getGesuch_ID() == gesuch_ID) {
                 gesuche.remove(g);
+                break;
+            }
         }
 
     }
 
     public void angebotLoeschen(String angebots_ID) {
         for (Dienstleistungsangebot a : angebote){
-            if(a.getAngebots_ID() == angebots_ID)
+            if(a.getAngebots_ID() == angebots_ID) {
                 angebote.remove(a);
+                break;
+            }
         }
 
     }
 
-    public void gesuchAendern(String gesuchsID, Object attr, Object wert) {
-
+    public void gesuchAendern(String gesuchsID, Dienstleistungsgesuchdaten attr, Object wert) {
+        for (Dienstleistungsgesuch a : gesuche) {
+            if (a.getGesuch_ID() == gesuchsID) {
+                switch (attr) {
+                    case GESUCH_ID -> a.setGesuch_ID(wert.toString());
+                    case TITEL -> a.setTitel(wert.toString());
+                    case BESCHREIBUNG -> a.setBeschreibung(wert.toString());
+                    case KATEGORIE -> a.setKategorie(wert.toString());
+                    case SUCHENDER_ID -> a.setSuchender_ID((wert.toString()));
+                }
+                break;
+            }
+        }
     }
-
-    public void angebotAendern(String angebotsID, Object attr, Object wert) {
-
+            public void angebotAendern(String angebotsID, Dienstleistungsangebotdaten attr, Object wert) {
+        for (Dienstleistungsangebot a : angebote) {
+            if (a.getAngebots_ID() == angebotsID){
+                switch(attr){
+                    case ANGEBOTS_ID -> a.setAngebots_ID(wert.toString());
+                    case TITEL -> a.setTitel(wert.toString());
+                    case BESCHREIBUNG -> a.setBeschreibung(wert.toString());
+                    case KATEGORIE -> a.setKategorie(wert.toString());
+                    case AB -> a.setAb(LocalDateTime.parse(wert.toString()));
+                    case BIS -> a.setBis(LocalDateTime.parse(wert.toString()));
+                    case PERSONEN_ID -> a.setPersonenID(wert.toString());
+                }
+                break;
+            }
+        }
     }
 
     public void gesuchAnnehmen(String gesuchs_ID, String ersteller_ID, String nutzer_ID, int stunden) throws Exception{
