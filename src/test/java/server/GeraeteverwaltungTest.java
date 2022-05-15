@@ -5,14 +5,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.rmi.NoSuchObjectException;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class GeraeteverwaltungTest {
+class GeraeteverwaltungTest { //todo bitte jede einzelne Test allein durchführen, wenn alle zusammen durchgeführt werden dann passiert Fehler
 
-    private static ArrayList<Geraet> geraeteTest;
+   // private static ArrayList<Geraet> geraeteTest;
 
     @BeforeEach
     void setUp() {
@@ -280,6 +279,8 @@ class GeraeteverwaltungTest {
         }
 
         assertEquals(g.getHistorie().size(),0);
+
+
     }
 
     @Test
