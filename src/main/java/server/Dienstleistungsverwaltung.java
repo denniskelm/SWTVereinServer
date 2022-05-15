@@ -83,7 +83,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     public void gesuchLoeschen(String gesuch_ID) {
         for (Dienstleistungsgesuch g : gesuche){
-            if(g.getGesuch_ID() == gesuch_ID) {
+            if(g.getGesuch_ID().equals(gesuch_ID)) {
                 gesuche.remove(g);
                 break;
             }
@@ -93,7 +93,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     public void angebotLoeschen(String angebots_ID) {
         for (Dienstleistungsangebot a : angebote){
-            if(a.getAngebots_ID() == angebots_ID) {
+            if(a.getAngebots_ID().equals(angebots_ID)) {
                 angebote.remove(a);
                 break;
             }
@@ -103,7 +103,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     public void gesuchAendern(String gesuchsID, Dienstleistungsgesuchdaten attr, Object wert) {
         for (Dienstleistungsgesuch a : gesuche) {
-            if (a.getGesuch_ID() == gesuchsID) {
+            if (a.getGesuch_ID().equals(gesuchsID)) {
                 switch (attr) {
                     case GESUCH_ID -> a.setGesuch_ID(wert.toString());
                     case TITEL -> a.setTitel(wert.toString());
@@ -115,9 +115,9 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
             }
         }
     }
-            public void angebotAendern(String angebotsID, Dienstleistungsangebotdaten attr, Object wert) {
+    public void angebotAendern(String angebotsID, Dienstleistungsangebotdaten attr, Object wert) {
         for (Dienstleistungsangebot a : angebote) {
-            if (a.getAngebots_ID() == angebotsID){
+            if (a.getAngebots_ID().equals(angebotsID)) {
                 switch(attr){
                     case ANGEBOTS_ID -> a.setAngebots_ID(wert.toString());
                     case TITEL -> a.setTitel(wert.toString());

@@ -12,11 +12,14 @@ Bastian Reichert
 Dennis Kelm
 */
 
+import server.Dienstleistungsgesuch;
 import server.Geraet;
+import server.Mahnungsverwaltung;
 import shared.communication.IRollenverwaltung;
 
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Rollenverwaltung implements IRollenverwaltung {
@@ -25,6 +28,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
      private static ArrayList<Mitglied> mitglieder;
      private static ArrayList<Mitarbeiter> mitarbeiter;
      private static ArrayList<Vorsitz> vorsitze;
+     private static ArrayList<Mahnungsverwaltung> mahnungen;
 
      public Rollenverwaltung(){
          gaeste = new ArrayList();
@@ -53,31 +57,40 @@ public class Rollenverwaltung implements IRollenverwaltung {
         return mitglieder;
     }
 
-    public void gastListeAnzeigen() {
+    public Object[] gastListeAnzeigen() { return gaeste.toArray(); }
 
+    public Object[] mitgliedListeAnzeigen() { return mitglieder.toArray(); }
+
+    public Object[] mitarbeiterListeAnzeigen() { return mitarbeiter.toArray(); }
+
+    public Object[] vorsitzListeAnzeigen() { return vorsitze.toArray(); }
+
+    public void rolleAendern(String mitgliedsID, Rolle rolle) {
+        // TODO wie genau soll das funktionieren ?
     }
 
-    public void mitgliedListeAnzeigen() {
-
+    public void nutzereintragAendern(String mitgliedsID, Mitgliederdaten attr, Object wert) throws Exception{
+        for (Mitglied m : mitglieder) {
+            if (m.getPersonenID().equals(mitgliedsID)) {
+                switch (attr) {
+                    case PERSONENID -> m.setPersonenID(wert.toString());
+                    case NACHNAME -> m.setNachname(wert.toString());
+                    case VORNAME -> m.setVorname(wert.toString());
+                    case E_MAIL -> m.setEmail(wert.toString());
+                    case PASSWORD -> m.setPassword((wert.toString()).hashCode());
+                    case ANSCHRIFT -> m.setAnschrift(wert.toString());
+                    case MITGLIEDSNR -> m.setMitgliedsnr(wert.toString());
+                    case TELEFONNUMMER -> m.setTelefonnummer(Integer.parseInt(wert.toString()));
+                    case SPENDER -> m.setSpender(Boolean.parseBoolean(wert.toString()));
+                    case STUNDENKONTO -> m.setStundenkonto(Integer.parseInt(wert.toString()));
+                    case MAHNUNGEN -> throw new Exception();
+                    case IST_GESPERRT -> m.setIst_gesperrt(Boolean.parseBoolean(wert.toString()));
+                    case MITGLIED_SEIT -> m.setMitglied_seit(LocalDateTime.parse(wert.toString()));
+                }
+                break;
+            }
+        }
     }
 
-    public void mitarbeiterListeAnzeigen() {
-
-    }
-
-    public void vorsitzListeAnzeigen() {
-
-    }
-
-    public void rolleAendern(Mitglied mitglied, Rolle rolle) {
-
-    }
-
-    public void nutzereintragAendern(String mitgliedsID, Object attr, Object wert) {
-
-    }
-
-    public void mahnungsverwaltungAnzeigen() {
-
-    }
+    public Object[] mahnungsverwaltungAnzeigen() { return mahnungen.toArray()}
 }
