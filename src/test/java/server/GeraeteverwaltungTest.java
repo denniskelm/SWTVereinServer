@@ -1,333 +1,177 @@
 package server;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.rmi.NoSuchObjectException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class GeraeteverwaltungTest { //todo bitte jede einzelne Test allein durchführen, wenn alle zusammen durchgeführt werden dann passiert Fehler
+class GeraeteverwaltungTest {
 
-   // private static ArrayList<Geraet> geraeteTest;
+    private static Geraeteverwaltung gv = new Geraeteverwaltung();
 
     @BeforeEach
     void setUp() {
-        //Geraeteverwaltung gv = new Geraeteverwaltung();
-        //gv.geraetHinzufuegen("jojo", "spender", 15, "spiel", "beschreibung", "abholort");
+        gv.reset();
+        gv.geraetHinzufuegen("Ball", "spender", 15, "Spielzeug", "beschreibung", "abholort");
+        gv.geraetHinzufuegen("Bohrer", "spender", 15, "Werkzeug", "beschreibung", "abholort");
     }
 
     @Test
-    void geraetHinzufuegen() {
-        Geraeteverwaltung gv = new Geraeteverwaltung();
-        String Id = gv.geraetHinzufuegen("jojo", "spender", 15, "spiel", "beschreibung", "abholort");
+    void geraetHinzufuegen() throws NoSuchObjectException {
+        String Id = gv.geraetHinzufuegen("Schere", "spender", 15, "Werkzeug", "beschreibung", "abholort");
 
-        assertEquals(Id,"1","dsfsf");
+        assertEquals("1", gv.fetch("1").getGeraeteID());
+        assertEquals("3", Id);
     }
 
     @Test
-    void fetch() {
-        Geraeteverwaltung gv = new Geraeteverwaltung();
-        String Id = gv.geraetHinzufuegen("jojo", "spender", 15, "spiel", "beschreibung", "abholort");
+    void geraetEntfernen() throws NoSuchObjectException {
 
-        Throwable exception = assertThrows(NoSuchObjectException.class, () -> gv.fetch("0"));
-        assertEquals("Geraet mit ID: 0 nicht vorhanden.", exception.getMessage());
+        assertEquals(gv.getGeraeteArrayList().size(),2);
 
-        Geraet g;
-        try {
-            g = gv.fetch("1");
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
+        gv.geraetEntfernen("2");
 
-        assertEquals(g.getGeraeteID(),"1");
-        assertEquals(g.getSpenderName(),"spender");
-        assertEquals(g.getLeihfrist(),15);
-    }
-
-    @Test
-    void geraetReservieren() {
-        Geraeteverwaltung gv = new Geraeteverwaltung();
-        gv.geraetHinzufuegen("jojo", "spender", 15, "spiel", "beschreibung", "abholort");
-
-        Throwable exception = assertThrows(NoSuchObjectException.class, () -> gv.geraetReservieren("0","1"));
-        assertEquals("Geraet mit ID: 0 nicht vorhanden.", exception.getMessage());
-
-        Geraet g;
-        try {
-            gv.geraetReservieren("1","1");
-            g = gv.fetch("1");
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        Assertions.assertEquals(Status.BEANSPRUCHT, g.getLeihstatus());
-
-    }
-
-    @Test
-    void geraetAusgeben() {
-        Geraeteverwaltung gv = new Geraeteverwaltung();
-        gv.geraetHinzufuegen("jojo", "spender", 15, "spiel", "beschreibung", "abholort");
-
-        try {
-            gv.geraetReservieren("1","1");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        Geraet g;
-        try {
-            g = gv.fetch("1");
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            gv.geraetAusgeben("1");
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
-
-        assertEquals(g.getLeihstatus(),Status.AUSGELIEHEN);
-    }
-
-    @Test
-    void geraetAnnehmen() {
-        Geraeteverwaltung gv = new Geraeteverwaltung();
-        gv.geraetHinzufuegen("jojo", "spender", 15, "spiel", "beschreibung", "abholort");
-
-        try {
-            gv.geraetReservieren("1","1");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        Geraet g;
-        try {
-            g = gv.fetch("1");
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            gv.geraetAusgeben("1");
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            gv.geraetAnnehmen("1");
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
-
-        assertEquals(g.getLeihstatus(),Status.FREI);
-    }
-
-    @Test
-    void geraetEntfernen() {
-        Geraeteverwaltung gv = new Geraeteverwaltung();
-        gv.geraetHinzufuegen("jojo", "spender", 15, "spiel", "beschreibung", "abholort");
-        gv.geraetHinzufuegen("soso", "spender", 15, "spiel", "beschreibung", "abholort");
-
-        try {
-            gv.geraetEntfernen("2");
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
+        Throwable exception = assertThrows(NoSuchObjectException.class, () -> gv.fetch("2"));
+        assertEquals("Geraet mit ID: 2 nicht vorhanden.", exception.getMessage());
 
         assertEquals(gv.getGeraeteArrayList().size(),1);
 
     }
 
     @Test
-    void geraeteDatenVerwalten() {
+    void fetch() throws NoSuchObjectException {
+        Throwable exception = assertThrows(NoSuchObjectException.class, () -> gv.fetch("0"));
+        assertEquals("Geraet mit ID: 0 nicht vorhanden.", exception.getMessage());
 
-        Geraeteverwaltung gv = new Geraeteverwaltung();
-        gv.geraetHinzufuegen("jojo", "spender", 15, "spiel", "beschreibung", "abholort") ;
+        Geraet g = gv.fetch("2");
+
+        assertEquals("2", g.getGeraeteID());
+        assertEquals("spender", g.getSpenderName());
+        assertEquals(15, g.getLeihfrist());
+    }
+
+    @Test
+    void geraetReservieren() throws Exception { // TODO erweitern sobald Rollenverwaltung funktioniert
+        Geraet g = gv.fetch("1");
+        ArrayList<Ausleiher> rl = g.getReservierungsliste();
+
+        Assertions.assertEquals(Status.FREI, g.getLeihstatus());
+
+        Throwable exception = assertThrows(NoSuchObjectException.class, () -> gv.geraetReservieren("0","1"));
+        assertEquals("Geraet mit ID: 0 nicht vorhanden.", exception.getMessage());
+
+        gv.geraetReservieren("1","1");
+        gv.geraetReservieren("1","2");
+        assertEquals(Status.BEANSPRUCHT, g.getLeihstatus());
+        assertEquals(rl.get(0).getFristBeginn().toLocalDate(), LocalDate.now());
+        assertEquals(rl.get(1).getFristBeginn().toLocalDate(), rl.get(0).getFristBeginn().plusDays(g.getLeihfrist()).toLocalDate());
+    }
+
+    @Test
+    void geraetAusgeben() throws Exception {
+        Geraet g = gv.fetch("1");
+
+        Throwable exception1 = assertThrows(Exception.class, () -> gv.geraetAusgeben("1"));
+        assertEquals("keine Reservierung vorhanden.", exception1.getMessage());
+
+        gv.geraetReservieren("1","1");
+        gv.geraetAusgeben("1");
+        assertEquals(g.getLeihstatus(),Status.AUSGELIEHEN);
+
+        Throwable exception2 = assertThrows(Exception.class, () -> gv.geraetAusgeben("1"));
+        assertEquals("ausgeliehenes/freies Geraet kann nicht ausgegeben werden.", exception2.getMessage());
+    }
+
+    @Test
+    void geraetAnnehmen() throws Exception {
+        Geraet g = gv.fetch("1");
+        ArrayList<Ausleiher> rl = g.getReservierungsliste();
+
+        Throwable exception1 = assertThrows(Exception.class, () -> gv.geraetAnnehmen("1"));
+        assertEquals("keine Reservierung vorhanden.", exception1.getMessage());
+
+        gv.geraetReservieren("1","1");
+        gv.geraetReservieren("1","2");
+        assertEquals(0, g.getHistorie().size());
+        assertEquals(2, g.getReservierungsliste().size());
+        Throwable exception2 = assertThrows(Exception.class, () -> gv.geraetAnnehmen("1"));
+        assertEquals("beanspruchtes/freies Geraet kann nicht angenommen werden.", exception2.getMessage());
+
+        gv.geraetAusgeben("1");
+        gv.geraetAnnehmen("1");
+        assertEquals(Status.BEANSPRUCHT, g.getLeihstatus());
+        assertEquals(1, g.getHistorie().size());
+        assertEquals(1, g.getReservierungsliste().size());
+        //assertEquals(LocalDate.now(), rl.get(0).getFristBeginn().toLocalDate());
+
+        gv.geraetAusgeben("1");
+        gv.geraetAnnehmen("1");
+        assertEquals(Status.FREI, g.getLeihstatus());
+        assertEquals(2, g.getHistorie().size());
+        assertEquals(0, g.getReservierungsliste().size());
+    }
 
 
-        Geraet g;
-        try {
-            g = gv.fetch("1");
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
+    @Test
+    void geraeteDatenVerwalten() throws NoSuchObjectException {
+        Geraet g = gv.fetch("1");
 
-
-        Geraetedaten NAME = Geraetedaten.NAME;;
         Object newNAME = "newNAME";
-
-        try {
-            gv.geraeteDatenVerwalten("1", NAME , newNAME);
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
-
+        gv.geraeteDatenVerwalten("1", Geraetedaten.NAME , newNAME);
         assertEquals(g.getGeraetName(),newNAME);
 
-
-
-
-        Geraetedaten SPENDERNAME = Geraetedaten.SPENDERNAME;
         Object newSPENDERNAME = "newSPENDERNAME";
-
-        try {
-            gv.geraeteDatenVerwalten("1", SPENDERNAME , newSPENDERNAME);
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
-
+        gv.geraeteDatenVerwalten("1", Geraetedaten.SPENDERNAME , newSPENDERNAME);
         assertEquals(g.getGeraetName(),newNAME);
 
-
-
-
-
-        Geraetedaten LEIHFRIST = Geraetedaten.LEIHFRIST;
         Object newLEIHFRIST = 20;
-
-
-        try {
-            gv.geraeteDatenVerwalten("1", LEIHFRIST , newLEIHFRIST);
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
-
+        gv.geraeteDatenVerwalten("1", Geraetedaten.LEIHFRIST , newLEIHFRIST);
         assertEquals(g.getLeihfrist(),newLEIHFRIST);
 
-
-
-
-        Geraetedaten BESCHREIBUNG = Geraetedaten.BESCHREIBUNG;
         Object newBESCHREIBUNG = "newBESCHREIBUNG";
-
-        try {
-            gv.geraeteDatenVerwalten("1", BESCHREIBUNG , newBESCHREIBUNG);
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
-
+        gv.geraeteDatenVerwalten("1", Geraetedaten.BESCHREIBUNG , newBESCHREIBUNG);
         assertEquals(g.getGeraetBeschreibung(),newBESCHREIBUNG);
 
-
-
-        Geraetedaten ABHOLORT = Geraetedaten.ABHOLORT;
         Object newABHOLORT = "newABHOLORT";
-
-        try {
-            gv.geraeteDatenVerwalten("1", ABHOLORT , newABHOLORT);
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
-
+        gv.geraeteDatenVerwalten("1", Geraetedaten.ABHOLORT , newABHOLORT);
         assertEquals(g.getGeraetAbholort(),newABHOLORT);
-
-
-
-
-
-
-
     }
 
     @Test
-    void historieZuruecksetzen() {
+    void historieZuruecksetzen() throws Exception {
+        Geraet g = gv.fetch("1");
 
-        Geraeteverwaltung gv = new Geraeteverwaltung();
-        gv.geraetHinzufuegen("jojo", "spender", 15, "spiel", "beschreibung", "abholort");
+        assertEquals(0, g.getHistorie().size());
 
-        try {
-            gv.geraetReservieren("1","1");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        gv.geraetReservieren("1","1");
+        gv.geraetAusgeben("1");
+        gv.geraetAnnehmen("1");
+        assertEquals(1, g.getHistorie().size());
 
-        Geraet g;
-        try {
-            g = gv.fetch("1");
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
-
-
-
-        try {
-            gv.geraetAusgeben("1");
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
-
-
-        try {
-            gv.geraetAnnehmen("1");
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
-
-
-
-
-        try {
-            gv.historieZuruecksetzen("1");
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
-
-        assertEquals(g.getHistorie().size(),0);
-
-
+        gv.historieZuruecksetzen("1");
+        assertEquals(0, g.getHistorie().size());
     }
 
     @Test
-    void geraeteAnzeigen() {
-
-        Geraeteverwaltung gv = new Geraeteverwaltung();
-        gv.geraetHinzufuegen("jojo", "spender", 15, "spiel", "beschreibung", "abholort");
-
-
-        Geraet g;
-        try {
-            g = gv.fetch("1");
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
-
-        assertEquals(1,1); // die MEthode in backend ist []object ??
-
+    void geraeteAnzeigen() throws NoSuchObjectException {
+        ArrayList<Geraet> gl = gv.geraeteAnzeigen();
+        assertEquals(2, gl.size());
     }
 
     @Test
-    void geraeteDatenAusgeben() {
+    void geraeteDatenAusgeben() throws Exception {
+        Geraet g = gv.fetch("1");
+        gv.geraetReservieren("1","1");
 
-        Geraeteverwaltung gv = new Geraeteverwaltung();
-        gv.geraetHinzufuegen("jojo", "spender", 15, "spiel", "beschreibung", "abholort");
-
-        try {
-            gv.geraetReservieren("1","1");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        Geraet g;
-        try {
-            g = gv.fetch("1");
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
-
-        String st ;
-        try {
-          st =   gv.geraeteDatenAusgeben("1");
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
-
-        assertEquals("ich weiß nicht",st);
-
+        String st =   gv.geraeteDatenAusgeben("1");
+        assertEquals("ID: 1, Name: Ball, Spender: spender, Leihfrist: 15, Kategorie: Spielzeug, Beschreibung: beschreibung, Abholort: abholort",st);
     }
 }

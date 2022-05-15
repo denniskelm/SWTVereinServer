@@ -8,6 +8,7 @@ public class Mitglied extends Gast {
     private int stundenkonto;
     private boolean ist_gesperrt;
     private LocalDateTime mitglied_seit;
+    // private int ausgelieheneGeraete TODO
 
     public Mitglied(String personenID, String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, int telefonnummer, boolean spender/*, Mahnungsverwaltung mahnungen, Profilseite profilseite */, LocalDateTime mitglied_seit){
 

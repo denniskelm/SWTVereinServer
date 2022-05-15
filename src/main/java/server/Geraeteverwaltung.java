@@ -32,24 +32,33 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     public String geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort) {
         if (geraete.size() >= 50000) throw new ArrayIndexOutOfBoundsException(); //TODO Exception
 
-        IdCounter++;// ansonst IdCounter nicht verändert
-        //naechste ID holen
+        //naechste ID generieren
+        IdCounter++;
         String geraeteID = Long.toString(IdCounter);
-        System.out.println(IdCounter);
 
         Geraet g = new Geraet(geraeteID, name, spender, leihfrist, kategorie, beschreibung, abholort);
         geraete.add(g);
-        System.out.println("Geraet " +  g.getGeraeteID() + "is added ");
-        System.out.println("Geraet size methode " +  geraete.size() + " ");
+        System.out.println("Geraet mit ID " +  g.getGeraeteID() + " hinzugefuegt. Anzahl Geraete: " +  geraete.size());
         return geraeteID;
     }
 
-    public Geraet fetch(String geraeteID) throws NoSuchObjectException { // warum heißt das nicht getGeraet
+    public void geraetEntfernen(String geraeteID) throws NoSuchObjectException {
+        geraete.remove(fetch(geraeteID));
+        System.out.println("Geraet mit ID " +  geraeteID + " entfernt. Anzahl Geraete: " +  geraete.size());
+    }
+
+    public Geraet fetch(String geraeteID) throws NoSuchObjectException {
         for (Geraet g : geraete) {
             if (g.getGeraeteID().equals(geraeteID)) return g;
         }
 
         throw new NoSuchObjectException("Geraet mit ID: " + geraeteID + " nicht vorhanden.");
+    }
+
+    public void reset() {
+        geraete = new ArrayList<Geraet>();
+        IdCounter = 0;
+        System.out.println("Geraeteverwaltung zurueckgesetzt.");
     }
 
     public void geraetReservieren(String geraeteID, String personenID) throws Exception {
@@ -59,7 +68,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         for (Geraet g : geraete) {
             for (Ausleiher a : g.getReservierungsliste()) {
                 if (a.getMitlgiedsID().equals(personenID)) {
-                    reservierungen++;
+                    reservierungen++; // TODO als Attribut des Mitglieds implementieren. Es ist dumm immer alle Geraete zu ueberprufen
 
                     if (reservierungen == 3)
                         break; // damit man bestenfalls nicht durch alle Geräte iterieren muss
@@ -75,22 +84,37 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
 //            throw new NoPermissionException();
 
         fetch(geraeteID).reservierungHinzufuegen(personenID);
+        System.out.println("Geraet mit ID " +  geraeteID + " reserviert.");
     }
 
-    public void geraetAusgeben(String geraeteID) throws NoSuchObjectException {  //Mitarbeiter gibt Gerät fur mitglied
-        this.fetch(geraeteID).ausgeben();
+    //TODO
+    public void reservierungStornieren(String geraeteID, String personenID) {
+        return;
     }
 
-    public void geraetAnnehmen(String geraeteID) throws NoSuchObjectException {
-        this.fetch(geraeteID).annehmen();
-    } //rueckgabe des geraets
+    //Mitarbeiter gibt das Geraet an ein Mitglied aus
+    public void geraetAusgeben(String geraeteID) throws Exception {
+        Geraet g = fetch(geraeteID);
+        if (g.getReservierungsliste().isEmpty())
+            throw new Exception("keine Reservierung vorhanden.");
+        if (g.getLeihstatus() != Status.BEANSPRUCHT)
+            throw new Exception("ausgeliehenes/freies Geraet kann nicht ausgegeben werden.");
 
-    public void geraetEntfernen(String geraeteID) throws NoSuchObjectException {
-        Geraet geraet = fetch(geraeteID);
-
-        geraete.remove(geraet);
+        g.ausgeben();
     }
 
+    //Mitarbeiter nimmt das Geraet von einem Mitglied wieder an
+    public void geraetAnnehmen(String geraeteID) throws Exception {
+        Geraet g = fetch(geraeteID);
+        if (g.getReservierungsliste().isEmpty())
+            throw new Exception("keine Reservierung vorhanden.");
+        if (g.getLeihstatus() != Status.AUSGELIEHEN)
+            throw new Exception("beanspruchtes/freies Geraet kann nicht angenommen werden.");
+
+        g.annehmen();
+    }
+
+    //Mitarbeiter aendert Informationen zu einem Geraet
     public void geraeteDatenVerwalten(String geraeteID, Geraetedaten attr, Object wert) throws NoSuchObjectException {
         Geraet g = fetch(geraeteID);
 
@@ -106,27 +130,27 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     }
 
     public void historieZuruecksetzen(String geraeteID) throws NoSuchObjectException {
-        Geraet geraet = fetch(geraeteID);
-        for (Geraet g : geraete) {
-            if (g.getGeraeteID().equals(geraet.getGeraeteID())) {
-                g.setHistorie(new ArrayList<>());
-                break;
-            }
-        }
+        Geraet g = fetch(geraeteID);
+        g.setHistorie(new ArrayList<>());
     }
 
 
-    public Object[] geraeteAnzeigen() { //geraet Fenester anzeigen
-        return geraete.toArray();
-    } //TODO: warum die Rückgabe object[] ist ?
+    public ArrayList<Geraet> geraeteAnzeigen() { //geraet Fenester anzeigen
+        return geraete;
+    }
 
     //Zum Testen der Geraeteverwaltung
     public String geraeteDatenAusgeben(String geraeteID) throws NoSuchObjectException {
         Geraet geraet = fetch(geraeteID);
-        StringBuilder str = new StringBuilder(); //Stringvuilder klasse ist in Java integriert und kann die Woerter bsser hintereinander haengen
+        StringBuilder str = new StringBuilder();
 
-        str.append("ID: " + geraet.getGeraeteID()); //TODO wo sind die anderen Daten ?
-        //TODO: Alle anderen Daten anhaengen
+        str.append("ID: " + geraet.getGeraeteID());
+        str.append(", Name: " + geraet.getGeraetName());
+        str.append(", Spender: " + geraet.getSpenderName());
+        str.append(", Leihfrist: " + geraet.getLeihfrist());
+        str.append(", Kategorie: " + geraet.getKategorie());
+        str.append(", Beschreibung: " + geraet.getGeraetBeschreibung());
+        str.append(", Abholort: " + geraet.getGeraetAbholort());
 
         return str.toString();
     }
