@@ -27,12 +27,16 @@ import java.rmi.server.UnicastRemoteObject;
 
 //TODO WAS MACHT DIESE KLASSE?
 public class RMIServerTest {
+    public static Geraeteverwaltung geraeteverwaltung;
+    public static Dienstleistungsverwaltung dienstleistungsverwaltung;
+    public static Mahnungsverwaltung mahnungsverwaltung;
+    public static Rollenverwaltung rollenverwaltung;
 
     public static void main(String[] args) {
-        Geraeteverwaltung geraeteverwaltung = new Geraeteverwaltung();
-        Dienstleistungsverwaltung dienstleistungsverwaltung = new Dienstleistungsverwaltung();
-        Mahnungsverwaltung mahnungsverwaltung = new Mahnungsverwaltung();
-        Rollenverwaltung rollenverwaltung = new Rollenverwaltung();
+        geraeteverwaltung = new Geraeteverwaltung();
+        dienstleistungsverwaltung = new Dienstleistungsverwaltung();
+        mahnungsverwaltung = new Mahnungsverwaltung();
+        rollenverwaltung = new Rollenverwaltung();
 
         //Klassen zur Kommunikation mit dem Server vorbereiten
         //System.setProperty("java.rmi.server.hostname", "meta.informatik.uni-rostock.de");
