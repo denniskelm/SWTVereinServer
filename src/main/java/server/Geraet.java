@@ -20,18 +20,11 @@ public class Geraet {
     private String geraeteID;
     private String name;
     private String spenderName;
-
-
-
     private int leihfrist; // muss in Tagen angegeben werden
     private String kategorie;
     private String beschreibung;
     private String abholort;
     private ArrayList<Ausleiher> reservierungsliste, historie;
-
-    public ArrayList<Ausleiher> getHistorie() {
-        return historie;
-    }
 
     // reservierdatum: LocalDateTime
     // fristbeginn: LocalDateTime
@@ -163,6 +156,14 @@ public class Geraet {
 
     public ArrayList<Ausleiher> getReservierungsliste() {
         return reservierungsliste;
+    }
+
+    public String getKategorie() {
+        return kategorie;
+    }
+
+    public ArrayList<Ausleiher> getHistorie() {
+        return historie;
     }
 
 }
