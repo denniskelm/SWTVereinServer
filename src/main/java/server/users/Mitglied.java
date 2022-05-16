@@ -41,17 +41,18 @@ public class Mitglied extends Gast {
     @Override
     public void datenVerwalten(Personendaten attr, Object wert) {
         switch (attr) {
-            case ID -> this.personenID = wert.toString();
+            case PERSONENID -> this.personenID = wert.toString();
             case NACHNAME -> this.nachname = wert.toString();
             case VORNAME -> this.vorname = wert.toString();
-            case EMAIL -> this.email = wert.toString();
-            case PASSWORT -> this.password = Integer.parseInt(wert.toString());
+            case E_MAIL -> this.email = wert.toString();
+            case PASSWORD -> this.password = Integer.parseInt(wert.toString());
             case ANSCHRIFT -> this.anschrift = wert.toString();
-            case MITGLIEDSNUMMER -> this.mitgliedsnr = wert.toString();
+            case MITGLIEDSNR -> this.mitgliedsnr = wert.toString();
             case TELEFONNUMMER -> this.telefonnummer = Integer.parseInt(wert.toString());
-            case SPENDERSTATUS -> this.spender = Boolean.parseBoolean(wert.toString());
-            case STUNDENZAHL -> this.stundenkonto = Integer.parseInt(wert.toString());
-            case SPERRSTATUS -> this.ist_gesperrt = Boolean.parseBoolean(wert.toString());
+            case SPENDER -> this.spender = Boolean.parseBoolean(wert.toString());
+            case STUNDENKONTO -> this.stundenkonto = Integer.parseInt(wert.toString());
+            case IST_GESPERRT -> this.ist_gesperrt = Boolean.parseBoolean(wert.toString());
+            case MITGLIED_SEIT -> this.mitglied_seit = LocalDateTime.parse(wert.toString());
 
             //Attribut kann für diese Rolle nicht geändert werden
             default -> {return;}

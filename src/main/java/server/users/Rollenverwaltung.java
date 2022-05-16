@@ -69,27 +69,15 @@ public class Rollenverwaltung implements IRollenverwaltung {
         // TODO wie genau soll das funktionieren ?
     }
 
-    public void nutzereintragAendern(String mitgliedsID, Mitgliederdaten attr, Object wert) throws Exception{
-        for (Mitglied m : mitglieder) {
-            if (m.getPersonenID().equals(mitgliedsID)) {
-                switch (attr) {
-                    case PERSONENID -> m.setPersonenID(wert.toString());
-                    case NACHNAME -> m.setNachname(wert.toString());
-                    case VORNAME -> m.setVorname(wert.toString());
-                    case E_MAIL -> m.setEmail(wert.toString());
-                    case PASSWORD -> m.setPassword((wert.toString()).hashCode());
-                    case ANSCHRIFT -> m.setAnschrift(wert.toString());
-                    case MITGLIEDSNR -> m.setMitgliedsnr(wert.toString());
-                    case TELEFONNUMMER -> m.setTelefonnummer(Integer.parseInt(wert.toString()));
-                    case SPENDER -> m.setSpender(Boolean.parseBoolean(wert.toString()));
-                    case STUNDENKONTO -> m.setStundenkonto(Integer.parseInt(wert.toString()));
-                    case MAHNUNGEN -> throw new Exception();
-                    case IST_GESPERRT -> m.setIst_gesperrt(Boolean.parseBoolean(wert.toString()));
-                    case MITGLIED_SEIT -> m.setMitglied_seit(LocalDateTime.parse(wert.toString()));
-                }
-                break;
-            }
+    public void nutzereintragAendern(String mitgliedsID, Personendaten attr, String wert) throws NoSuchObjectException {
+        System.out.println("test");
+        try {
+            (fetch(mitgliedsID)).datenVerwalten(attr, wert);
+        } catch (NoSuchObjectException e) {
+            throw new NoSuchObjectException("");
         }
+
+
     }
 
     public Object[] mahnungsverwaltungAnzeigen() { return mahnungen.toArray(); }
