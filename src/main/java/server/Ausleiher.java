@@ -27,4 +27,12 @@ public class Ausleiher {
         return mitgliedsID;
     }
 
+    public LocalDateTime getReservierdatum() {
+        return reservierdatum;
+    }
+
+    public boolean isAbgegeben() {
+        return abgegeben;
+    }
+
 }

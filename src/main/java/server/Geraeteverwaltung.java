@@ -19,10 +19,6 @@ import java.util.ArrayList;
 public class Geraeteverwaltung implements IGeraeteverwaltung {
     private static ArrayList<Geraet> geraete;
 
-    public static ArrayList<Geraet> getGeraeteArrayList() {
-        return geraete;
-    }
-
     private static long IdCounter = 0;
 
     public Geraeteverwaltung() {
@@ -172,6 +168,10 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         str.append(geraet.getGeraetAbholort());
 
         return str.toString();
+    }
+
+    public static ArrayList<Geraet> getGeraeteArrayList() {
+        return geraete;
     }
 
 }
