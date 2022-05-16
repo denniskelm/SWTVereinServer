@@ -26,7 +26,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 //TODO WAS MACHT DIESE KLASSE?
-public class RMIServerTest {
+public class VereinssoftwareServer {
     public static Geraeteverwaltung geraeteverwaltung;
     public static Dienstleistungsverwaltung dienstleistungsverwaltung;
     public static Mahnungsverwaltung mahnungsverwaltung;
