@@ -29,6 +29,6 @@ public interface IDienstleistungsverwaltung extends Remote {
     void gesuchAendern(String gesuchsID, Dienstleistungsgesuchdaten attr, Object wert) throws RemoteException;
     void angebotAendern(String angebotsID, Dienstleistungsangebotdaten attr, Object wert) throws RemoteException;
     void gesuchAnnehmen(String gesuchsID, String ersteller, String nutzer, int stunden) throws RemoteException, Exception;
-    void angebotAnfragen(String angebotsID, String ersteller, String fragender) throws RemoteException;
+    void angebotAnnehmen(String gesuchsID, String ersteller, String nutzer, int stunden) throws RemoteException, Exception;
 
 }
