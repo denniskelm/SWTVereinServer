@@ -11,9 +11,11 @@ TODO Bastian Reichert
 Dennis Kelm
 */
 
+import server.users.Rollenverwaltung;
 import shared.communication.IDienstleistungsverwaltung;
 import shared.communication.IGeraeteverwaltung;
 import shared.communication.IMahnungsverwaltung;
+import shared.communication.IRollenverwaltung;
 
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
@@ -28,6 +30,7 @@ public class RMIServerTest {
         Geraeteverwaltung geraeteverwaltung = new Geraeteverwaltung();
         Dienstleistungsverwaltung dienstleistungsverwaltung = new Dienstleistungsverwaltung();
         Mahnungsverwaltung mahnungsverwaltung = new Mahnungsverwaltung();
+        Rollenverwaltung rollenverwaltung = new Rollenverwaltung();
 
         //Klassen zur Kommunikation mit dem Server vorbereiten
         //System.setProperty("java.rmi.server.hostname", "meta.informatik.uni-rostock.de");
@@ -38,6 +41,7 @@ public class RMIServerTest {
             IGeraeteverwaltung gVerwaltungInterface = (IGeraeteverwaltung) UnicastRemoteObject.exportObject(geraeteverwaltung, 0);
             IDienstleistungsverwaltung dVerwaltungInterface = (IDienstleistungsverwaltung) UnicastRemoteObject.exportObject(dienstleistungsverwaltung, 0);
             IMahnungsverwaltung mVerwaltungInterface = (IMahnungsverwaltung) UnicastRemoteObject.exportObject(mahnungsverwaltung, 0);
+            IRollenverwaltung rVerwaltungInterface = (IRollenverwaltung) UnicastRemoteObject.exportObject(rollenverwaltung, 0);
 
             //Einmalig - Objekte im Registry registrieren, damit RMI vom Client aus ausgeführt werden kann
             Registry registry = LocateRegistry.createRegistry(1234);
@@ -46,6 +50,7 @@ public class RMIServerTest {
             registry.bind("Geraeteverwaltung", gVerwaltungInterface);
             registry.bind("Dienstleistungsverwaltung", dVerwaltungInterface);
             registry.bind("Mahnungsverwaltung", mVerwaltungInterface);
+            registry.bind("Rollenverwaltung", rVerwaltungInterface);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         } catch (AlreadyBoundException e) { //Sollte nicht weiter schlimm sein

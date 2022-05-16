@@ -1,9 +1,9 @@
 package shared.communication;
 
-import server.users.Mitglied;
-import server.users.Mitgliederdaten;
+import server.users.Personendaten;
 import server.users.Rolle;
 
+import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -27,7 +27,7 @@ public interface IRollenverwaltung extends Remote {
     Object[] mitarbeiterListeAnzeigen() throws RemoteException;
     Object[] vorsitzListeAnzeigen() throws RemoteException;
     void rolleAendern(String mitgliedsID, Rolle rolle) throws RemoteException;
-    void nutzereintragAendern(String mitgliedsID, Mitgliederdaten attr, Object wert) throws RemoteException, Exception;
+    void nutzereintragAendern(String mitgliedsID, Personendaten attr, String wert) throws RemoteException;
     Object[] mahnungsverwaltungAnzeigen() throws RemoteException;
 
 }

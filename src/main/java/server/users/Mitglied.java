@@ -1,6 +1,5 @@
 package server.users;
 
-import server.Anfragenliste;
 import server.Mahnungsverwaltung;
 
 import java.time.LocalDateTime;

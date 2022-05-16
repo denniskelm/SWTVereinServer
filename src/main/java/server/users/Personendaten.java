@@ -1,17 +1,18 @@
 package server.users;
 
 public enum Personendaten {
-
-    ID,
+    PERSONENID,
     NACHNAME,
     VORNAME,
-    EMAIL,
-    PASSWORT,
+    E_MAIL,
+    PASSWORD,
     ANSCHRIFT,
-    MITGLIEDSNUMMER,
+    MITGLIEDSNR,
     TELEFONNUMMER,
-    SPENDERSTATUS,
-    STUNDENZAHL,
-    SPERRSTATUS
+    SPENDER,
+    STUNDENKONTO,
+    MAHNUNGEN,
+    IST_GESPERRT,
+    MITGLIED_SEIT
 
 }

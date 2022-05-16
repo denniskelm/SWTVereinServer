@@ -63,17 +63,16 @@ public class Gast {
         this.spender = spender;
     }
 
-    public void datenVerwalten(Personendaten attr, Object wert) {
+    public void datenVerwalten(Personendaten attr, String wert) {
         switch (attr) {
-            case ID -> this.personenID = wert.toString();
+            case PERSONENID -> this.personenID = wert.toString();
             case NACHNAME -> this.nachname = wert.toString();
             case VORNAME -> this.vorname = wert.toString();
-            case EMAIL -> this.email = wert.toString();
-            case PASSWORT -> this.password = Integer.parseInt(wert.toString());
+            case E_MAIL -> this.email = wert.toString();
+            case PASSWORD -> this.password = Integer.parseInt(wert.toString());
             case ANSCHRIFT -> this.anschrift = wert.toString();
-            case MITGLIEDSNUMMER -> this.mitgliedsnr = wert.toString();
+            case MITGLIEDSNR -> this.mitgliedsnr = wert.toString();
             case TELEFONNUMMER -> this.telefonnummer = Integer.parseInt(wert.toString());
-            case SPENDERSTATUS -> this.spender = Boolean.parseBoolean(wert.toString());
 
             //Attribut kann für diese Rolle nicht geändert werden
             default -> {return;}
