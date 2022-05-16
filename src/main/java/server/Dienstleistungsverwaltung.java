@@ -1,5 +1,6 @@
 package server;
 
+import org.jetbrains.annotations.NotNull;
 import shared.communication.IDienstleistungsverwaltung;
 
 import java.time.LocalDateTime;
@@ -13,7 +14,7 @@ Gabriel Kleebaum
 Mhd Esmail Kanaan
 //TODO Gia Huy Hans Tran
 Ole Björn Adelmann
-//TODO Bastian Reichert
+Bastian Reichert
 //TODO Dennis Kelm
 */
 
@@ -132,22 +133,29 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         }
     }
 
-    public void gesuchAnnehmen(String gesuchs_ID, String ersteller_ID, String nutzer_ID, int stunden) throws Exception{
+    public void gesuchAnnehmen(String gesuchs_ID, String ersteller_ID, String nutzer_ID, int stunden) throws Exception {
         Dienstleistungsgesuch gesuch;
         int anzahl = gesuche.size();
         int counter = 0;
 
-        for(Dienstleistungsgesuch g : gesuche) {
+        for (Dienstleistungsgesuch g : gesuche) {
             if (g.getGesuch_ID() == gesuchs_ID && counter <= anzahl) {
                 gesuch = g;
                 //TODO g.getSuchender().veraendereStundenkonto(-stunden);
-            }
-            else
+            } else
                 throw new Exception();
         }
+    }
 
-
+    public void gesuchAnnehmenI(Dienstleistungsgesuch g, server.users.Mitglied ersteller, server.users.Mitglied nutzer, int stunden) throws Exception{
+        Anfragenliste l= ersteller.getAnfragenliste();
+        l.addgAnfrage(nutzer, g,stunden);
         }
+
+    public void angebotAnfragenI(Dienstleistungsangebot a, server.users.Mitglied ersteller, server.users.Mitglied nutzer, int stunden) throws Exception{
+        Anfragenliste l= ersteller.getAnfragenliste();
+        l.addaAnfrage(nutzer, a,stunden);
+    }
 
     public void angebotAnfragen(String angebotsID, String ersteller, String fragender) {
 

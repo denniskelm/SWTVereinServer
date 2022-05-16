@@ -1,11 +1,14 @@
 package server.users;
 
+import server.Anfragenliste;
 import server.Mahnungsverwaltung;
 
 import java.time.LocalDateTime;
 
 public class Mitglied extends Gast {
     private int stundenkonto;
+    private Anfragenliste anfragenliste; //da Profilseite nicht existiert, habe ich die Anfregenliste direkt zum Mitglied gepackt(kann ja noch verändert werden)
+
     private boolean ist_gesperrt;
     private LocalDateTime mitglied_seit;
     // private int ausgelieheneGeraete TODO
@@ -16,6 +19,8 @@ public class Mitglied extends Gast {
         this.stundenkonto = 0;
         this.ist_gesperrt = false;
         this.mitglied_seit = mitglied_seit;
+        this.anfragenliste = new Anfragenliste(personenID);
+        this.anfragenliste.nutzer = this;
     }
 
     public void veraendereStundenkonto(int change) {
@@ -36,6 +41,10 @@ public class Mitglied extends Gast {
 
     public void setMitglied_seit(LocalDateTime mitglied_seit) {
         this.mitglied_seit = mitglied_seit;
+    }
+
+    public Anfragenliste getAnfragenliste(){  //TODO muss wahrscheinlich aus der DB geholt werden
+        return this.anfragenliste;
     }
 
     @Override
