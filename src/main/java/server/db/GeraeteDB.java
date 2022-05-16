@@ -1,11 +1,14 @@
 package server.db;
 
-import server.Ausleiher;
-import server.Geraet;
-import server.Geraetedaten;
-import server.Status;
+import server.geraetemodul.Ausleiher;
+import server.geraetemodul.Geraet;
+import server.geraetemodul.Geraetedaten;
+import server.geraetemodul.Status;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 
 public class GeraeteDB {
 
@@ -169,7 +172,11 @@ public class GeraeteDB {
         PreparedStatement prep;
         ResultSet result;
         String status;
-        String personenID;
+        String personenID, abgegeben;
+        Timestamp resevierDatum, fristBeginn;
+        int leihfrist;
+        int personenZuUpdaten;
+        ArrayList<Timestamp> fristBeginne = new ArrayList<>();
 
         // Geraeteverwaltung.geraetAnnehmen(...)
         try {
@@ -194,12 +201,78 @@ public class GeraeteDB {
         // Geraet.annehmen()
         try {
 
-            // TODO aktuellen Ausleiher zur Historie hinzufügen
-            //prep = conn.prepareStatement("INSERT INTO historie VALUES (?, ?, ?, ?, ?)");
+            prep = conn.prepareStatement("SELECT PersonenID, Abgegeben, Reservierdatum, Fristbeginn FROM reserviert WHERE GeraeteID = ?");
             prep.setString(1, geraeteID);
-            //prep.setString(2, pers);
-            // TODO aktuellen Ausleiher aus Reservierungsliste entfernen
+
+            result = prep.executeQuery();
+            result.next();
+
+            personenID = result.getString(1);
+            abgegeben = result.getString(2);
+            resevierDatum = result.getTimestamp(3);
+            fristBeginn = result.getTimestamp(4);
+
+            // aktuellen Ausleiher zur Historie hinzufügen
+            prep = conn.prepareStatement("INSERT INTO historie VALUES (?, ?, ?, ?, ?)");
+            prep.setString(1, geraeteID);
+            prep.setString(2, personenID);
+            prep.setTimestamp(3, resevierDatum);
+            prep.setTimestamp(4, fristBeginn);
+            prep.setString(5, abgegeben);
+
+            prep.executeUpdate();
+            prep.close();
+
+            // aktuellen Ausleiher aus Reservierungsliste entfernen
+            prep = conn.prepareStatement("DELETE FROM reserviert WHERE GeraeteID = ? AND PersonenID = ?");
+            prep.setString(1, geraeteID);
+            prep.setString(2, personenID);
+
+            prep.executeUpdate();
+            prep.close();
+
             // TODO Fristbeginn der anderen Ausleiher neu berechnen
+            prep = conn.prepareStatement("SELECT Leihfrist FROM geraet WHERE GeraeteID = ?");
+            prep.setString(1, geraeteID);
+
+            result = prep.executeQuery();
+            prep.close();
+            result.next();
+
+            leihfrist = result.getInt(1);
+
+            long tageZuFrüh = LocalDateTime.now().until(fristBeginn.toLocalDateTime().plusDays(leihfrist), ChronoUnit.DAYS);
+
+            prep = conn.prepareStatement("SELECT COUNT(GeraeteID) FROM reserviert WHERE GeraeteID = ? AND Abgegeben = 'N' ");
+            prep.setString(1, geraeteID);
+            result = prep.executeQuery();
+            prep.close();
+            result.next();
+
+            personenZuUpdaten = result.getInt(1);
+
+            prep = conn.prepareStatement("SELECT Fristbeginn FROM reserviert WHERE GeraeteID = ? AND Abgegeben = 'N' ");
+            prep.setString(1, geraeteID);
+            result = prep.executeQuery();
+            prep.close();
+            result.next();
+
+            int j = 1;
+
+            do {
+                fristBeginne.add(result.getTimestamp(j++));
+            } while (result.next());
+
+            prep = conn.prepareStatement("UPDATE reserviert SET Fristbeginn = ? WHERE GeraeteID = ? AND Abgegeben = 'N'");
+
+            for (int i = 0; i < personenZuUpdaten; i++) {
+                prep.setTimestamp(1, Timestamp.valueOf(fristBeginne.get(i).toLocalDateTime().plusDays(tageZuFrüh)));
+                prep.setString(2, geraeteID);
+                prep.addBatch();
+            }
+
+            prep.executeBatch();
+            prep.close();
 
             // herausfinden, ob die Reservierungsliste leer ist
             prep = conn.prepareStatement("SELECT COUNT(GeraeteID) FROM reserviert WHERE GeraeteID = ?");
@@ -254,8 +327,6 @@ public class GeraeteDB {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-
 
     }
 
