@@ -160,7 +160,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         server.users.Mitglied nutzer=r.fetch(nutzerID);
         Anfragenliste l= ersteller.getAnfragenliste();
         l.addgAnfrage(nutzer, gesuch ,stunden);
-        }
+    }
 
     public void angebotAnfragenI(String angebotID, String erstellerID, String nutzerID, int stunden, server.users.Rollenverwaltung r) throws Exception{
         Dienstleistungsangebot angebot= null;
