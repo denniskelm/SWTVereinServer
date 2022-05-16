@@ -27,42 +27,6 @@ public class Gast {
         return personenID;
     }
 
-    public void setPersonenID(String personenID) {
-        this.personenID = personenID;
-    }
-
-    public void setNachname(String nachname) {
-        this.nachname = nachname;
-    }
-
-    public void setVorname(String vorname) {
-        this.vorname = vorname;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(int password) {
-        this.password = password;
-    }
-
-    public void setAnschrift(String anschrift) {
-        this.anschrift = anschrift;
-    }
-
-    public void setMitgliedsnr(String mitgliedsnr) {
-        this.mitgliedsnr = mitgliedsnr;
-    }
-
-    public void setTelefonnummer(int telefonnummer) {
-        this.telefonnummer = telefonnummer;
-    }
-
-    public void setSpender(boolean spender) {
-        this.spender = spender;
-    }
-
     public void datenVerwalten(Personendaten attr, String wert) {
         switch (attr) {
             case PERSONENID -> this.personenID = wert.toString();

@@ -1,5 +1,6 @@
 package server.users;
 
+import server.Anfragenliste;
 import server.Mahnungsverwaltung;
 
 import java.time.LocalDateTime;
@@ -30,36 +31,24 @@ public class Mitglied extends Gast {
         return ist_gesperrt;
     }
 
-    public void setStundenkonto(int stundenkonto) {
-        this.stundenkonto = stundenkonto;
-    }
-
-    public void setIst_gesperrt(boolean ist_gesperrt) {
-        this.ist_gesperrt = ist_gesperrt;
-    }
-
-    public void setMitglied_seit(LocalDateTime mitglied_seit) {
-        this.mitglied_seit = mitglied_seit;
-    }
-
     public Anfragenliste getAnfragenliste(){  //TODO muss wahrscheinlich aus der DB geholt werden
         return this.anfragenliste;
     }
 
     @Override
-    public void datenVerwalten(Personendaten attr, Object wert) {
+    public void datenVerwalten(Personendaten attr, String wert) {
         switch (attr) {
-            case ID -> this.personenID = wert.toString();
-            case NACHNAME -> this.nachname = wert.toString();
-            case VORNAME -> this.vorname = wert.toString();
-            case EMAIL -> this.email = wert.toString();
-            case PASSWORT -> this.password = Integer.parseInt(wert.toString());
-            case ANSCHRIFT -> this.anschrift = wert.toString();
-            case MITGLIEDSNUMMER -> this.mitgliedsnr = wert.toString();
-            case TELEFONNUMMER -> this.telefonnummer = Integer.parseInt(wert.toString());
-            case SPENDERSTATUS -> this.spender = Boolean.parseBoolean(wert.toString());
-            case STUNDENZAHL -> this.stundenkonto = Integer.parseInt(wert.toString());
-            case SPERRSTATUS -> this.ist_gesperrt = Boolean.parseBoolean(wert.toString());
+            case PERSONENID -> this.personenID = wert;
+            case NACHNAME -> this.nachname = wert;
+            case VORNAME -> this.vorname = wert;
+            case E_MAIL -> this.email = wert;
+            case PASSWORD -> this.password = Integer.parseInt(wert);
+            case ANSCHRIFT -> this.anschrift = wert;
+            case MITGLIEDSNR -> this.mitgliedsnr = wert;
+            case TELEFONNUMMER -> this.telefonnummer = Integer.parseInt(wert);
+            case SPENDER -> this.spender = Boolean.parseBoolean(wert);
+            case STUNDENKONTO -> this.stundenkonto = Integer.parseInt(wert);
+            case IST_GESPERRT -> this.ist_gesperrt = Boolean.parseBoolean(wert);
 
             //Attribut kann für diese Rolle nicht geändert werden
             default -> {return;}
