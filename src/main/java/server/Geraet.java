@@ -26,6 +26,10 @@ public class Geraet {
     private String abholort;
     private ArrayList<Ausleiher> reservierungsliste, historie;
 
+    public ArrayList<Ausleiher> getHistorie() {
+        return historie;
+    }
+
     // reservierdatum: LocalDateTime
     // fristbeginn: LocalDateTime
     // abgegeben: boolean
@@ -40,7 +44,7 @@ public class Geraet {
         this.kategorie = kategorie;
         this.beschreibung = beschreibung;
         this.abholort = abholort;
-        reservierungsliste = new ArrayList<>();
+        reservierungsliste = new ArrayList<Ausleiher>();
         historie = new ArrayList<>();
         leihstatus = Status.FREI;
     }
@@ -72,14 +76,11 @@ public class Geraet {
         }
     }
 
-    public void ausgeben() {
-        // what would happen if the device Status was AUSGELIEGEN ? where is the fehlerbehandlung
+    public void ausgeben() throws Exception {
         leihstatus = Status.AUSGELIEHEN;
     }
 
     public void annehmen() {
-        leihstatus = Status.FREI;
-
         LocalDateTime altesAbgabeDatum = reservierungsliste.get(0).getFristBeginn().plusDays(leihfrist);
         long tageZuFrueh = LocalDateTime.now().until(altesAbgabeDatum, ChronoUnit.DAYS);
 
@@ -94,6 +95,8 @@ public class Geraet {
             a.setFristBeginn(a.getFristBeginn().minusDays(tageZuFrueh));
         }
 
+        leihstatus = Status.BEANSPRUCHT;
+        if (reservierungsliste.isEmpty()) leihstatus = Status.FREI;
     }
 
     public String getGeraeteID() {
@@ -112,11 +115,13 @@ public class Geraet {
         return abholort;
     }
 
+    public String getKategorie() {
+        return kategorie;
+    }
+
     public String getGeraetBeschreibung() {
         return beschreibung;
     }
-
-
 
     public int getLeihfrist() {
         return leihfrist;
@@ -126,8 +131,14 @@ public class Geraet {
         return leihstatus;
     }
 
+    public ArrayList<Ausleiher> getReservierungsliste() {
+        return reservierungsliste;
+    }
+
+
     public void setHistorie(ArrayList<Ausleiher> historie) {
         this.historie = historie;
+        this.leihstatus = Status.FREI;
     }
 
     public void setName(String name) {
@@ -153,17 +164,4 @@ public class Geraet {
     public void setAbholort(String abholort) {
         this.abholort = abholort;
     }
-
-    public ArrayList<Ausleiher> getReservierungsliste() {
-        return reservierungsliste;
-    }
-
-    public String getKategorie() {
-        return kategorie;
-    }
-
-    public ArrayList<Ausleiher> getHistorie() {
-        return historie;
-    }
-
 }

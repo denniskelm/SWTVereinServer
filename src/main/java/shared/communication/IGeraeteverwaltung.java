@@ -1,9 +1,11 @@
 package shared.communication;
 
+import server.Geraet;
 import server.Geraetedaten;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 /*
 @author
@@ -22,12 +24,12 @@ public interface IGeraeteverwaltung extends Remote {
 
     String geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort) throws RemoteException;
     void geraetReservieren(String geraeteID, String ausleiherID) throws Exception;
-    void geraetAusgeben(String geraeteID) throws RemoteException;
-    void geraetAnnehmen(String geraeteID) throws RemoteException;
+    void geraetAusgeben(String geraeteID) throws Exception;
+    void geraetAnnehmen(String geraeteID) throws Exception;
     void geraetEntfernen(String geraeteID) throws RemoteException;
     void geraeteDatenVerwalten(String geraeteID, Geraetedaten attr, Object wert) throws RemoteException;
     void historieZuruecksetzen(String geraeteID) throws RemoteException;
-    Object[] geraeteAnzeigen() throws RemoteException;
+    ArrayList<Geraet> geraeteAnzeigen() throws RemoteException;
     String geraeteDatenAusgeben(String geraeteID) throws RemoteException;
 
 }

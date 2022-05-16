@@ -12,9 +12,7 @@ TODO Bastian Reichert
 TODO Dennis Kelm
 */
 
-import server.Dienstleistungsangebot;
-import server.Dienstleistungsgesuch;
-import server.users.Mitglied;
+import server.*;
 
 import java.awt.*;
 import java.rmi.Remote;
@@ -28,8 +26,8 @@ public interface IDienstleistungsverwaltung extends Remote {
     String angebotErstellen(String titel, String beschreibung, String kategorie, LocalDateTime ab, LocalDateTime bis, String ersteller) throws RemoteException, Exception;
     void gesuchLoeschen(String gesuchsID) throws RemoteException;
     void angebotLoeschen(String angebotsID) throws RemoteException;
-    void gesuchAendern(String gesuchsID, Object attr, Object wert) throws RemoteException;
-    void angebotAendern(String angebotsID, Object attr, Object wert) throws RemoteException;
+    void gesuchAendern(String gesuchsID, Dienstleistungsgesuchdaten attr, Object wert) throws RemoteException;
+    void angebotAendern(String angebotsID, Dienstleistungsangebotdaten attr, Object wert) throws RemoteException;
     void gesuchAnnehmen(String gesuchsID, String ersteller, String nutzer, int stunden) throws RemoteException, Exception;
     void angebotAnfragen(String angebotsID, String ersteller, String fragender) throws RemoteException;
 
