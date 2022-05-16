@@ -147,14 +147,35 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         }
     }
 
-    public void gesuchAnnehmenI(Dienstleistungsgesuch g, server.users.Mitglied ersteller, server.users.Mitglied nutzer, int stunden) throws Exception{
+    public void gesuchAnnehmenI(String gesuchsID, String erstellerID, String nutzerID, int stunden, server.users.Rollenverwaltung r) throws Exception{
+        Dienstleistungsgesuch gesuch= null;
+        int i=0;
+        while(i<gesuche.size()){
+            if (gesuchsID==gesuche.get(i).getGesuch_ID()){
+                gesuch=gesuche.get(i);
+            }
+
+        }
+        server.users.Mitglied ersteller=r.fetch(erstellerID);
+        server.users.Mitglied nutzer=r.fetch(nutzerID);
         Anfragenliste l= ersteller.getAnfragenliste();
-        l.addgAnfrage(nutzer, g,stunden);
+        l.addgAnfrage(nutzer, gesuch ,stunden);
         }
 
-    public void angebotAnfragenI(Dienstleistungsangebot a, server.users.Mitglied ersteller, server.users.Mitglied nutzer, int stunden) throws Exception{
+    public void angebotAnfragenI(String angebotID, String erstellerID, String nutzerID, int stunden, server.users.Rollenverwaltung r) throws Exception{
+        Dienstleistungsangebot angebot= null;
+        int i=0;
+        while(i<angebote.size()){
+            if (angebotID==angebote.get(i).getAngebots_ID()){
+                angebot=angebote.get(i);
+            }
+
+        }
+
+        server.users.Mitglied ersteller=r.fetch(erstellerID);
+        server.users.Mitglied nutzer=r.fetch(nutzerID);
         Anfragenliste l= ersteller.getAnfragenliste();
-        l.addaAnfrage(nutzer, a,stunden);
+        l.addaAnfrage(nutzer, angebot,stunden);
     }
 
     public void angebotAnfragen(String angebotsID, String ersteller, String fragender) {
