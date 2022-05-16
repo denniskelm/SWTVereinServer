@@ -56,7 +56,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     }
 
     public void reset() {
-        geraete = new ArrayList<Geraet>();
+        geraete = new ArrayList<>();
         IdCounter = 0;
         System.out.println("Geraeteverwaltung zurueckgesetzt.");
     }
@@ -144,13 +144,32 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         Geraet geraet = fetch(geraeteID);
         StringBuilder str = new StringBuilder();
 
-        str.append("ID: " + geraet.getGeraeteID());
-        str.append(", Name: " + geraet.getGeraetName());
-        str.append(", Spender: " + geraet.getSpenderName());
-        str.append(", Leihfrist: " + geraet.getLeihfrist());
-        str.append(", Kategorie: " + geraet.getKategorie());
-        str.append(", Beschreibung: " + geraet.getGeraetBeschreibung());
-        str.append(", Abholort: " + geraet.getGeraetAbholort());
+        str.append("ID: ");
+        str.append(geraet.getGeraeteID());
+        str.append(", ");
+
+        str.append("Name: ");
+        str.append(geraet.getGeraetName());
+        str.append(", ");
+
+        str.append("Spender: ");
+        str.append(geraet.getSpenderName());
+        str.append(", ");
+
+        str.append("Leihfrist: ");
+        str.append(geraet.getLeihfrist());
+        str.append(", ");
+
+        str.append("Kategorie: ");
+        str.append(geraet.getKategorie());
+        str.append(", ");
+
+        str.append("Beschreibung: ");
+        str.append(geraet.getGeraetBeschreibung());
+        str.append(", ");
+
+        str.append("Abholort: ");
+        str.append(geraet.getGeraetAbholort());
 
         return str.toString();
     }

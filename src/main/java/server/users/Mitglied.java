@@ -26,20 +26,8 @@ public class Mitglied extends Gast {
         return ist_gesperrt;
     }
 
-    public void setStundenkonto(int stundenkonto) {
-        this.stundenkonto = stundenkonto;
-    }
-
-    public void setIst_gesperrt(boolean ist_gesperrt) {
-        this.ist_gesperrt = ist_gesperrt;
-    }
-
-    public void setMitglied_seit(LocalDateTime mitglied_seit) {
-        this.mitglied_seit = mitglied_seit;
-    }
-
     @Override
-    public void datenVerwalten(Personendaten attr, Object wert) {
+    public void datenVerwalten(Personendaten attr, String wert) {
         switch (attr) {
             case PERSONENID -> this.personenID = wert.toString();
             case NACHNAME -> this.nachname = wert.toString();

@@ -63,7 +63,7 @@ public class Gast {
         this.spender = spender;
     }
 
-    public void datenVerwalten(Personendaten attr, Object wert) {
+    public void datenVerwalten(Personendaten attr, String wert) {
         switch (attr) {
             case PERSONENID -> this.personenID = wert.toString();
             case NACHNAME -> this.nachname = wert.toString();

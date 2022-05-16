@@ -70,14 +70,11 @@ public class Rollenverwaltung implements IRollenverwaltung {
     }
 
     public void nutzereintragAendern(String mitgliedsID, Personendaten attr, String wert) throws NoSuchObjectException {
-        System.out.println("test");
         try {
             (fetch(mitgliedsID)).datenVerwalten(attr, wert);
         } catch (NoSuchObjectException e) {
             throw new NoSuchObjectException("");
         }
-
-
     }
 
     public Object[] mahnungsverwaltungAnzeigen() { return mahnungen.toArray(); }
