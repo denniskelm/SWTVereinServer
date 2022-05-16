@@ -1,4 +1,5 @@
-package server;
+package server.dienstleistungsmodul;
+
 import java.util.ArrayList; //Todo weiß nicht ob wir das woanders haben
 
 public class Anfragenliste {

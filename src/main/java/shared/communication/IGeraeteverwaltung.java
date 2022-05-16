@@ -1,7 +1,7 @@
 package shared.communication;
 
-import server.Geraet;
-import server.Geraetedaten;
+import server.geraetemodul.Geraet;
+import server.geraetemodul.Geraetedaten;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

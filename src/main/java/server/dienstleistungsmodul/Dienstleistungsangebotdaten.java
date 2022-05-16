@@ -1,4 +1,4 @@
-package server;
+package server.dienstleistungsmodul;
 
 public enum Dienstleistungsangebotdaten {
     ANGEBOTS_ID,

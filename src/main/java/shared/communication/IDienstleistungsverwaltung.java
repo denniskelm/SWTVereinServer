@@ -12,9 +12,9 @@ TODO Bastian Reichert
 TODO Dennis Kelm
 */
 
-import server.*;
+import server.dienstleistungsmodul.Dienstleistungsangebotdaten;
+import server.dienstleistungsmodul.Dienstleistungsgesuchdaten;
 
-import java.awt.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;

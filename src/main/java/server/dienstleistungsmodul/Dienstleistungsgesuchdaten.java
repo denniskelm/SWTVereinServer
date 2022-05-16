@@ -1,4 +1,4 @@
-package server;
+package server.dienstleistungsmodul;
 
 public enum Dienstleistungsgesuchdaten {
     GESUCH_ID,

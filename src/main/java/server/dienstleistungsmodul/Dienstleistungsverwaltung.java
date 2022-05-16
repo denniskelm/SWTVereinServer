@@ -1,6 +1,6 @@
-package server;
+package server.dienstleistungsmodul;
 
-import org.jetbrains.annotations.NotNull;
+import server.dienstleistungsmodul.*;
 import shared.communication.IDienstleistungsverwaltung;
 
 import java.time.LocalDateTime;

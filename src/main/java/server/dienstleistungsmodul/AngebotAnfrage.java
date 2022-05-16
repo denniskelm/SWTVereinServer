@@ -1,4 +1,4 @@
-package server;
+package server.dienstleistungsmodul;
 
 public class AngebotAnfrage {
     public server.users.Mitglied nutzer;

@@ -2,6 +2,8 @@ package server;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import server.dienstleistungsmodul.Dienstleistungsgesuch;
+import server.dienstleistungsmodul.Dienstleistungsverwaltung;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

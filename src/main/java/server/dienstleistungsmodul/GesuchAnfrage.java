@@ -1,4 +1,6 @@
-package server;
+package server.dienstleistungsmodul;
+
+import server.dienstleistungsmodul.Dienstleistungsgesuch;
 
 public class GesuchAnfrage {
     public server.users.Mitglied nutzer ;

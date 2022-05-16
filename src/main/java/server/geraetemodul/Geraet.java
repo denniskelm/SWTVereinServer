@@ -1,4 +1,4 @@
-package server;
+package server.geraetemodul;
 /*
 @author
 Raphael Kleebaum

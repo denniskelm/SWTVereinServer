@@ -1,7 +1,6 @@
 package server.users;
 
-import server.Anfragenliste;
-import server.Mahnungsverwaltung;
+import server.dienstleistungsmodul.Anfragenliste;
 
 import java.time.LocalDateTime;
 

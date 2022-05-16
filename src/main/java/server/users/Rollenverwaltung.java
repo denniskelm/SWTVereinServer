@@ -12,14 +12,10 @@ Bastian Reichert
 Dennis Kelm
 */
 
-import server.Dienstleistungsgesuch;
-import server.Geraet;
 import server.Mahnungsverwaltung;
 import shared.communication.IRollenverwaltung;
 
 import java.rmi.NoSuchObjectException;
-import java.rmi.RemoteException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Rollenverwaltung implements IRollenverwaltung {

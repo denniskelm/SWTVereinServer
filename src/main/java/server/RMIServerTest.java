@@ -11,6 +11,8 @@ TODO Bastian Reichert
 Dennis Kelm
 */
 
+import server.dienstleistungsmodul.Dienstleistungsverwaltung;
+import server.geraetemodul.Geraeteverwaltung;
 import server.users.Rollenverwaltung;
 import shared.communication.IDienstleistungsverwaltung;
 import shared.communication.IGeraeteverwaltung;

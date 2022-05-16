@@ -1,4 +1,4 @@
-package server;
+package server.geraetemodul;
 
 public enum Status {
     FREI,
