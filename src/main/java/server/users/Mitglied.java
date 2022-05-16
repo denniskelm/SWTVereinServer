@@ -18,7 +18,7 @@ public class Mitglied extends Gast {
         this.stundenkonto = 0;
         this.ist_gesperrt = false;
         this.mitglied_seit = mitglied_seit;
-        this.anfragenliste = new Anfragenliste(personenID);
+        this.anfragenliste = new server.dienstleistungsmodul.Anfragenliste(personenID);
         this.anfragenliste.nutzer = this;
     }
 
