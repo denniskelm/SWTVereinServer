@@ -1,12 +1,18 @@
 package server;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.geraetemodul.*;
+import server.users.Mitglied;
+import server.users.Personendaten;
+import server.users.Rollenverwaltung;
 
+import javax.naming.NoPermissionException;
 import java.rmi.NoSuchObjectException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,10 +20,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class GeraeteverwaltungTest {
 
-    private static Geraeteverwaltung gv = new Geraeteverwaltung();
+    private static final Geraeteverwaltung gv = new Geraeteverwaltung();
+    private static final server.users.Rollenverwaltung rv = VereinssoftwareServer.rollenverwaltung;
+
+    @BeforeAll
+    static void mitglieder() {
+        rv.mitgliedHinzufuegen("Mustermann","Max","bsp@gmx.de","12345","anschrift","mitgliedsnr",1234567890,true,LocalDateTime.now());
+        rv.mitgliedHinzufuegen("Schmidt","Peter","schmidt@gmx.de","54321","anschrift","mitgliedsnr",987654321,true,LocalDateTime.now());
+    }
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws NoSuchObjectException {
+        rv.fetch("1").datenVerwalten(Personendaten.RESERVIERUNGEN, String.valueOf(0));
+        rv.fetch("2").datenVerwalten(Personendaten.RESERVIERUNGEN, String.valueOf(0));
         gv.reset();
         gv.geraetHinzufuegen("Ball", "spender", 15, "Spielzeug", "beschreibung", "abholort");
         gv.geraetHinzufuegen("Bohrer", "spender", 15, "Werkzeug", "beschreibung", "abholort");
@@ -58,20 +73,67 @@ class GeraeteverwaltungTest {
     }
 
     @Test
-    void geraetReservieren() throws Exception { // TODO erweitern sobald Rollenverwaltung funktioniert
+    void geraetReservieren() throws Exception {
         Geraet g = gv.fetch("1");
         ArrayList<Ausleiher> rl = g.getReservierungsliste();
 
         Assertions.assertEquals(Status.FREI, g.getLeihstatus());
+        assertEquals(0,rv.fetch("1").getReservierungen());
 
-        Throwable exception = assertThrows(NoSuchObjectException.class, () -> gv.geraetReservieren("0","1"));
-        assertEquals("Geraet mit ID: 0 nicht vorhanden.", exception.getMessage());
+        Throwable exception1 = assertThrows(NoSuchObjectException.class, () -> gv.geraetReservieren("0","1"));
+        assertEquals("Geraet mit ID: 0 nicht vorhanden.", exception1.getMessage());
+
+        Throwable exception2 = assertThrows(NoSuchObjectException.class, () -> gv.geraetReservieren("1","0"));
+        assertEquals("Person mit ID: 0 nicht vorhanden.", exception2.getMessage());
 
         gv.geraetReservieren("1","1");
         gv.geraetReservieren("1","2");
+        assertEquals(1,rv.fetch("1").getReservierungen());
         assertEquals(Status.BEANSPRUCHT, g.getLeihstatus());
         assertEquals(rl.get(0).getFristBeginn().toLocalDate(), LocalDate.now());
         assertEquals(rl.get(1).getFristBeginn().toLocalDate(), rl.get(0).getFristBeginn().plusDays(g.getLeihfrist()).toLocalDate());
+
+        Throwable exception3 = assertThrows(Exception.class, () -> gv.geraetReservieren("1","1"));
+        assertEquals("Mitglied hat das Geraet bereits reserviert.", exception3.getMessage());
+
+        gv.geraetHinzufuegen("Schere", "spender", 15, "Werkzeug", "beschreibung", "abholort");
+        gv.geraetReservieren("2","1");
+        gv.geraetReservieren("3","1");
+        Throwable exception4 = assertThrows(ArrayIndexOutOfBoundsException.class, () -> gv.geraetReservieren("1","1"));
+        assertEquals("Mitglied hat bereits 3 oder mehr Reservierungen.", exception4.getMessage());
+
+        rv.fetch("1").datenVerwalten(Personendaten.IST_GESPERRT, String.valueOf(true));
+        Throwable exception5 = assertThrows(NoPermissionException.class, () -> gv.geraetReservieren("1","1"));
+        assertEquals("Mitglied ist gesperrt.", exception5.getMessage());
+        rv.fetch("1").datenVerwalten(Personendaten.IST_GESPERRT, String.valueOf(false));
+    }
+
+    @Test
+    void reservierungStornieren() throws Exception {
+        Geraet g = gv.fetch("1");
+        ArrayList<Ausleiher> rl = g.getReservierungsliste();
+
+
+        gv.geraetReservieren("1","1");
+        gv.geraetReservieren("1","2");
+        assertEquals(2,rl.size());
+
+
+        gv.reservierungStornieren("1","1");
+        assertEquals(Status.BEANSPRUCHT, g.getLeihstatus());
+        assertEquals(1,rl.size());
+        assertEquals("2", rl.get(0).getMitlgiedsID());
+        assertEquals(rl.get(0).getFristBeginn().toLocalDate(), LocalDate.now());
+
+        gv.reservierungStornieren("1","2");
+        assertEquals(Status.FREI, g.getLeihstatus());
+        assertEquals(0,rl.size());
+
+        gv.geraetReservieren("1","1");
+        gv.geraetAusgeben("1");
+        Throwable exception = assertThrows(Exception.class, () -> gv.reservierungStornieren("1","1"));
+        assertEquals("Geraet ist momentan von dir ausgeliehen.", exception.getMessage());
+
     }
 
     @Test

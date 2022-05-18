@@ -11,7 +11,8 @@ public class Gast {
     int telefonnummer;
     boolean spender;
 
-    public Gast(String personenID, String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, int telefonnummer, boolean spender ){
+    public Gast(String personenID, String nachname, String vorname, String email, String password, String anschrift,
+                String mitgliedsnr, int telefonnummer, boolean spender ){
         this.personenID = personenID;
         this.nachname = nachname;
         this.vorname = vorname;

@@ -1,9 +1,6 @@
 package server.db;
 
-import server.geraetemodul.Ausleiher;
-import server.geraetemodul.Geraet;
-import server.geraetemodul.Geraetedaten;
-import server.geraetemodul.Status;
+import server.geraetemodul.*;
 
 import java.sql.*;
 import java.time.LocalDateTime;

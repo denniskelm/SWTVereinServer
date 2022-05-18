@@ -14,6 +14,7 @@ Mhd Esmail Kanaan
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Geraet {
 
@@ -66,37 +67,33 @@ public class Geraet {
         
 
     // Entfernt eine Reservierung von der Reservierungsliste.
-    // TODO: wie soll damit umgegangen werden, wenn die methode nicht erfolgreich ausgeführt werden kann? (z.B. wenn die Person das Gerät momentan ausgeliehen hat)
     public void reservierungEntfernen(String personenID) {
-        for (int i = 1; i < reservierungsliste.size(); i++) {
-            if (reservierungsliste.get(i).getMitlgiedsID() == personenID){
-                if (reservierungsliste.get(i).getFristBeginn().isAfter(LocalDateTime.now()) || leihstatus == Status.BEANSPRUCHT)
-                    reservierungsliste.remove(i);
+        for (Ausleiher a : reservierungsliste) {
+            if (Objects.equals(a.getMitlgiedsID(), personenID)) {
+                reservierungsliste.remove(a);
+                break;
             }
         }
+        updateFristen();
     }
 
     public void ausgeben() throws Exception {
         leihstatus = Status.AUSGELIEHEN;
     }
 
-    public void annehmen() {
-        LocalDateTime altesAbgabeDatum = reservierungsliste.get(0).getFristBeginn().plusDays(leihfrist);
-        long tageZuFrueh = LocalDateTime.now().until(altesAbgabeDatum, ChronoUnit.DAYS);
-
-        //aktuellen Ausleiher zur Historie hinzufügen
-        historie.add(reservierungsliste.get(0));
-
-        // aktuellen Ausleiher aus Reservierungsliste entfernen
-        reservierungsliste.remove(0);
-
-        // Fristbeginn der anderen Ausleiher neu berechnen
-        for (Ausleiher a : reservierungsliste) {
-            a.setFristBeginn(a.getFristBeginn().minusDays(tageZuFrueh));
-        }
-
-        leihstatus = Status.BEANSPRUCHT;
+    public void updateFristen() {
         if (reservierungsliste.isEmpty()) leihstatus = Status.FREI;
+
+        for (int i = 0; i < reservierungsliste.size(); i++) {
+            reservierungsliste.get(i).setFristBeginn(LocalDateTime.now().plusDays((long) leihfrist * i));
+        }
+    }
+
+    public void annehmen() {
+        historie.add(reservierungsliste.get(0));//aktuellen Ausleiher zur Historie hinzufügen
+        reservierungsliste.remove(0);// aktuellen Ausleiher aus Reservierungsliste entfernen
+        leihstatus = Status.BEANSPRUCHT;
+        updateFristen();// Fristbeginn der anderen Ausleiher neu berechnen oder Leihstatus auf frei setzten
     }
 
     public String getGeraeteID() {

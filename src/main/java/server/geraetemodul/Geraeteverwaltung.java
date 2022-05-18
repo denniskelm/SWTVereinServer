@@ -11,10 +11,15 @@ Jonny Schlutter
 //TODO Dennis Kelm
 */
 
+import server.VereinssoftwareServer;
+import server.users.Mitglied;
+import server.users.Personendaten;
 import shared.communication.IGeraeteverwaltung;
 
+import javax.naming.NoPermissionException;
 import java.rmi.NoSuchObjectException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Geraeteverwaltung implements IGeraeteverwaltung {
     private static ArrayList<Geraet> geraete;
@@ -26,7 +31,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     }
 
     public String geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort) {
-        if (geraete.size() >= 50000) throw new ArrayIndexOutOfBoundsException(); //TODO Exception
+        if (geraete.size() >= 50000) throw new ArrayIndexOutOfBoundsException();
 
         //naechste ID generieren
         IdCounter++;
@@ -57,35 +62,36 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         System.out.println("Geraeteverwaltung zurueckgesetzt.");
     }
 
+    //Mitglied reserviert ein Geraet
     public void geraetReservieren(String geraeteID, String personenID) throws Exception {
-        int reservierungen = 0;
-        //Mitglied m = new Rollenverwaltung().fetch(personenID); // TODO später die richtige Rollenverwaltung nehmen
+        server.users.Rollenverwaltung rv = VereinssoftwareServer.rollenverwaltung;
+        Mitglied m = rv.fetch(personenID);
+        Geraet g = fetch(geraeteID);
 
-        for (Geraet g : geraete) {
-            for (Ausleiher a : g.getReservierungsliste()) {
-                if (a.getMitlgiedsID().equals(personenID)) {
-                    reservierungen++; // TODO als Attribut des Mitglieds implementieren. Es ist dumm immer alle Geraete zu ueberprufen
-
-                    if (reservierungen == 3)
-                        break; // damit man bestenfalls nicht durch alle Geräte iterieren muss
-
-                }
+        if (m.isGesperrt()) throw new NoPermissionException("Mitglied ist gesperrt.");
+        if (m.getReservierungen() >= 3) throw new ArrayIndexOutOfBoundsException("Mitglied hat bereits 3 oder mehr Reservierungen.");
+        for (Ausleiher a :  g.getReservierungsliste()) {
+            if (Objects.equals(a.getMitlgiedsID(), personenID)) {
+                throw new Exception("Mitglied hat das Geraet bereits reserviert.");
             }
         }
 
-        if (reservierungen == 3)
-            throw new ArrayIndexOutOfBoundsException();
-
-//        if (m.isGesperrt())
-//            throw new NoPermissionException();
-
-        fetch(geraeteID).reservierungHinzufuegen(personenID);
+        g.reservierungHinzufuegen(personenID); //Reservierung hinzufuegen
+        m.datenVerwalten(Personendaten.RESERVIERUNGEN, String.valueOf((m.getReservierungen()+1))); //Anzahl Reservierung des Mitglieds erhöhen
         System.out.println("Geraet mit ID " +  geraeteID + " reserviert.");
     }
 
-    //TODO
-    public void reservierungStornieren(String geraeteID, String personenID) {
-        return;
+    //Mitglied storniert eine Reservierung für ein Geraet
+    public void reservierungStornieren(String geraeteID, String personenID) throws Exception {
+        server.users.Rollenverwaltung rv = VereinssoftwareServer.rollenverwaltung;
+        Mitglied m = rv.fetch(personenID);
+        Geraet g = fetch(geraeteID);
+        if (Objects.equals(g.getReservierungsliste().get(0).getMitlgiedsID(), personenID) && g.getLeihstatus() == Status.AUSGELIEHEN)
+            throw new Exception("Geraet ist momentan von dir ausgeliehen.");
+
+        g.reservierungEntfernen(personenID);
+        m.datenVerwalten(Personendaten.RESERVIERUNGEN, String.valueOf((m.getReservierungen()-1))); //Anzahl Reservierung des Mitglieds verringern
+        System.out.println("Geraet mit ID " +  geraeteID + " storniert.");
     }
 
     //Mitarbeiter gibt das Geraet an ein Mitglied aus
@@ -122,7 +128,6 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
             case BESCHREIBUNG -> g.setBeschreibung(wert.toString());
             case ABHOLORT -> g.setAbholort(wert.toString());
         }
-
     }
 
     public void historieZuruecksetzen(String geraeteID) throws NoSuchObjectException {

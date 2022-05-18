@@ -156,8 +156,8 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
             if (gesuchsID==gesuche.get(i).getGesuch_ID()){
                 gesuch=gesuche.get(i);
             }
-
         }
+
         server.users.Mitglied ersteller=r.fetch(erstellerID);
         server.users.Mitglied nutzer=r.fetch(nutzerID);
         Anfragenliste l= ersteller.getAnfragenliste();

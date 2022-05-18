@@ -16,6 +16,7 @@ import server.Mahnungsverwaltung;
 import shared.communication.IRollenverwaltung;
 
 import java.rmi.NoSuchObjectException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Rollenverwaltung implements IRollenverwaltung {
@@ -25,15 +26,45 @@ public class Rollenverwaltung implements IRollenverwaltung {
      private static ArrayList<Mitarbeiter> mitarbeiter;
      private static ArrayList<Vorsitz> vorsitze;
      private static ArrayList<Mahnungsverwaltung> mahnungen;
+     private long IdCounter;
 
      public Rollenverwaltung(){
-         gaeste = new ArrayList();
-         mitglieder = new ArrayList();
-         mitarbeiter = new ArrayList();
-         vorsitze = new ArrayList();
+         gaeste = new ArrayList<Gast>();
+         mitglieder = new ArrayList<Mitglied>();
+         mitarbeiter = new ArrayList<Mitarbeiter>();
+         vorsitze = new ArrayList<Vorsitz>();
+         IdCounter = 0;
      }
 
-    public Mitglied fetch(String mitgliederID) throws NoSuchObjectException { // warum heißt das nicht getGeraet
+     public void gastHinzufuegen(String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, int telefonnummer, boolean spender ) {
+         if (gaeste.size() >= 50000) throw new ArrayIndexOutOfBoundsException();
+
+         //naechste ID generieren
+         IdCounter++;
+         String personenID = Long.toString(IdCounter);
+
+         Gast gast = new Gast(personenID,nachname,vorname,email,password,anschrift,mitgliedsnr,telefonnummer,spender);
+         gaeste.add(gast);
+         System.out.println("Gast mit ID " +  personenID + " hinzugefuegt. Anzahl Gaeste: " +  gaeste.size());
+     }
+
+     // TODO wie zum Teufel soll man das richtig machen?
+     public void mitgliedHinzufuegen(String nachname, String vorname, String email, String password, String anschrift,
+                                     String mitgliedsnr, int telefonnummer, boolean spender/*, Mahnungsverwaltung mahnungen, Profilseite profilseite */,
+                                     LocalDateTime mitglied_seit) {
+         if (mitglieder.size() >= 50000) throw new ArrayIndexOutOfBoundsException();
+
+         //naechste ID generieren
+         IdCounter++;
+         String personenID = Long.toString(IdCounter);
+
+         Mitglied m = new Mitglied(personenID,nachname,vorname,email,password,anschrift,mitgliedsnr,telefonnummer,spender, mitglied_seit);
+         mitglieder.add(m);
+         System.out.println("Mitglied mit ID " +  personenID + " hinzugefuegt. Anzahl Mitglieder: " +  mitglieder.size());
+
+     }
+
+    public Mitglied fetch(String mitgliederID) throws NoSuchObjectException {
         for (Mitglied m : mitglieder) {
             if (m.getPersonenID().equals(mitgliederID)) return m;
         }
@@ -46,7 +77,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
             if (m.getPersonenID().equals(mitgliederID)) return m;
         }
 
-        throw new NoSuchObjectException("");
+        throw new NoSuchObjectException("Person mit ID: " + mitgliederID + " nicht vorhanden.");
     }
 
     public static ArrayList<Mitglied> getMitglieder() {

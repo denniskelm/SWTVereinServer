@@ -13,6 +13,7 @@ public enum Personendaten {
     STUNDENKONTO,
     MAHNUNGEN,
     IST_GESPERRT,
-    MITGLIED_SEIT
+    MITGLIED_SEIT,
+    RESERVIERUNGEN
 
 }
