@@ -31,6 +31,6 @@ public interface IRollenverwaltung extends Remote {
     void nutzereintragAendern(String mitgliedsID, Personendaten attr, String wert) throws RemoteException;
     Object[] mahnungsverwaltungAnzeigen() throws RemoteException;
     void gastHinzufuegen(String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, int telefonnummer, boolean spender);
-    public boolean login(String email, int password) throws Exception;
+    boolean login(String email, int password) throws Exception;
 
 }
