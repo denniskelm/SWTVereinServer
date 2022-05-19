@@ -1,5 +1,6 @@
 package server.dienstleistungsmodul;
 
+import server.VereinssoftwareServer;
 import server.dienstleistungsmodul.*;
 import shared.communication.IDienstleistungsverwaltung;
 
@@ -160,7 +161,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         }
     }
 
-    public void gesuchAnnehmen(String gesuchs_ID, String ersteller_ID, String nutzer_ID, int stunden) throws Exception {
+    /*public void gesuchAnnehmen(String gesuchs_ID, String ersteller_ID, String nutzer_ID, int stunden) throws Exception {
         Dienstleistungsgesuch gesuch;
         int anzahl = gesuche.size();
         int counter = 0;
@@ -172,25 +173,27 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
             } else
                 throw new Exception();
         }
-    }
+    }*/
 
-    public void gesuchAnnehmenI(String gesuchsID, String erstellerID, String nutzerID, int stunden, server.users.Rollenverwaltung r) throws Exception{
+    public void gesuchAnnehmen(String gesuchsID, String erstellerID, String nutzerID, int stunden) throws Exception{
         Dienstleistungsgesuch gesuch= null;
+        server.users.Rollenverwaltung r= VereinssoftwareServer.rollenverwaltung;
         int i=0;
         while(i<gesuche.size()){
             if (gesuchsID==gesuche.get(i).getGesuch_ID()){
                 gesuch=gesuche.get(i);
             }
-
         }
+
         server.users.Mitglied ersteller=r.fetch(erstellerID);
         server.users.Mitglied nutzer=r.fetch(nutzerID);
         Anfragenliste l= ersteller.getAnfragenliste();
         l.addgAnfrage(nutzer, gesuch ,stunden);
     }
 
-    public void angebotAnfragenI(String angebotID, String erstellerID, String nutzerID, int stunden, server.users.Rollenverwaltung r) throws Exception{
+    public void angebotAnnehmen(String angebotID, String erstellerID, String nutzerID, int stunden) throws Exception{
         Dienstleistungsangebot angebot= null;
+        server.users.Rollenverwaltung r= VereinssoftwareServer.rollenverwaltung;
         int i=0;
         while(i<angebote.size()){
             if (angebotID==angebote.get(i).getAngebots_ID()){
@@ -205,8 +208,6 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         l.addaAnfrage(nutzer, angebot,stunden);
     }
 
-    public void angebotAnfragen(String angebotsID, String ersteller, String fragender) {
 
-    }
 
 }

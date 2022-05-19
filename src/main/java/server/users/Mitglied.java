@@ -9,10 +9,12 @@ public class Mitglied extends Gast {
     private Anfragenliste anfragenliste; //da Profilseite nicht existiert, habe ich die Anfregenliste direkt zum Mitglied gepackt(kann ja noch verändert werden)
 
     private boolean ist_gesperrt;
-    private LocalDateTime mitglied_seit;
-    // private int ausgelieheneGeraete TODO
+    LocalDateTime mitglied_seit;
+    private int reservierungen;
 
-    public Mitglied(String personenID, String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, int telefonnummer, boolean spender/*, Mahnungsverwaltung mahnungen, Profilseite profilseite */, LocalDateTime mitglied_seit){
+    public Mitglied(String personenID, String nachname, String vorname, String email, String password, String anschrift,
+                    String mitgliedsnr, int telefonnummer, boolean spender/*, Mahnungsverwaltung mahnungen, Profilseite profilseite */,
+                    LocalDateTime mitglied_seit){
 
         super(personenID, nachname, vorname, email, password, anschrift, mitgliedsnr, telefonnummer, spender);
         this.stundenkonto = 0;
@@ -20,6 +22,25 @@ public class Mitglied extends Gast {
         this.mitglied_seit = mitglied_seit;
         this.anfragenliste = new server.dienstleistungsmodul.Anfragenliste(personenID);
         this.anfragenliste.nutzer = this;
+        this.reservierungen = 0;
+    }
+
+    // Weiterer Konstruktor, falls man die Rolle von einem Gast ändert, da dann das Passwort schon gehasht ist
+    public Mitglied(String personenID, String nachname, String vorname, String email, int password, String anschrift,
+                    String mitgliedsnr, int telefonnummer, boolean spender/*, Mahnungsverwaltung mahnungen, Profilseite profilseite */,
+                    LocalDateTime mitglied_seit){
+
+        super(personenID, nachname, vorname, email, password, anschrift, mitgliedsnr, telefonnummer, spender);
+        this.stundenkonto = 0;
+        this.ist_gesperrt = false;
+        this.mitglied_seit = mitglied_seit;
+        this.anfragenliste = new server.dienstleistungsmodul.Anfragenliste(personenID);
+        this.anfragenliste.nutzer = this;
+        this.reservierungen = 0;
+    }
+
+    public int getReservierungen() {
+        return reservierungen;
     }
 
     public void veraendereStundenkonto(int change) {
@@ -48,6 +69,7 @@ public class Mitglied extends Gast {
             case SPENDER -> this.spender = Boolean.parseBoolean(wert);
             case STUNDENKONTO -> this.stundenkonto = Integer.parseInt(wert);
             case IST_GESPERRT -> this.ist_gesperrt = Boolean.parseBoolean(wert);
+            case RESERVIERUNGEN -> this.reservierungen = Integer.parseInt(wert);
 
             //Attribut kann für diese Rolle nicht geändert werden
             default -> {return;}
