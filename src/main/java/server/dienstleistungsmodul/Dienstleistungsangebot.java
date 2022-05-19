@@ -22,8 +22,8 @@ public class Dienstleistungsangebot {
         this.ab = ab;
         this.bis = bis;
         this.personenID = personen_ID;
-        String anfrage = "insert into  Dienstleitunsgangebot(angebots_ID, personenID Titel, Beschreibung, Kategorie) values (" + angebots_ID + ", " + personen_ID + ", " + titel + ", "+ beschreibung + ", " + kategorie ;
-        //Sql Anfrage , QuerryString
+        String anfrage = "insert into  Dienstleitungsangebot(angebots_ID, personenID Titel, Beschreibung, Kategorie) values (" + angebots_ID + ", " + personen_ID + ", " + titel + ", "+ beschreibung + ", " + kategorie ;
+        //Sql Anfrage , QueryString
 
     }
 
