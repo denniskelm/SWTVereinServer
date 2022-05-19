@@ -11,12 +11,27 @@ public class Gast {
     int telefonnummer;
     boolean spender;
 
-    public Gast(String personenID, String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, int telefonnummer, boolean spender ){
+    public Gast(String personenID, String nachname, String vorname, String email, String password, String anschrift,
+                String mitgliedsnr, int telefonnummer, boolean spender ){
         this.personenID = personenID;
         this.nachname = nachname;
         this.vorname = vorname;
         this.email = email;
         this.password = password.hashCode();
+        this.anschrift = anschrift;
+        this.mitgliedsnr = mitgliedsnr;
+        this.telefonnummer = telefonnummer;
+        this.spender = spender;
+    }
+
+    // Weiterer Konstruktor, falls man die Rolle von einem Gast ändert, da dann das Passwort schon gehasht ist
+    public Gast(String personenID, String nachname, String vorname, String email, int password, String anschrift,
+                String mitgliedsnr, int telefonnummer, boolean spender ){
+        this.personenID = personenID;
+        this.nachname = nachname;
+        this.vorname = vorname;
+        this.email = email;
+        this.password = password;
         this.anschrift = anschrift;
         this.mitgliedsnr = mitgliedsnr;
         this.telefonnummer = telefonnummer;
@@ -44,4 +59,3 @@ public class Gast {
     }
 
 }
-
