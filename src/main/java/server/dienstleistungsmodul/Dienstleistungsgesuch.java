@@ -8,14 +8,17 @@ public class Dienstleistungsgesuch {
     private String titel;
     private String beschreibung;
     private String kategorie;
+
+    private String imageUrl;
     private String suchenderID; //MitgliedID z.b
 
-    public Dienstleistungsgesuch(String gesuch_ID, String titel, String beschreibung, String kategorie, String suchenderID){
+    public Dienstleistungsgesuch(String gesuch_ID, String titel, String beschreibung, String kategorie, String imageUrl, String suchenderID){
         this.gesuch_ID = gesuch_ID;
         this.titel = titel;
         this.beschreibung = beschreibung;
         this.kategorie = kategorie;
         this.suchenderID = suchenderID;
+        this.imageUrl =imageUrl;
 
         //TODO: mehr Parameter gegeben als erwartet
         //String anfrage = "insert into  Dienstleitunsgesuch(angebots_ID, PersonenID, Titel, Beschreibung, Kategorie) values (" + gesuch_ID + ", " + suchenderID + ", " + titel + ", "+ beschreibung + ", " + kategorie + ", " + suchender + ");";

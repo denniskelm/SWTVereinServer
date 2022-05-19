@@ -83,7 +83,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         else
             throw new Exception();
 
-        Dienstleistungsgesuch g = new Dienstleistungsgesuch(gesuch_ID, titel, beschreibung, kategorie, ersteller);
+        Dienstleistungsgesuch g = new Dienstleistungsgesuch(gesuch_ID, titel, beschreibung, kategorie, imageUrl, ersteller);
         gesuche.add(g);
         return gesuch_ID;
     }
@@ -191,6 +191,30 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         l.addgAnfrage(nutzer, gesuch ,stunden);
     }
 
+    public Dienstleistungsangebot fetchAngebot(String angebotID){
+        Dienstleistungsangebot angebot= null;
+        int i=0;
+        while(i<angebote.size()){
+            if (angebotID==angebote.get(i).getAngebots_ID()){
+                angebot=angebote.get(i);
+                return angebot;
+            }
+
+        }
+        return angebot;//fehler
+    }
+    public Dienstleistungsgesuch fetchGesuch(String gID){
+        Dienstleistungsgesuch g= null;
+        int i=0;
+        while(i<angebote.size()){
+            if (gID==gesuche.get(i).getGesuch_ID()){
+                g=gesuche.get(i);
+                return g;
+            }
+
+        }
+        return g;//fehler
+    }
     public void angebotAnnehmen(String angebotID, String erstellerID, String nutzerID, int stunden) throws Exception{
         Dienstleistungsangebot angebot= null;
         server.users.Rollenverwaltung r= VereinssoftwareServer.rollenverwaltung;
