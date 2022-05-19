@@ -5,6 +5,7 @@ import shared.communication.IDienstleistungsverwaltung;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /*
 @author
@@ -15,7 +16,7 @@ Mhd Esmail Kanaan
 //TODO Gia Huy Hans Tran
 Ole Björn Adelmann
 Bastian Reichert
-//TODO Dennis Kelm
+Dennis Kelm
 */
 
 public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
@@ -30,6 +31,32 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     public ArrayList<Dienstleistungsgesuch> getGesucheArrayList() {
         return gesuche;
     }
+
+    public Object[] getAngeboteInformationen(String gesucheID){
+        //TODO Implementieren
+        Object[] info = new Object[6];
+        info[0] = "Titel";
+        info[1] = "Beschreibung";
+        info[2] = "Kategorie";
+        info[3] = LocalDateTime.now();
+        info[4] = LocalDateTime.now().plusDays(14);
+        info[5] = "P00001";
+        return info;
+    }
+
+    public Object[] getGesucheInformationen(String gesucheID){
+        //TODO Implementieren
+        Object[] info = new Object[4];
+        info[0] = "Titel";
+        info[1] = "Beschreibung";
+        info[2] = "Kategorie";
+        info[3] = "P00001";
+        return info;
+    }
+
+    //TODO??? - public int howManyAngebote
+    //TODO??? - public int howManyGesuche
+
 
     public Dienstleistungsverwaltung() {
         angebote = new ArrayList<>();

@@ -3,13 +3,13 @@ package shared.communication;
 /*
 @author
 TODO Raphael Kleebaum
-TODO Jonny Schlutter
+Jonny Schlutter
 Gabriel Kleebaum
 TODO Mhd Esmail Kanaan
 TODO Gia Huy Hans Tran
 TODO Ole Björn Adelmann
-TODO Bastian Reichert
-TODO Dennis Kelm
+Bastian Reichert
+Dennis Kelm
 */
 
 import server.dienstleistungsmodul.Dienstleistungsangebotdaten;
@@ -18,6 +18,7 @@ import server.dienstleistungsmodul.Dienstleistungsgesuchdaten;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 // Interface, um RMI für Klasse Dienstleistungsverwaltung zu ermöglichen
 public interface IDienstleistungsverwaltung extends Remote {
@@ -30,5 +31,7 @@ public interface IDienstleistungsverwaltung extends Remote {
     void angebotAendern(String angebotsID, Dienstleistungsangebotdaten attr, Object wert) throws RemoteException;
     void gesuchAnnehmen(String gesuchsID, String ersteller, String nutzer, int stunden) throws RemoteException, Exception;
     void angebotAnfragen(String angebotsID, String ersteller, String fragender) throws RemoteException;
+    Object[] getAngeboteInformationen(String geraeteID) throws RemoteException;
+    Object[] getGesucheInformationen(String geraeteID) throws RemoteException;
 
 }
