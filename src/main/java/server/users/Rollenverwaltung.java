@@ -34,6 +34,10 @@ public class Rollenverwaltung implements IRollenverwaltung {
          mitarbeiter = new ArrayList<Mitarbeiter>();
          vorsitze = new ArrayList<Vorsitz>();
          IdCounter = 0;
+
+         mitgliedHinzufuegen("Ehrenmann", "Stefan", "stefan.ehrenmann@t-online.de", "12345678", "Huglfingstr. 27", "M4657", 110, false, LocalDateTime.now());
+         mitgliedHinzufuegen("Tran", "Huy", "huy@email.de", "1234", "Musterstr. 1", "ABC", 123, true, LocalDateTime.now().minusDays(3));
+         mitgliedHinzufuegen("Kelm", "Dennis", "dennis@email.de", "2345", "Teststr. 4", "DEF", 234, false, LocalDateTime.now().minusDays(20));
      }
 
      public void gastHinzufuegen(String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, int telefonnummer, boolean spender) {
