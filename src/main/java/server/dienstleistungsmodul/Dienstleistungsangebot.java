@@ -58,4 +58,10 @@ public class Dienstleistungsangebot {
     public void setPersonenID(String personenID) {
         this.personenID = personenID;
     }
+
+    public String getTitel(){return this.titel;}
+    public String getBeschreibung(){return this.beschreibung;}
+    public String getKategorie(){return this.kategorie;}
+    public LocalDateTime getTime1(){return this.ab;}
+    public LocalDateTime getTime2(){return this.bis;}
 }

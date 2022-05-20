@@ -302,7 +302,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
     }
 
-    @Override
     public ArrayList<Gast> getGaeste() {
         return null;
     }
