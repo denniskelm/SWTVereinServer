@@ -136,7 +136,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
         }
 
         if (mitgliedInAlterRolle.getClass() == rolle.getKlasse())
-            throw new Exception("Der Nutzer hat diese Rolle schon.");
+            throw new Exception("Der Nutzer hat diese Rolle bereits.");
 
         mitglied_seit = mitgliedInAlterRolle.mitglied_seit;
 
