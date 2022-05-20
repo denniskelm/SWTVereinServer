@@ -67,6 +67,13 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     }
 
 
+    public ArrayList<Dienstleistungsangebot> getAngebote() {
+        return angebote;
+    }
+
+    public ArrayList<Dienstleistungsgesuch> getGesuche() {
+        return gesuche;
+    }
 
     public String gesuchErstellen(String titel, String beschreibung, String kategorie, String imageUrl, String ersteller) throws Exception {
         int anzahl = gesuche.size();

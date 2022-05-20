@@ -31,5 +31,7 @@ public interface IGeraeteverwaltung extends Remote {
     void historieZuruecksetzen(String geraeteID) throws RemoteException;
     ArrayList<Geraet> geraeteAnzeigen() throws RemoteException;
     String geraeteDatenAusgeben(String geraeteID) throws RemoteException;
+    long getIdCounter();
+    ArrayList<Geraet> getGeraete();
 
 }

@@ -96,7 +96,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
         throw new NoSuchObjectException("Person mit ID: " + personenID + " nicht vorhanden.");
     }
 
-    public static ArrayList<Mitglied> getMitglieder() {
+    public ArrayList<Mitglied> getMitglieder() {
         return mitglieder;
     }
 
@@ -145,6 +145,26 @@ public class Rollenverwaltung implements IRollenverwaltung {
             rolleAendernSwitch(gast, rolle, mitglied_seit);
 
         }
+
+    public ArrayList<Gast> getGaeste() {
+        return gaeste;
+    }
+
+    public ArrayList<Mitarbeiter> getMitarbeiter() {
+        return mitarbeiter;
+    }
+
+    public ArrayList<Vorsitz> getVorsitze() {
+        return vorsitze;
+    }
+
+    public ArrayList<Mahnungsverwaltung> getMahnungen() {
+        return mahnungen;
+    }
+
+    public long getIdCounter() {
+        return IdCounter;
+    }
 
     public void rolleAendernSwitch(Gast gast, Rolle rolle, LocalDateTime mitglied_seit) {
         Gast g;

@@ -12,12 +12,15 @@ TODO Bastian Reichert
 TODO Dennis Kelm
 */
 
+import server.dienstleistungsmodul.Dienstleistungsangebot;
 import server.dienstleistungsmodul.Dienstleistungsangebotdaten;
+import server.dienstleistungsmodul.Dienstleistungsgesuch;
 import server.dienstleistungsmodul.Dienstleistungsgesuchdaten;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 // Interface, um RMI für Klasse Dienstleistungsverwaltung zu ermöglichen
 public interface IDienstleistungsverwaltung extends Remote {
@@ -33,5 +36,7 @@ public interface IDienstleistungsverwaltung extends Remote {
     void angebotAnnehmen(String gesuchsID, String ersteller, String nutzer, int stunden) throws RemoteException, Exception;
     Object[] getAngeboteInformationen(String geraeteID) throws RemoteException;
     Object[] getGesucheInformationen(String geraeteID) throws RemoteException;
+    ArrayList<Dienstleistungsangebot> getAngebote();
+    ArrayList<Dienstleistungsgesuch> getGesuche();
 
 }

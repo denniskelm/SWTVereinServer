@@ -53,6 +53,14 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         System.out.println("Geraet mit ID " +  geraeteID + " entfernt. Anzahl Geraete: " +  geraete.size());
     }
 
+    public ArrayList<Geraet> getGeraete() {
+        return geraete;
+    }
+
+    public long getIdCounter() {
+        return IdCounter;
+    }
+
     public Geraet fetch(String geraeteID) throws NoSuchObjectException {
         for (Geraet g : geraete) {
             if (g.getGeraeteID().equals(geraeteID)) return g;
