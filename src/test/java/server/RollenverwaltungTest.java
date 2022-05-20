@@ -10,6 +10,10 @@ import java.rmi.NoSuchObjectException;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
+/*author
+@author
+Ole Adelmann
+ */
 
 class RollenverwaltungTest {
 

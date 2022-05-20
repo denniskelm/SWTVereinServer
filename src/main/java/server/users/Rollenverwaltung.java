@@ -4,12 +4,7 @@ package server.users;
 @author
 Raphael Kleebaum
 Jonny Schlutter
-Gabriel Kleebaum
-Mhd Esmail Kanaan
-Gia Huy Hans Tran
 Ole Björn Adelmann
-Bastian Reichert
-Dennis Kelm
 */
 
 import server.Mahnungsverwaltung;
