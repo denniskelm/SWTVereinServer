@@ -76,7 +76,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         aidliste = new ArrayList<>();
         gidliste = new ArrayList<>();
         int anzahl=0;
-        while (anzahl<50000) {
+        while (anzahl<500) {
             if (anzahl < 9)  // todo : nach dem testen ist die Rueckgabe nicht wie gewunscht???
                 gidliste.add("dg0000" + (anzahl + 1)); // klammern hinzugefügt damit test richtig
             else if (anzahl < 99)
@@ -87,9 +87,10 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
                 gidliste.add("dg0" + (anzahl + 1));
             else if (anzahl < 50000)
                 gidliste.add("dg" + (anzahl + 1));
+            anzahl++;
         }
         anzahl=0;
-        while (anzahl<50000) {
+        while (anzahl<500) {
             if (anzahl < 9)  // todo : nach dem testen ist die Rueckgabe nicht wie gewunscht???
                 aidliste.add("da0000" + (anzahl + 1)); // klammern hinzugefügt damit test richtig
             else if (anzahl < 99)
@@ -100,6 +101,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
                 aidliste.add("da0" + (anzahl + 1));
             else if (anzahl < 50000)
                 aidliste.add("da" + (anzahl + 1));
+            anzahl++;
         }
     }
 
