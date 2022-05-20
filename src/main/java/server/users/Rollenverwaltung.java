@@ -306,4 +306,18 @@ public class Rollenverwaltung implements IRollenverwaltung {
         return null;
     }
 
+    public String getMitgliedsNamen(String MitgliedsID) throws Exception{
+
+         Mitglied mitglied;
+
+         try{
+             mitglied = fetch(MitgliedsID);
+         }
+         catch(NoSuchObjectException e){
+             throw new RuntimeException(e);
+         }
+
+         return mitglied.getVorname() + " " + mitglied.getNachname();
+    }
+
 }
