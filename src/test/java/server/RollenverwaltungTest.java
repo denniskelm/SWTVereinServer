@@ -122,7 +122,7 @@ class RollenverwaltungTest {
         public void nutzereintragAendern () throws NoSuchObjectException {
 
             rv.nutzereintragAendern("5", Personendaten.ANSCHRIFT, "Am See 2");
-            assertEquals("Am See 2", rv.fetch("2").getAnschrift());
+            assertEquals("Am See 2", rv.fetch("5").getAnschrift());
         }
 
         @Test
