@@ -49,7 +49,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         info[2] = a.getKategorie();
         info[3] = a.getTime1();
         info[4] = a.getTime2();
-        info[5] = a.getAngebots_ID();
+        info[5] = a.getPersonenID();
         return info;
     }
 
