@@ -57,6 +57,8 @@ public class VereinssoftwareServer {
             registry.bind("Dienstleistungsverwaltung", dVerwaltungInterface);
             registry.bind("Mahnungsverwaltung", mVerwaltungInterface);
             registry.bind("Rollenverwaltung", rVerwaltungInterface);
+
+            System.out.println("Server erfolgreich gestartet!");
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         } catch (AlreadyBoundException e) { //Sollte nicht weiter schlimm sein

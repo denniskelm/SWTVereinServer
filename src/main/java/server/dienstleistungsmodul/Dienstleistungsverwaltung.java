@@ -42,25 +42,29 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     public Object[] getAngeboteInformationen(String angebotID) throws NoSuchObjectException {
 
-        Dienstleistungsangebot a= fetchAngebot(angebotID);
-        Object[] info = new Object[6];
+        Dienstleistungsangebot a = fetchAngebot(angebotID);
+        Object[] info = new Object[8];
         info[0] = a.getTitel();
         info[1] = a.getBeschreibung();
         info[2] = a.getKategorie();
         info[3] = a.getTime1();
         info[4] = a.getTime2();
         info[5] = a.getPersonenID();
+        info[6] = angebotID;
+        info[7] = a.getImageUrl();
         return info;
     }
 
     public Object[] getGesucheInformationen(String gesucheID) throws NoSuchObjectException {
 
         Dienstleistungsgesuch g= fetchGesuch(gesucheID);
-        Object[] info = new Object[4];
+        Object[] info = new Object[6];
         info[0] = g.getTitel();
         info[1] = g.getBeschreibung();
         info[2] = g.getKategorie();
         info[3] = g.getGesuch_ID();
+        info[4] = g.getSuchender();
+        info[5] = g.getImageUrl();
         return info;
     }
 
@@ -105,14 +109,11 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         }
 
         try {
-            this.gesuchErstellen("Kaka","Kaka","Kaka","https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg","P00001");
-            this.gesuchErstellen("Kaka","Kaka","Kaka","https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg","P00001");
-            this.gesuchErstellen("Kaka","Kaka","Kaka","https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg","P00001");
-            this.gesuchErstellen("Kaka","Kaka","Kaka","https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg","P00001");
-            this.gesuchErstellen("Kaka","Kaka","Kaka","https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg","P00001");
+            gesuchErstellen("Rasen mähen", "Ich brauche jemanden, der meine Wiese mäht", "Gartenarbeiten", "https://www.gartentipps.com/wp-content/uploads/2013/08/spindelmaeher-1.jpg", "1");
+            gesuchErstellen("Pinsel", "Ich möchte meinen Zaun streichen und brauche dafür einen Pinsel.", "Werkzeuge", "https://cdn.hornbach.de/data/shop/D04/001/780/491/350/564/DV_8_8447763_02_4c_DE_20180410170240.jpg", "2");
 
-            this.angebotErstellen("Kaka","Kaka","Kaka", LocalDateTime.now(), LocalDateTime.now().plusDays(14), "https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg", "P00001");
-            this.angebotErstellen("Kaka","Kaka","Kaka", LocalDateTime.now(), LocalDateTime.now().plusDays(14), "https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg", "P00001");
+            angebotErstellen("Gartenschere", "Braucht jemand eine Schere?", "Werkzeuge", LocalDateTime.now().minusDays(2), LocalDateTime.now().plusDays(3), "https://bilder.gartenpaul.de/item/images/456/full/456-IMG-0840.JPG", "3");
+            angebotErstellen("Vogelhaus", "Gebe mein Vogelhäuschen ab.", "Sonstiges", LocalDateTime.now().minusDays(4), LocalDateTime.now().plusDays(1), "https://master.opitec.com/out/pictures/master/product/1/101290-01-z.jpg", "1");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -193,6 +194,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
                     case BESCHREIBUNG -> a.setBeschreibung(wert.toString());
                     case KATEGORIE -> a.setKategorie(wert.toString());
                     case SUCHENDER_ID -> a.setSuchender_ID((wert.toString()));
+                    case URL -> a.setImageUrl(wert.toString());
                 }
                 break;
             }
@@ -206,9 +208,10 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
                     case TITEL -> a.setTitel(wert.toString());
                     case BESCHREIBUNG -> a.setBeschreibung(wert.toString());
                     case KATEGORIE -> a.setKategorie(wert.toString());
-                    case AB -> a.setAb(LocalDateTime.parse(wert.toString()));
-                    case BIS -> a.setBis(LocalDateTime.parse(wert.toString()));
+                    case AB -> a.setAb((LocalDateTime) wert);
+                    case BIS -> a.setBis((LocalDateTime) wert);
                     case PERSONEN_ID -> a.setPersonenID(wert.toString());
+                    case URL -> a.setImageUrl(wert.toString());
                 }
                 break;
             }
@@ -260,7 +263,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     }
 
     public Object[][] OmniAngebotDaten() throws NoSuchObjectException {
-        Object[][] aliste = new Object[50000][6];
+        Object[][] aliste = new Object[50000][8];
 
         for(int i = 0; i < angebote.size(); i++) {
             aliste[i] = getAngeboteInformationen(angebote.get(i).getAngebots_ID());
@@ -270,7 +273,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     }
 
     public Object[][] OmniGesuchDaten() throws NoSuchObjectException{
-        Object[][] gliste = new Object[50000][5];
+        Object[][] gliste = new Object[50000][6];
 
         for (int i = 0; i < gesuche.size(); i++)
             gliste[i] = getGesucheInformationen(gesuche.get(i).getGesuch_ID());

@@ -7,5 +7,6 @@ public enum Dienstleistungsangebotdaten {
     KATEGORIE,
     AB,
     BIS,
-    PERSONEN_ID
+    PERSONEN_ID,
+    URL
 }

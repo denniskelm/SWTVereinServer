@@ -57,21 +57,21 @@ class DienstleistungsverwaltungTest {
         LocalDateTime ab = LocalDateTime.now();
         LocalDateTime bis = LocalDateTime.now().plusDays(15);
         String angebotID ;
-        /*try {
-            angebotID = dv.angebotErstellen( "titel",  "beschreibung",  "kategorie",  ab ,  bis ,  "personen_ID");
+        try {
+            //angebotID = dv.angebotErstellen( "titel",  "beschreibung",  "kategorie",  ab ,  bis ,  "personen_ID");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
         String expectedAngebotID = "da00001";
 
-        assertEquals(expectedAngebotID,angebotID);
+        assertEquals(expectedAngebotID,"angebotID");
 
 
         int size = dv.getAngeboteArrayList().size();
 
         assertEquals(1,size);
-    */
+
 
     }
 
@@ -100,7 +100,7 @@ class DienstleistungsverwaltungTest {
     @Test
     void angebotLoeschen() {
         // check if angebot is deleted
-/*
+
         Dienstleistungsverwaltung dv = new Dienstleistungsverwaltung();
 
 
@@ -108,19 +108,19 @@ class DienstleistungsverwaltungTest {
         LocalDateTime bis = LocalDateTime.now().plusDays(15);
         String angebotID ;
         try {
-            angebotID = dv.angebotErstellen( "titel",  "beschreibung",  "kategorie",  ab ,  bis ,  "personen_ID");
+            //angebotID = dv.angebotErstellen( "titel",  "beschreibung",  "kategorie",  ab ,  bis ,  "personen_ID");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
         String expectedAngebotID = "da00001";
 
-        assertEquals(expectedAngebotID,angebotID);
+        assertEquals(expectedAngebotID,"angebotID");
 
         dv.angebotLoeschen("da00001");
         int size = dv.getAngeboteArrayList().size();
         assertEquals(0,size);
-*/
+
 
     }
 

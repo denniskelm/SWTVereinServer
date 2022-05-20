@@ -28,6 +28,8 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
 
     public Geraeteverwaltung() {
         geraete = new ArrayList<>();
+
+        geraetHinzufuegen("Rasenmäher", "Gabriel Kleebaum", 5, "Geräte", "Nichts weiter zu sagen.", "Raum 2");
     }
 
     public String geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort) {

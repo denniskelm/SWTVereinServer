@@ -34,6 +34,10 @@ public class Rollenverwaltung implements IRollenverwaltung {
          mitarbeiter = new ArrayList<Mitarbeiter>();
          vorsitze = new ArrayList<Vorsitz>();
          IdCounter = 0;
+
+         mitgliedHinzufuegen("Ehrenmann", "Stefan", "stefan.ehrenmann@t-online.de", "12345678", "Huglfingstr. 27", "M4657", 110, false, LocalDateTime.now());
+         mitgliedHinzufuegen("Tran", "Huy", "huy@email.de", "1234", "Musterstr. 1", "ABC", 123, true, LocalDateTime.now().minusDays(3));
+         mitgliedHinzufuegen("Kelm", "Dennis", "dennis@email.de", "2345", "Teststr. 4", "DEF", 234, false, LocalDateTime.now().minusDays(20));
      }
 
      public void gastHinzufuegen(String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, int telefonnummer, boolean spender) {
@@ -47,8 +51,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
          gaeste.add(gast);
          System.out.println("Gast mit ID " +  personenID + " hinzugefuegt. Anzahl Gaeste: " +  gaeste.size());
      }
-
-     // TODO wie zum Teufel soll man das richtig machen?
+     
      public void mitgliedHinzufuegen(String nachname, String vorname, String email, String password, String anschrift,
                                      String mitgliedsnr, int telefonnummer, boolean spender/*, Mahnungsverwaltung mahnungen, Profilseite profilseite */,
                                      LocalDateTime mitglied_seit) {
@@ -58,9 +61,8 @@ public class Rollenverwaltung implements IRollenverwaltung {
          IdCounter++;
          String personenID = Long.toString(IdCounter);
 
-         Mitglied m = new Mitglied(personenID,nachname,vorname,email,password,anschrift,mitgliedsnr,telefonnummer,spender, mitglied_seit);
+         Mitglied m = new Mitglied(personenID, nachname, vorname, email, password, anschrift, mitgliedsnr, telefonnummer, spender, mitglied_seit);
          mitglieder.add(m);
-         System.out.println("Mitglied mit ID " +  personenID + " hinzugefuegt. Anzahl Mitglieder: " +  mitglieder.size());
 
      }
 
@@ -128,8 +130,14 @@ public class Rollenverwaltung implements IRollenverwaltung {
         } catch (NoSuchObjectException e) {
             try {
                 GastInAlterRolle = fetchGaeste(mitgliedsID);
-                gastRolleAendern(GastInAlterRolle, rolle);
+                mitglied_seit = LocalDateTime.now();
+
+                if(GastInAlterRolle.getClass() == rolle.getKlasse()) {
+                    throw new Exception("Der Nutzer hat diese Rolle bereits.");
+                }
+                rolleAendernSwitch(GastInAlterRolle, rolle, mitglied_seit);
                 return;
+
             } catch (NoSuchObjectException f) {
                 throw new RuntimeException(f);
             }
@@ -142,18 +150,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
         rolleAendernSwitch(mitgliedInAlterRolle, rolle, mitglied_seit);
     }
-
-        private void gastRolleAendern(Gast gast, Rolle rolle) throws Exception {
-            Gast g;
-            LocalDateTime mitglied_seit = LocalDateTime.now();
-
-
-            if (gast.getClass() ==  rolle.getKlasse())
-                throw new Exception("Der Nutzer hat diese Rolle schon.");
-
-            rolleAendernSwitch(gast, rolle, mitglied_seit);
-
-        }
 
     private void rolleAendernSwitch(Gast gast, Rolle rolle, LocalDateTime mitglied_seit) {
         Gast g;
