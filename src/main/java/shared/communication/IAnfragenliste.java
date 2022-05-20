@@ -6,9 +6,9 @@ Bastian Reichert
 */
 
 import server.dienstleistungsmodul.AngebotAnfrage;
-import server.dienstleistungsmodul.AngebotAnfragedaten;
+//import server.dienstleistungsmodul.AngebotAnfragedaten;
 import server.dienstleistungsmodul.GesuchAnfrage;
-import server.dienstleistungsmodul.GesuchAnfragedaten;
+//import server.dienstleistungsmodul.GesuchAnfragedaten;
 
 import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
