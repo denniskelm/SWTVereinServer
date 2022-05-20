@@ -5,7 +5,8 @@ public enum Dienstleistungsgesuchdaten {
     TITEL,
     BESCHREIBUNG,
     KATEGORIE,
-    SUCHENDER_ID
+    SUCHENDER_ID,
+    URL
 
 
 }

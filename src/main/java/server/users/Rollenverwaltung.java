@@ -51,8 +51,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
          gaeste.add(gast);
          System.out.println("Gast mit ID " +  personenID + " hinzugefuegt. Anzahl Gaeste: " +  gaeste.size());
      }
-
-     // TODO wie zum Teufel soll man das richtig machen?
+     
      public void mitgliedHinzufuegen(String nachname, String vorname, String email, String password, String anschrift,
                                      String mitgliedsnr, int telefonnummer, boolean spender/*, Mahnungsverwaltung mahnungen, Profilseite profilseite */,
                                      LocalDateTime mitglied_seit) {
@@ -62,9 +61,8 @@ public class Rollenverwaltung implements IRollenverwaltung {
          IdCounter++;
          String personenID = Long.toString(IdCounter);
 
-         Mitglied m = new Mitglied(personenID,nachname,vorname,email,password,anschrift,mitgliedsnr,telefonnummer,spender, mitglied_seit);
+         Mitglied m = new Mitglied(personenID, nachname, vorname, email, password, anschrift, mitgliedsnr, telefonnummer, spender, mitglied_seit);
          mitglieder.add(m);
-         System.out.println("Mitglied mit ID " +  personenID + " hinzugefuegt. Anzahl Mitglieder: " +  mitglieder.size());
 
      }
 

@@ -33,7 +33,7 @@ class RollenverwaltungTest {
 
         rv.gastHinzufuegen("Adelmann", "Ole", "O.a@.de", "1234", "Haus am See 1", "6772571836", 11238, true);
 
-        assertEquals("Adelmann", ((Gast) rv.fetchGaeste("3")).getNachname());
+        assertEquals("Adelmann", ((Gast) rv.fetchGaeste("6")).getNachname());
 
         Assertions.assertThrows(NoSuchObjectException.class, () -> {
             rv.fetch("200");
@@ -44,7 +44,7 @@ class RollenverwaltungTest {
     public void MitgliedHinzufuegen() throws NoSuchObjectException {
 
         rv.mitgliedHinzufuegen("Mustermann", "Max", "we.de@de.de", "hallo", "Am See 3", "123", 87772627, false, LocalDateTime.parse("2016-11-09T11:44:44.797"));
-        assertEquals("Mustermann", rv.fetch("4").getNachname());
+        assertEquals("Mustermann", rv.fetch("7").getNachname());
 
         Assertions.assertThrows(NoSuchObjectException.class, () -> {
             rv.fetch("2000");
@@ -54,10 +54,10 @@ class RollenverwaltungTest {
     @Test
     public void fetch() throws NoSuchObjectException {
 
-        assertEquals("Musterfrau", rv.fetch("2").getNachname());
+        assertEquals("Musterfrau", rv.fetch("5").getNachname());
 
         Assertions.assertThrows(NoSuchObjectException.class, () -> {
-            rv.fetch("3");
+            rv.fetch("300");
         });
     }
 
@@ -65,38 +65,38 @@ class RollenverwaltungTest {
     public void RolleAendern() throws Exception {
 
         // Rolle von Gast zu Mitglied ändern
-        rv.rolleAendern("1", Rolle.MITGLIED);
+        rv.rolleAendern("4", Rolle.MITGLIED);
         Object[] mitglieder = rv.mitgliedListeAnzeigen();
         boolean exist = false;
 
 
         for (int i = 0; i < mitglieder.length; i++) {
-            if (((Mitglied) mitglieder[i]).getPersonenID().equals("1")) {
+            if (((Mitglied) mitglieder[i]).getPersonenID().equals("4")) {
                 exist = true;
             }
         }
         assertTrue(exist);
 
         // Rolle von Mitglied zum Mitarbeiter aendern
-        rv.rolleAendern("2", Rolle.MITARBEITER);
+        rv.rolleAendern("5", Rolle.MITARBEITER);
         Object[] mitarbeiter = rv.mitarbeiterListeAnzeigen();
         boolean exist1 = false;
 
 
         for(int k = 0; mitarbeiter.length > k; k++){
-            if(((Mitarbeiter) mitarbeiter[k]).getPersonenID().equals("2")){
+            if(((Mitarbeiter) mitarbeiter[k]).getPersonenID().equals("5")){
                 exist1 = true;
             }
         }
         assertTrue(exist1);
 
         // Rolle von Mitarbeiter zum Vorstand aendern
-        rv.rolleAendern("2", Rolle.VORSITZ);
+        rv.rolleAendern("5", Rolle.VORSITZ);
         Object[] vorsitze = rv.vorsitzListeAnzeigen();
         boolean exist2 = false;
 
         for(int j = 0; vorsitze.length > j; j++){
-            if(((Vorsitz) vorsitze[j]).getPersonenID().equals("2")){
+            if(((Vorsitz) vorsitze[j]).getPersonenID().equals("5")){
                 exist2 = true;
             }
         }
@@ -104,7 +104,7 @@ class RollenverwaltungTest {
 
         // Throws RuntimeException
         Assertions.assertThrows(RuntimeException.class, () -> {
-           rv.rolleAendern("8", Rolle.GAST);
+           rv.rolleAendern("300", Rolle.GAST);
         });
 
         //Fehlerfall Nutzer hat diese Rolle schon
@@ -117,7 +117,7 @@ class RollenverwaltungTest {
         @Test
         public void nutzereintragAendern () throws NoSuchObjectException {
 
-            rv.nutzereintragAendern("2", Personendaten.ANSCHRIFT, "Am See 2");
+            rv.nutzereintragAendern("5", Personendaten.ANSCHRIFT, "Am See 2");
             assertEquals("Am See 2", rv.fetch("2").getAnschrift());
         }
 

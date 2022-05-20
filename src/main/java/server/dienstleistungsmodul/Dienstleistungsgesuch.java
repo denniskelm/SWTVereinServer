@@ -37,7 +37,10 @@ public class Dienstleistungsgesuch {
         return suchenderID;
     }
 
+    public String getImageUrl() { return imageUrl; }
+
     public void setGesuch_ID(String gesuch_ID) { this.gesuch_ID = gesuch_ID; }
+
 
     public void setTitel(String titel) {
         this.titel = titel;
@@ -50,6 +53,8 @@ public class Dienstleistungsgesuch {
     public void setKategorie(String kategorie) {
         this.kategorie = kategorie;
     }
+
+    public void setImageUrl(String url) { this.imageUrl = url; }
 
     /* public void setSuchender(Mitglied suchender) {
         this.suchender = suchender;

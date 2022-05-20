@@ -66,6 +66,8 @@ public class Dienstleistungsangebot {
         this.personenID = personenID;
     }
 
+    public void setImageUrl(String url) { this.imageUrl = url; }
+
     public String getTitel(){return this.titel;}
     public String getBeschreibung(){return this.beschreibung;}
     public String getKategorie(){return this.kategorie;}

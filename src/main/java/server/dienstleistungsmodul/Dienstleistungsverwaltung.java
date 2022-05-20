@@ -63,6 +63,8 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         info[1] = g.getBeschreibung();
         info[2] = g.getKategorie();
         info[3] = g.getGesuch_ID();
+        info[4] = g.getSuchender();
+        info[5] = g.getImageUrl();
         return info;
     }
 
@@ -192,6 +194,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
                     case BESCHREIBUNG -> a.setBeschreibung(wert.toString());
                     case KATEGORIE -> a.setKategorie(wert.toString());
                     case SUCHENDER_ID -> a.setSuchender_ID((wert.toString()));
+                    case URL -> a.setImageUrl(wert.toString());
                 }
                 break;
             }
@@ -208,6 +211,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
                     case AB -> a.setAb((LocalDateTime) wert);
                     case BIS -> a.setBis((LocalDateTime) wert);
                     case PERSONEN_ID -> a.setPersonenID(wert.toString());
+                    case URL -> a.setImageUrl(wert.toString());
                 }
                 break;
             }
