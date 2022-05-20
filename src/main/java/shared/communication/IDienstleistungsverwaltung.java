@@ -36,7 +36,7 @@ public interface IDienstleistungsverwaltung extends Remote {
     void angebotAnnehmen(String gesuchsID, String ersteller, String nutzer, int stunden) throws RemoteException, Exception;
     Object[] getAngeboteInformationen(String geraeteID) throws RemoteException;
     Object[] getGesucheInformationen(String geraeteID) throws RemoteException;
-    ArrayList<Dienstleistungsangebot> getAngebote();
-    ArrayList<Dienstleistungsgesuch> getGesuche();
+    ArrayList getAngebote();
+    ArrayList getGesuche();
 
 }
