@@ -130,8 +130,14 @@ public class Rollenverwaltung implements IRollenverwaltung {
         } catch (NoSuchObjectException e) {
             try {
                 GastInAlterRolle = fetchGaeste(mitgliedsID);
-                gastRolleAendern(GastInAlterRolle, rolle);
+                mitglied_seit = LocalDateTime.now();
+
+                if(GastInAlterRolle.getClass() == rolle.getKlasse()) {
+                    throw new Exception("Der Nutzer hat diese Rolle bereits.");
+                }
+                rolleAendernSwitch(GastInAlterRolle, rolle, mitglied_seit);
                 return;
+
             } catch (NoSuchObjectException f) {
                 throw new RuntimeException(f);
             }
@@ -144,18 +150,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
         rolleAendernSwitch(mitgliedInAlterRolle, rolle, mitglied_seit);
     }
-
-        private void gastRolleAendern(Gast gast, Rolle rolle) throws Exception {
-            Gast g;
-            LocalDateTime mitglied_seit = LocalDateTime.now();
-
-
-            if (gast.getClass() ==  rolle.getKlasse())
-                throw new Exception("Der Nutzer hat diese Rolle schon.");
-
-            rolleAendernSwitch(gast, rolle, mitglied_seit);
-
-        }
 
     private void rolleAendernSwitch(Gast gast, Rolle rolle, LocalDateTime mitglied_seit) {
         Gast g;
