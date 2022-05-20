@@ -104,7 +104,7 @@ class RollenverwaltungTest {
 
         // Throws RuntimeException
         Assertions.assertThrows(RuntimeException.class, () -> {
-           rv.rolleAendern("3", Rolle.GAST);
+           rv.rolleAendern("8", Rolle.GAST);
         });
 
         //Fehlerfall Nutzer hat diese Rolle schon
