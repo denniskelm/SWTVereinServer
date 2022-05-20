@@ -101,7 +101,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         return gesuch_ID;
     }
 
-    public String angebotErstellen(String titel, String beschreibung, String kategorie, LocalDateTime ab, LocalDateTime bis , String personen_ID) throws Exception {
+    public String angebotErstellen(String titel, String beschreibung, String kategorie, LocalDateTime ab, LocalDateTime bis ,String imageUrl, String personen_ID) throws Exception {
         int anzahl = angebote.size();
         String angebot_ID;
 
@@ -118,7 +118,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         else
             throw new Exception();
 
-        Dienstleistungsangebot g = new Dienstleistungsangebot(angebot_ID, titel, beschreibung, kategorie, ab, bis, personen_ID);
+        Dienstleistungsangebot g = new Dienstleistungsangebot(angebot_ID, titel, beschreibung, kategorie, ab, bis,imageUrl, personen_ID);
         angebote.add(g);
         return angebot_ID;
     }
