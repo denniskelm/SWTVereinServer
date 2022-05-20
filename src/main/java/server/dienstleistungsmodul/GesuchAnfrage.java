@@ -4,7 +4,7 @@ import server.dienstleistungsmodul.Dienstleistungsgesuch;
 
 public class GesuchAnfrage {
     public server.users.Mitglied nutzer ;
-    private Dienstleistungsgesuch gesuch;
+    public Dienstleistungsgesuch gesuch;
     public int stunden;
 
     public GesuchAnfrage (server.users.Mitglied nutzer, Dienstleistungsgesuch gesuch, int stunden) {

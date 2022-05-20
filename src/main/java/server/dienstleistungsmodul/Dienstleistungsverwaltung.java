@@ -37,11 +37,11 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         return gesuche;
     }
 
-    private ArrayList<String> aidliste;
-    private ArrayList<String> gidliste;
+    public ArrayList<String> aidliste;
+    public ArrayList<String> gidliste;
 
     public Object[] getAngeboteInformationen(String angebotID) throws NoSuchObjectException {
-        //TODO Implementieren
+
         Dienstleistungsangebot a= fetchAngebot(angebotID);
         Object[] info = new Object[6];
         info[0] = a.getTitel();
@@ -54,7 +54,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     }
 
     public Object[] getGesucheInformationen(String gesucheID) throws NoSuchObjectException {
-        //TODO Implementieren
+
         Dienstleistungsgesuch g= fetchGesuch(gesucheID);
         Object[] info = new Object[4];
         info[0] = g.getTitel();

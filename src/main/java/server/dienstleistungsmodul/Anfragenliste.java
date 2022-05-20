@@ -1,5 +1,7 @@
 package server.dienstleistungsmodul;
 
+import server.VereinssoftwareServer;
+
 import java.util.ArrayList;
 
 public class Anfragenliste {
@@ -45,11 +47,13 @@ public class Anfragenliste {
         this.gliste.remove(g);
         this.nutzer.veraendereStundenkonto(g.stunden);
         g.nutzer.veraendereStundenkonto(-g.stunden);
+        VereinssoftwareServer.dienstleistungsverwaltung.gidliste.add(g.gesuch.getGesuch_ID());
     }
 
     public void aAnfrageAnnehmen(AngebotAnfrage a) throws Exception{
         this.gliste.remove(a);
         this.nutzer.veraendereStundenkonto(a.stunden);
         a.nutzer.veraendereStundenkonto(-a.stunden);
+        VereinssoftwareServer.dienstleistungsverwaltung.aidliste.add(a.angebot.getAngebots_ID());
     }
 }
