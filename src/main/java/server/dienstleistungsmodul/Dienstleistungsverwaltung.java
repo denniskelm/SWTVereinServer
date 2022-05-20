@@ -247,10 +247,10 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     }
 
     public Object[][] OmniAngebotDaten() throws NoSuchObjectException {
-        Object[][] aliste = new Object[50000][];
+        Object[][] aliste = new Object[50000][7];
 
         for(int i = 0; i < aliste.length; i++) {
-            aliste[i] = getAngeboteInformationen(aidliste.get(i));
+            aliste[i] = getAngeboteInformationen(angebote.get(i).getAngebots_ID());
         }
 
         return aliste;
@@ -260,7 +260,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         Object[][] gliste = new Object[50000][5];
         
         for (int i = 0; i < gliste.length; i++)
-            gliste[i] = getGesucheInformationen(gidliste.get(i));
+            gliste[i] = getGesucheInformationen(gesuche.get(i).getGesuch_ID());
 
         return gliste;
     }
