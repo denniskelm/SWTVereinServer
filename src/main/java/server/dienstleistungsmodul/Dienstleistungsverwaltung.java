@@ -187,7 +187,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     public void gesuchAnnehmen(String gesuchsID, String erstellerID, String nutzerID, int stunden) throws Exception{
 
         server.users.Rollenverwaltung r= VereinssoftwareServer.rollenverwaltung;
-        Dienstleistungsgesuch gesuch = fetchAngebot(gesuchsID)
+        Dienstleistungsgesuch gesuch = fetchGesuch(gesuchsID);
 
         server.users.Mitglied ersteller=r.fetch(erstellerID);
         server.users.Mitglied nutzer=r.fetch(nutzerID);
@@ -216,7 +216,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     public void angebotAnnehmen(String angebotID, String erstellerID, String nutzerID, int stunden) throws Exception{
 
         server.users.Rollenverwaltung r= VereinssoftwareServer.rollenverwaltung;
-        Dienstleistungsangebot angebot = fetchAngebot(angebotID)
+        Dienstleistungsangebot angebot = fetchAngebot(angebotID);
 
 
         server.users.Mitglied ersteller=r.fetch(erstellerID);
