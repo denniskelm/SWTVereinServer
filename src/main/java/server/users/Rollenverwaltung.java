@@ -263,11 +263,20 @@ public class Rollenverwaltung implements IRollenverwaltung {
         }
     }
 
-    public boolean login(String email, int password) throws Exception {
+    public boolean login(String email, String password) throws Exception {
+
+        for (Gast m : gaeste) {
+            if (m.email.equals(email)) {
+                if (m.password == password.hashCode())
+                    return true;
+                else
+                    throw new Exception("E-Mail oder Passwort falsch!");
+            }
+        }
 
         for (Mitglied m : mitglieder) {
             if (m.email.equals(email)) {
-                if (m.password == password)
+                if (m.password == password.hashCode())
                     return true;
                 else
                     throw new Exception("E-Mail oder Passwort falsch!");
@@ -276,7 +285,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
         for (Mitglied m : mitarbeiter) {
             if (m.email.equals(email)) {
-                if (m.password == password)
+                if (m.password == password.hashCode())
                     return true;
                 else
                     throw new Exception("E-Mail oder Passwort falsch!");
@@ -285,7 +294,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
         for (Mitglied m : vorsitze) {
             if (m.email.equals(email)) {
-                if (m.password == password)
+                if (m.password == password.hashCode())
                     return true;
                 else
                     throw new Exception("E-Mail oder Passwort falsch!");

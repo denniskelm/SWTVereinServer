@@ -126,11 +126,11 @@ class RollenverwaltungTest {
 
             // Richtige Anmeldedaten
             boolean eingeloggt = false;
-            eingeloggt = rv.login("we.de@de.de", ("hallo1".hashCode()));
+            eingeloggt = rv.login("we.de@de.de", ("hallo1"));
             assertTrue(eingeloggt);
 
             // Falsche Anmeldedaten
-            Throwable exception = assertThrows(Exception.class, () -> rv.login("1", 2));
+            Throwable exception = assertThrows(Exception.class, () -> rv.login("1", "2"));
             assertEquals("E-Mail oder Passwort falsch!", exception.getMessage());
         }
 
