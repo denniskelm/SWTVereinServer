@@ -1,5 +1,8 @@
 package server.dienstleistungsmodul;
-
+/*
+@author
+Bastian Reichert
+*/
 import server.dienstleistungsmodul.Dienstleistungsgesuch;
 
 public class GesuchAnfrage {

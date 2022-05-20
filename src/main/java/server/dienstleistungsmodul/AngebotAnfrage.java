@@ -1,5 +1,8 @@
 package server.dienstleistungsmodul;
-
+/*
+@author
+Bastian Reichert
+*/
 public class AngebotAnfrage {
     public server.users.Mitglied nutzer;
     public Dienstleistungsangebot angebot;

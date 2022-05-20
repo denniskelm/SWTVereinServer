@@ -1,17 +1,58 @@
 package server.dienstleistungsmodul;
-
+/*
+@author
+Bastian Reichert
+*/
 import server.VereinssoftwareServer;
+import shared.communication.IAnfragenliste;
 
+import java.rmi.NoSuchObjectException;
 import java.util.ArrayList;
 
-public class Anfragenliste {
+public class Anfragenliste implements IAnfragenliste {
     private String user_ID;
 
     public server.users.Mitglied nutzer;
     private ArrayList<GesuchAnfrage> gliste;
     private ArrayList<AngebotAnfrage> aliste;
 
+    public Object[] getGAnfragenInfo(GesuchAnfrage g) throws NoSuchObjectException {
 
+        Object[] info = new Object[3];
+        info[0] = g.nutzer.getPersonenID();
+        info[1] = g.gesuch.getGesuch_ID();
+        info[2] = g.stunden;
+        return info;
+    }
+
+    public Object[] getAAnfragenInfo(AngebotAnfrage a) throws NoSuchObjectException {
+
+        Object[] info = new Object[3];
+        info[0] = a.nutzer.getPersonenID();
+        info[1] = a.angebot.getAngebots_ID();
+        info[2] = a.stunden;
+        return info;
+    }
+
+    public Object[][] OmniAAnfrageDaten() throws NoSuchObjectException {
+        Object[][] liste = new Object[50][3];//TODO index out of range
+
+        for(int i = 0; i < aliste.size(); i++) {
+            liste[i] = getAAnfragenInfo(aliste.get(i));
+        }
+
+        return liste;
+    }
+
+    public Object[][] OmniGAnfrageDaten() throws NoSuchObjectException {
+        Object[][] liste = new Object[50][3];
+
+        for(int i = 0; i < gliste.size(); i++) {
+            liste[i] = getGAnfragenInfo(gliste.get(i));
+        }
+
+        return liste;
+    }
     public Anfragenliste(String user_ID) {
         this.user_ID = user_ID;
         this.gliste = new ArrayList<GesuchAnfrage>();
@@ -27,12 +68,12 @@ public class Anfragenliste {
         GesuchAnfrage g = new GesuchAnfrage(nutzer, gesuch, stunden);
         this.gliste.add(g);
     }
-    public void aremoveaAnfrage(){
-
+    public void removeAAnfrage(AngebotAnfrage a){
+        this.aliste.remove(a);
     }
 
-    public void aremovegAnfrage(){
-
+    public void removeGAnfrage(GesuchAnfrage g){
+        this.gliste.remove(g);
     }
 
     public void gAnfrageAnnehmen(GesuchAnfrage g) throws Exception{
