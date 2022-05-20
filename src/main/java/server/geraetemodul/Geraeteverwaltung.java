@@ -24,7 +24,7 @@ import java.util.Objects;
 public class Geraeteverwaltung implements IGeraeteverwaltung {
     private static ArrayList<Geraet> geraete;
 
-    private static long IdCounter = 0;
+    private static int IdCounter = 0;
 
     public Geraeteverwaltung() {
         geraete = new ArrayList<>();
@@ -57,7 +57,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         return geraete;
     }
 
-    public long getIdCounter() {
+    public int getIdCounter() {
         return IdCounter;
     }
 
@@ -155,8 +155,8 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     }
 
 
-    public ArrayList<Geraet> geraeteAnzeigen() { //geraet Fenester anzeigen
-        return geraete;
+    public Object geraeteAnzeigen() { //geraet Fenester anzeigen
+        return (Object) geraete;
     }
 
     //Zum Testen der Geraeteverwaltung
