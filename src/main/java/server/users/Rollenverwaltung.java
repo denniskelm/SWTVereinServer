@@ -64,6 +64,14 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
      }
 
+    public void mitarbeiterHinzufuegen() {
+
+    }
+
+    public void vorstandHinzufuegen() {
+
+    }
+
     public Mitglied fetch(String mitgliederID) throws NoSuchObjectException {
         for (Mitglied m : vorsitze) {
             if (m.getPersonenID().equals(mitgliederID)) return m;

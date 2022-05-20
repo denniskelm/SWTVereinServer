@@ -34,8 +34,13 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         if (geraete.size() >= 50000) throw new ArrayIndexOutOfBoundsException();
 
         //naechste ID generieren
+        String geraeteID;
         IdCounter++;
-        String geraeteID = Long.toString(IdCounter);
+        if (IdCounter < 10) geraeteID = "g0000" + (IdCounter);
+        else if (IdCounter < 100) geraeteID = "g000" + (IdCounter);
+        else if (IdCounter < 1000) geraeteID = "g00" + (IdCounter);
+        else if (IdCounter < 10000) geraeteID = "g0" + (IdCounter);
+        else geraeteID = "g" + (IdCounter);
 
         Geraet g = new Geraet(geraeteID, name, spender, leihfrist, kategorie, beschreibung, abholort);
         geraete.add(g);
@@ -77,7 +82,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         }
 
         g.reservierungHinzufuegen(personenID); //Reservierung hinzufuegen
-        m.datenVerwalten(Personendaten.RESERVIERUNGEN, String.valueOf((m.getReservierungen()+1))); //Anzahl Reservierung des Mitglieds erhöhen
+        m.reservierungenErhöhen(); //Anzahl der Reservierung des Mitglieds erhöhen
         System.out.println("Geraet mit ID " +  geraeteID + " reserviert.");
     }
 
@@ -90,7 +95,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
             throw new Exception("Geraet ist momentan von dir ausgeliehen.");
 
         g.reservierungEntfernen(personenID);
-        m.datenVerwalten(Personendaten.RESERVIERUNGEN, String.valueOf((m.getReservierungen()-1))); //Anzahl Reservierung des Mitglieds verringern
+        m.reservierungenVerringern(); //Anzahl Reservierung des Mitglieds verringern
         System.out.println("Geraet mit ID " +  geraeteID + " storniert.");
     }
 
@@ -108,10 +113,16 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     //Mitarbeiter nimmt das Geraet von einem Mitglied wieder an
     public void geraetAnnehmen(String geraeteID) throws Exception {
         Geraet g = fetch(geraeteID);
+
         if (g.getReservierungsliste().isEmpty())
             throw new Exception("keine Reservierung vorhanden.");
         if (g.getLeihstatus() != Status.AUSGELIEHEN)
             throw new Exception("beanspruchtes/freies Geraet kann nicht angenommen werden.");
+
+        //Anzahl Reservierung des Mitglieds verringern
+        server.users.Rollenverwaltung rv = VereinssoftwareServer.rollenverwaltung;
+        Mitglied m = rv.fetch(g.getReservierungsliste().get(0).getMitlgiedsID());
+        m.reservierungenVerringern();
 
         g.annehmen();
     }
