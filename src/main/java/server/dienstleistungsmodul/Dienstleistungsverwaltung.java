@@ -185,14 +185,9 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     }*/
 
     public void gesuchAnnehmen(String gesuchsID, String erstellerID, String nutzerID, int stunden) throws Exception{
-        Dienstleistungsgesuch gesuch= null;
+
         server.users.Rollenverwaltung r= VereinssoftwareServer.rollenverwaltung;
-        int i=0;
-        while(i<gesuche.size()){
-            if (gesuchsID==gesuche.get(i).getGesuch_ID()){
-                gesuch=gesuche.get(i);
-            }
-        }
+        Dienstleistungsgesuch gesuch = fetchAngebot(gesuchsID)
 
         server.users.Mitglied ersteller=r.fetch(erstellerID);
         server.users.Mitglied nutzer=r.fetch(nutzerID);
@@ -219,15 +214,10 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         throw new NoSuchObjectException("Angebot mit ID: " + gID + " nicht vorhanden.");
     }
     public void angebotAnnehmen(String angebotID, String erstellerID, String nutzerID, int stunden) throws Exception{
-        Dienstleistungsangebot angebot= null;
-        server.users.Rollenverwaltung r= VereinssoftwareServer.rollenverwaltung;
-        int i=0;
-        while(i<angebote.size()){
-            if (angebotID==angebote.get(i).getAngebots_ID()){
-                angebot=angebote.get(i);
-            }
 
-        }
+        server.users.Rollenverwaltung r= VereinssoftwareServer.rollenverwaltung;
+        Dienstleistungsangebot angebot = fetchAngebot(angebotID)
+
 
         server.users.Mitglied ersteller=r.fetch(erstellerID);
         server.users.Mitglied nutzer=r.fetch(nutzerID);

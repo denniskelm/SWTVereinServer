@@ -1,6 +1,6 @@
 package server.dienstleistungsmodul;
 
-import java.util.ArrayList; //Todo weiß nicht ob wir das woanders haben
+import java.util.ArrayList;
 
 public class Anfragenliste {
     private String user_ID;
@@ -9,7 +9,7 @@ public class Anfragenliste {
     private ArrayList<GesuchAnfrage> gliste;
     private ArrayList<AngebotAnfrage> aliste;
 
-    //Todo Die listen werden eigentlich in der DB gespeichert. Der Austauch muss noch implimentiert werden
+
     public Anfragenliste(String user_ID) {
         this.user_ID = user_ID;
         this.gliste = new ArrayList<GesuchAnfrage>();
