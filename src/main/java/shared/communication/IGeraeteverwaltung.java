@@ -29,9 +29,9 @@ public interface IGeraeteverwaltung extends Remote {
     void geraetEntfernen(String geraeteID) throws RemoteException;
     void geraeteDatenVerwalten(String geraeteID, Geraetedaten attr, Object wert) throws RemoteException;
     void historieZuruecksetzen(String geraeteID) throws RemoteException;
-    ArrayList<Geraet> geraeteAnzeigen() throws RemoteException;
+    ArrayList geraeteAnzeigen() throws RemoteException;
     String geraeteDatenAusgeben(String geraeteID) throws RemoteException;
     long getIdCounter();
-    ArrayList<Geraet> getGeraete();
+    ArrayList getGeraete();
 
 }
