@@ -4,6 +4,8 @@ import server.VereinssoftwareServer;
 import server.dienstleistungsmodul.*;
 import shared.communication.IDienstleistungsverwaltung;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
@@ -35,25 +37,27 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         return gesuche;
     }
 
-    public Object[] getAngeboteInformationen(String gesucheID){
+    public Object[] getAngeboteInformationen(String angebotID) throws NoSuchObjectException {
         //TODO Implementieren
+        Dienstleistungsangebot a= fetchAngebot(angebotID);
         Object[] info = new Object[6];
-        info[0] = "Titel";
-        info[1] = "Beschreibung";
-        info[2] = "Kategorie";
-        info[3] = LocalDateTime.now();
-        info[4] = LocalDateTime.now().plusDays(14);
-        info[5] = "P00001";
+        info[0] = a.getTitel();
+        info[1] = a.getBeschreibung();
+        info[2] = a.getKategorie();
+        info[3] = a.getTime1();
+        info[4] = a.getTime2();
+        info[5] = a.getAngebots_ID();
         return info;
     }
 
-    public Object[] getGesucheInformationen(String gesucheID){
+    public Object[] getGesucheInformationen(String gesucheID) throws NoSuchObjectException {
         //TODO Implementieren
+        Dienstleistungsgesuch g= fetchGesuch(gesucheID);
         Object[] info = new Object[4];
-        info[0] = "Titel";
-        info[1] = "Beschreibung";
-        info[2] = "Kategorie";
-        info[3] = "P00001";
+        info[0] = g.getTitel();
+        info[1] = g.getBeschreibung();
+        info[2] = g.getKategorie();
+        info[3] = g.getGesuch_ID();
         return info;
     }
 
@@ -97,7 +101,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         return gesuch_ID;
     }
 
-    public String angebotErstellen(String titel, String beschreibung, String kategorie, LocalDateTime ab, LocalDateTime bis , String personen_ID) throws Exception {
+    public String angebotErstellen(String titel, String beschreibung, String kategorie, LocalDateTime ab, LocalDateTime bis ,String imageUrl, String personen_ID) throws Exception {
         int anzahl = angebote.size();
         String angebot_ID;
 
@@ -114,7 +118,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         else
             throw new Exception();
 
-        Dienstleistungsangebot g = new Dienstleistungsangebot(angebot_ID, titel, beschreibung, kategorie, ab, bis, personen_ID);
+        Dienstleistungsangebot g = new Dienstleistungsangebot(angebot_ID, titel, beschreibung, kategorie, ab, bis,imageUrl, personen_ID);
         angebote.add(g);
         return angebot_ID;
     }
@@ -212,6 +216,27 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         }
 
         throw new NoSuchObjectException("Angebot mit ID: " + gID + " nicht vorhanden.");
+    }
+
+    public Object[][] OmniAngebotDaten() throws NoSuchObjectException {
+        ArrayList<Object[]> aliste = new ArrayList<>();
+        for (Dienstleistungsangebot da : angebote) {
+            aliste.add(getAngeboteInformationen(da.getAngebots_ID()));
+            //getAngeboteInformationen(da.getAngebots_ID());
+        }
+            //{"Dienstleistung 1", "Beschreibung 1", ""...}
+            //{"Dienstleistung 2", "Beschreibung 2", ""...}
+        return (Object[][]) aliste.toArray();
+    }
+    public Object[][] OmniGesuchDaten() throws NoSuchObjectException {
+        ArrayList<Object[]> gliste = new ArrayList<>();
+        for (Dienstleistungsgesuch da : gesuche) {
+            gliste.add(getGesucheInformationen(da.getGesuch_ID()));
+            //getAngeboteInformationen(da.getGesuch_ID());
+        }
+        //{"Dienstleistung 1", "Beschreibung 1", ""...}
+        //{"Dienstleistung 2", "Beschreibung 2", ""...}
+        return (Object[][]) gliste.toArray();
     }
     public void angebotAnnehmen(String angebotID, String erstellerID, String nutzerID, int stunden) throws Exception{
 

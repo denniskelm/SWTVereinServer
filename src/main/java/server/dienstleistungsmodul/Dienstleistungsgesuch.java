@@ -58,4 +58,8 @@ public class Dienstleistungsgesuch {
     public void setSuchender_ID(String suchenderID) {
         this.suchenderID = suchenderID;
     }
+
+    public String getTitel(){return this.titel;}
+    public String getBeschreibung(){return this.beschreibung;}
+    public String getKategorie(){return this.kategorie;}
 }
