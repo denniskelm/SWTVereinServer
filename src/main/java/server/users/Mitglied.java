@@ -39,6 +39,14 @@ public class Mitglied extends Gast {
         this.reservierungen = 0;
     }
 
+    public void reservierungenErhöhen() {
+        reservierungen++;
+    }
+
+    public void reservierungenVerringern() {
+        reservierungen--;
+    }
+
     public int getReservierungen() {
         return reservierungen;
     }
