@@ -26,7 +26,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
      private static ArrayList<Mitarbeiter> mitarbeiter;
      private static ArrayList<Vorsitz> vorsitze;
      private static ArrayList<Mahnungsverwaltung> mahnungen;
-     private long IdCounter;
+     private int IdCounter;
 
      public Rollenverwaltung(){
          gaeste = new ArrayList<Gast>();
@@ -105,7 +105,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
         return mahnungen;
     }
 
-    public long getIdCounter() {
+    public int getIdCounter() {
         return IdCounter;
     }
 

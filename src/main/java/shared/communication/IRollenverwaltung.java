@@ -23,20 +23,20 @@ TODO Dennis Kelm
 // Interface, um RMI für Klasse Rollenverwaltung zu ermöglichen
 public interface IRollenverwaltung extends Remote {
 
-    Object[] gastListeAnzeigen() throws RemoteException;
-    Object[] mitgliedListeAnzeigen() throws RemoteException;
-    Object[] mitarbeiterListeAnzeigen() throws RemoteException;
-    Object[] vorsitzListeAnzeigen() throws RemoteException;
+    Object gastListeAnzeigen() throws RemoteException;    //Object[]
+    Object mitgliedListeAnzeigen() throws RemoteException;    //Object[]
+    Object mitarbeiterListeAnzeigen() throws RemoteException; //Object[]
+    Object vorsitzListeAnzeigen() throws RemoteException; //Object[]
     void rolleAendern(String mitgliedsID, Rolle rolle) throws RemoteException, Exception;
     void nutzereintragAendern(String mitgliedsID, Personendaten attr, String wert) throws RemoteException;
-    Object[] mahnungsverwaltungAnzeigen() throws RemoteException;
-    void gastHinzufuegen(String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, int telefonnummer, boolean spender);
+    Object mahnungsverwaltungAnzeigen() throws RemoteException;   //Object[]
+    void gastHinzufuegen(String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, int telefonnummer, boolean spender) throws RemoteException;
     boolean login(String email, int password) throws Exception;
-    ArrayList getGaeste();
-    ArrayList getMitglieder();
-    ArrayList getMitarbeiter();
-    ArrayList getVorsitze();
-    ArrayList getMahnungen();
-    long getIdCounter();
+    Object getGaeste() throws RemoteException;  //ArrayList<Gast>
+    Object getMitglieder() throws RemoteException;  //ArrayList<Mitglied>
+    Object getMitarbeiter() throws RemoteException; //ArrayList<Mitarbeiter>
+    Object getVorsitze() throws RemoteException;    //ArrayList<Vorsitz>
+    Object getMahnungen() throws RemoteException;   //ArrayList<Mahnung>
+    int getIdCounter() throws RemoteException;
 
 }
