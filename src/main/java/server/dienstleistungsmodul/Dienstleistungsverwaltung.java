@@ -110,6 +110,9 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
             this.gesuchErstellen("Kaka","Kaka","Kaka","https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg","P00001");
             this.gesuchErstellen("Kaka","Kaka","Kaka","https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg","P00001");
             this.gesuchErstellen("Kaka","Kaka","Kaka","https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg","P00001");
+
+            this.angebotErstellen("Kaka","Kaka","Kaka",LocalDateTime.now(), LocalDateTime.now().plusDays(14), "https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg", "P00001");
+            this.angebotErstellen("Kaka","Kaka","Kaka",LocalDateTime.now(), LocalDateTime.now().plusDays(14), "https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg", "P00001");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
