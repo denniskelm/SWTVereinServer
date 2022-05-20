@@ -247,24 +247,22 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     }
 
     public Object[][] OmniAngebotDaten() throws NoSuchObjectException {
-        ArrayList<Object[]> aliste = new ArrayList<>();
-        for (Dienstleistungsangebot da : angebote) {
-            aliste.add(getAngeboteInformationen(da.getAngebots_ID()));
-            //getAngeboteInformationen(da.getAngebots_ID());
+        Object[][] aliste = new Object[50000][];
+
+        for(int i = 0; i < aliste.length; i++) {
+            aliste[i] = getAngeboteInformationen(aidliste.get(i));
         }
-            //{"Dienstleistung 1", "Beschreibung 1", ""...}
-            //{"Dienstleistung 2", "Beschreibung 2", ""...}
-        return (Object[][]) aliste.toArray();
+
+        return aliste;
     }
-    public Object[][] OmniGesuchDaten() throws NoSuchObjectException {
-        ArrayList<Object[]> gliste = new ArrayList<>();
-        for (Dienstleistungsgesuch da : gesuche) {
-            gliste.add(getGesucheInformationen(da.getGesuch_ID()));
-            //getAngeboteInformationen(da.getGesuch_ID());
-        }
-        //{"Dienstleistung 1", "Beschreibung 1", ""...}
-        //{"Dienstleistung 2", "Beschreibung 2", ""...}
-        return (Object[][]) gliste.toArray();
+
+    public Object[][] OmniGesuchDaten() throws NoSuchObjectException{
+        Object[][] gliste = new Object[50000][5];
+        
+        for (int i = 0; i < gliste.length; i++)
+            gliste[i] = getGesucheInformationen(gidliste.get(i));
+
+        return gliste;
     }
     public void angebotAnnehmen(String angebotID, String erstellerID, String nutzerID, int stunden) throws Exception{
 
