@@ -37,6 +37,9 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         return gesuche;
     }
 
+    private ArrayList<String> aidliste;
+    private ArrayList<String> gidliste;
+
     public Object[] getAngeboteInformationen(String angebotID) throws NoSuchObjectException {
         //TODO Implementieren
         Dienstleistungsangebot a= fetchAngebot(angebotID);
@@ -61,6 +64,8 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         return info;
     }
 
+
+
     //TODO??? - public int howManyAngebote
     //TODO??? - public int howManyGesuche
 
@@ -68,6 +73,34 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     public Dienstleistungsverwaltung() {
         angebote = new ArrayList<>();
         gesuche = new ArrayList<>();
+        aidliste = new ArrayList<>();
+        gidliste = new ArrayList<>();
+        int anzahl=0;
+        while (anzahl<50000) {
+            if (anzahl < 9)  // todo : nach dem testen ist die Rueckgabe nicht wie gewunscht???
+                gidliste.add("dg0000" + (anzahl + 1)); // klammern hinzugefügt damit test richtig
+            else if (anzahl < 99)
+                gidliste.add("dg000" + (anzahl + 1));
+            else if (anzahl < 999)
+                gidliste.add("dg00" + (anzahl + 1));
+            else if (anzahl < 9999)
+                gidliste.add("dg0" + (anzahl + 1));
+            else if (anzahl < 50000)
+                gidliste.add("dg" + (anzahl + 1));
+        }
+        anzahl=0;
+        while (anzahl<50000) {
+            if (anzahl < 9)  // todo : nach dem testen ist die Rueckgabe nicht wie gewunscht???
+                aidliste.add("da0000" + (anzahl + 1)); // klammern hinzugefügt damit test richtig
+            else if (anzahl < 99)
+                aidliste.add("da000" + (anzahl + 1));
+            else if (anzahl < 999)
+                aidliste.add("da00" + (anzahl + 1));
+            else if (anzahl < 9999)
+                aidliste.add("da0" + (anzahl + 1));
+            else if (anzahl < 50000)
+                aidliste.add("da" + (anzahl + 1));
+        }
     }
 
 
@@ -80,10 +113,15 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     }
 
     public String gesuchErstellen(String titel, String beschreibung, String kategorie, String imageUrl, String ersteller) throws Exception {
-        int anzahl = gesuche.size();
+        String gesuch_ID;
+        gesuch_ID=this.gidliste.get(0);
+        gesuch_ID=this.gidliste.remove(0);
+
+
+        /*int anzahl = gesuche.size();
         String gesuch_ID;
 
-        if (anzahl < 9)  // todo : nach dem testen ist die Rueckgabe nicht wie gewunscht
+        if (anzahl < 9)  //
             gesuch_ID = "dg0000" + (anzahl + 1); // klammern hinzugefügt damit test richtig
         else if (anzahl < 99)
             gesuch_ID = "dg000" + (anzahl + 1);
@@ -95,28 +133,16 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
             gesuch_ID = "dg" + (anzahl + 1);
         else
             throw new Exception();
-
+        */
         Dienstleistungsgesuch g = new Dienstleistungsgesuch(gesuch_ID, titel, beschreibung, kategorie, imageUrl, ersteller);
         gesuche.add(g);
         return gesuch_ID;
     }
 
     public String angebotErstellen(String titel, String beschreibung, String kategorie, LocalDateTime ab, LocalDateTime bis ,String imageUrl, String personen_ID) throws Exception {
-        int anzahl = angebote.size();
         String angebot_ID;
-
-        if (anzahl < 9)
-            angebot_ID = "da0000" + (anzahl + 1); //klammern hinzugefügt damit test richtig
-        else if (anzahl < 99)
-            angebot_ID = "da000" + (anzahl + 1);
-        else if (anzahl < 999)
-            angebot_ID = "da00" + (anzahl + 1);
-        else if (anzahl < 9999)
-            angebot_ID = "da0" + (anzahl + 1);
-        else if (anzahl < 50000)
-            angebot_ID = "da" + (anzahl + 1);
-        else
-            throw new Exception();
+        angebot_ID=this.gidliste.get(0);
+        angebot_ID=this.gidliste.remove(0);
 
         Dienstleistungsangebot g = new Dienstleistungsangebot(angebot_ID, titel, beschreibung, kategorie, ab, bis,imageUrl, personen_ID);
         angebote.add(g);
