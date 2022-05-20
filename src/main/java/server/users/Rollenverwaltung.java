@@ -88,8 +88,25 @@ public class Rollenverwaltung implements IRollenverwaltung {
         throw new NoSuchObjectException("Person mit ID: " + personenID + " nicht vorhanden.");
     }
 
-    public static ArrayList<Mitglied> getMitglieder() {
+    public  ArrayList<Mitglied> getMitglieder() {
         return mitglieder;
+    }
+
+
+    public ArrayList<Mitarbeiter> getMitarbeiter() {
+        return mitarbeiter;
+    }
+
+    public ArrayList<Vorsitz> getVorsitze() {
+        return vorsitze;
+    }
+
+    public ArrayList<Mahnungsverwaltung> getMahnungen() {
+        return mahnungen;
+    }
+
+    public long getIdCounter() {
+        return IdCounter;
     }
 
     public Object[] gastListeAnzeigen() { return gaeste.toArray(); }
@@ -283,6 +300,11 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
         throw new Exception("E-Mail oder Passwort falsch!");
 
+    }
+
+    @Override
+    public ArrayList<Gast> getGaeste() {
+        return null;
     }
 
 }
