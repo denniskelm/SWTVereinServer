@@ -4,6 +4,7 @@ import server.VereinssoftwareServer;
 import server.dienstleistungsmodul.*;
 import shared.communication.IDienstleistungsverwaltung;
 
+import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -192,34 +193,23 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         l.addgAnfrage(nutzer, gesuch ,stunden);
     }
 
+    public Dienstleistungsangebot fetchAngebot(String angebotID) throws NoSuchObjectException {
 
-    public void angebotAnfragen(String angebotsID, String ersteller, String fragender)  { //todo
-
-    }
-
-    public Dienstleistungsangebot fetchAngebot(String angebotID){
-        Dienstleistungsangebot angebot= null;
-        int i=0;
-        while(i<angebote.size()){
-            if (angebotID==angebote.get(i).getAngebots_ID()){
-                angebot=angebote.get(i);
-                return angebot;
-            }
-
+        for (Dienstleistungsangebot da : angebote) {
+            if (da.getAngebots_ID().equals(angebotID))
+                return da;
         }
-        return angebot;//fehler
-    }
-    public Dienstleistungsgesuch fetchGesuch(String gID){
-        Dienstleistungsgesuch g= null;
-        int i=0;
-        while(i<angebote.size()){
-            if (gID==gesuche.get(i).getGesuch_ID()){
-                g=gesuche.get(i);
-                return g;
-            }
 
+        throw new NoSuchObjectException("Angebot mit ID: " + angebotID + " nicht vorhanden.");
+    }
+    public Dienstleistungsgesuch fetchGesuch(String gID) throws NoSuchObjectException {
+
+        for (Dienstleistungsgesuch ds : gesuche) {
+            if (ds.getGesuch_ID().equals(gID))
+                return ds;
         }
-        return g;//fehler
+
+        throw new NoSuchObjectException("Angebot mit ID: " + gID + " nicht vorhanden.");
     }
     public void angebotAnnehmen(String angebotID, String erstellerID, String nutzerID, int stunden) throws Exception{
         Dienstleistungsangebot angebot= null;
@@ -237,7 +227,6 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         Anfragenliste l= ersteller.getAnfragenliste();
         l.addaAnfrage(nutzer, angebot,stunden);
     }
-
 
 
 
