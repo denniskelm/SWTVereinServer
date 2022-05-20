@@ -206,8 +206,8 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
                     case TITEL -> a.setTitel(wert.toString());
                     case BESCHREIBUNG -> a.setBeschreibung(wert.toString());
                     case KATEGORIE -> a.setKategorie(wert.toString());
-                    case AB -> a.setAb(LocalDateTime.parse(wert.toString()));
-                    case BIS -> a.setBis(LocalDateTime.parse(wert.toString()));
+                    case AB -> a.setAb((LocalDateTime) wert);
+                    case BIS -> a.setBis((LocalDateTime) wert);
                     case PERSONEN_ID -> a.setPersonenID(wert.toString());
                 }
                 break;

@@ -35,6 +35,8 @@ public class Dienstleistungsangebot {
 
     public String getPersonenID() { return personenID; }
 
+    public String getImageUrl() { return imageUrl; }
+
 
     public void setAngebots_ID(String angebots_ID) {
         this.angebots_ID = angebots_ID;
