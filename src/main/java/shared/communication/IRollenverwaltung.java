@@ -1,12 +1,11 @@
 package shared.communication;
 
+import server.users.Gast;
 import server.users.Personendaten;
 import server.users.Rolle;
 
-import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.time.LocalDateTime;
 
 /*
 @author

@@ -65,7 +65,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
      }
 
     public Mitglied fetch(String mitgliederID) throws NoSuchObjectException {
-        for (Mitglied m : mitglieder) {
+        for (Mitglied m : vorsitze) {
             if (m.getPersonenID().equals(mitgliederID)) return m;
         }
 
@@ -73,11 +73,19 @@ public class Rollenverwaltung implements IRollenverwaltung {
             if (m.getPersonenID().equals(mitgliederID)) return m;
         }
 
-        for (Mitglied m : vorsitze) {
+        for (Mitglied m : mitglieder) {
             if (m.getPersonenID().equals(mitgliederID)) return m;
         }
 
+
         throw new NoSuchObjectException("Person mit ID: " + mitgliederID + " nicht vorhanden.");
+    }
+
+    public Gast fetchGaeste(String personenID) throws NoSuchObjectException{
+        for (Gast g : gaeste) {
+            if (g.getPersonenID().equals(personenID)) return g;
+        }
+        throw new NoSuchObjectException("Person mit ID: " + personenID + " nicht vorhanden.");
     }
 
     public static ArrayList<Mitglied> getMitglieder() {
@@ -94,101 +102,125 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
     public void rolleAendern(String mitgliedsID, Rolle rolle) throws Exception {
         Mitglied mitgliedInAlterRolle;
+        Gast GastInAlterRolle;
         Gast g;
         LocalDateTime mitglied_seit;
 
         try {
             mitgliedInAlterRolle = fetch(mitgliedsID);
         } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
+            try {
+                GastInAlterRolle = fetchGaeste(mitgliedsID);
+                gastRolleAendern(GastInAlterRolle, rolle);
+                return;
+            } catch (NoSuchObjectException f) {
+                throw new RuntimeException(f);
+            }
         }
 
-        if (mitgliedInAlterRolle.getClass() ==  rolle.getKlasse())
+        if (mitgliedInAlterRolle.getClass() == rolle.getKlasse())
+            throw new Exception("Der Nutzer hat diese Rolle schon.");
+
+        mitglied_seit = mitgliedInAlterRolle.mitglied_seit;
+
+        rolleAendernSwitch(mitgliedInAlterRolle, rolle, mitglied_seit);
+    }
+
+        public void gastRolleAendern(Gast gast, Rolle rolle) throws Exception {
+            Gast g;
+            LocalDateTime mitglied_seit = LocalDateTime.now();
+
+
+            if (gast.getClass() ==  rolle.getKlasse())
                 throw new Exception("Der Nutzer hat diese Rolle schon.");
 
-        if (mitgliedInAlterRolle instanceof Gast)
-            mitglied_seit = LocalDateTime.now();
-        else
-            mitglied_seit = mitgliedInAlterRolle.mitglied_seit;
+            rolleAendernSwitch(gast, rolle, mitglied_seit);
 
-         switch (rolle) {
-             case GAST:
+        }
 
-                     g = new Gast(mitgliedInAlterRolle.personenID,
-                             mitgliedInAlterRolle.nachname,
-                             mitgliedInAlterRolle.vorname,
-                             mitgliedInAlterRolle.email,
-                             mitgliedInAlterRolle.password,
-                             mitgliedInAlterRolle.anschrift,
-                             mitgliedInAlterRolle.mitgliedsnr,
-                             mitgliedInAlterRolle.telefonnummer,
-                             mitgliedInAlterRolle.spender);
+    public void rolleAendernSwitch(Gast gast, Rolle rolle, LocalDateTime mitglied_seit) {
+        Gast g;
+        switch (rolle) {
+            case GAST:
 
-                 gaeste.add(g);
-                 break;
-             case MITGLIED:
-                 g = new Mitglied(mitgliedInAlterRolle.personenID,
-                            mitgliedInAlterRolle.nachname,
-                            mitgliedInAlterRolle.vorname,
-                            mitgliedInAlterRolle.email,
-                            mitgliedInAlterRolle.password,
-                            mitgliedInAlterRolle.anschrift,
-                            mitgliedInAlterRolle.mitgliedsnr,
-                            mitgliedInAlterRolle.telefonnummer,
-                            mitgliedInAlterRolle.spender,
-                            mitglied_seit);
+                g = new Gast(gast.personenID,
+                        gast.nachname,
+                        gast.vorname,
+                        gast.email,
+                        gast.password,
+                        gast.anschrift,
+                        gast.mitgliedsnr,
+                        gast.telefonnummer,
+                        gast.spender);
+
+                gaeste.add(g);
+                break;
+            case MITGLIED:
+                g = new Mitglied(gast.personenID,
+                        gast.nachname,
+                        gast.vorname,
+                        gast.email,
+                        gast.password,
+                        gast.anschrift,
+                        gast.mitgliedsnr,
+                        gast.telefonnummer,
+                        gast.spender,
+                        mitglied_seit);
 
                 mitglieder.add((Mitglied) g);
                 break;
 
-             case MITARBEITER:
-                     g = new Mitarbeiter(mitgliedInAlterRolle.personenID,
-                             mitgliedInAlterRolle.nachname,
-                             mitgliedInAlterRolle.vorname,
-                             mitgliedInAlterRolle.email,
-                             mitgliedInAlterRolle.password,
-                             mitgliedInAlterRolle.anschrift,
-                             mitgliedInAlterRolle.mitgliedsnr,
-                             mitgliedInAlterRolle.telefonnummer,
-                             mitgliedInAlterRolle.spender,
-                             mitglied_seit,
-                             new Mahnungsverwaltung());
+            case MITARBEITER:
+                g = new Mitarbeiter(gast.personenID,
+                        gast.nachname,
+                        gast.vorname,
+                        gast.email,
+                        gast.password,
+                        gast.anschrift,
+                        gast.mitgliedsnr,
+                        gast.telefonnummer,
+                        gast.spender,
+                        mitglied_seit,
+                        new Mahnungsverwaltung());
 
-                 mitarbeiter.add((Mitarbeiter) g);
-                 break;
+                mitarbeiter.add((Mitarbeiter) g);
+                break;
 
-             case VORSITZ:
-                     g = new Vorsitz(mitgliedInAlterRolle.personenID,
-                             mitgliedInAlterRolle.nachname,
-                             mitgliedInAlterRolle.vorname,
-                             mitgliedInAlterRolle.email,
-                             mitgliedInAlterRolle.password,
-                             mitgliedInAlterRolle.anschrift,
-                             mitgliedInAlterRolle.mitgliedsnr,
-                             mitgliedInAlterRolle.telefonnummer,
-                             mitgliedInAlterRolle.spender,
-                             mitglied_seit,
-                             new Mahnungsverwaltung());
+            case VORSITZ:
+                g = new Vorsitz(gast.personenID,
+                        gast.nachname,
+                        gast.vorname,
+                        gast.email,
+                        gast.password,
+                        gast.anschrift,
+                        gast.mitgliedsnr,
+                        gast.telefonnummer,
+                        gast.spender,
+                        mitglied_seit,
+                        new Mahnungsverwaltung());
 
-                 vorsitze.add((Vorsitz) g);
-                 break;
-         }
+                vorsitze.add((Vorsitz) g);
+                break;
+        }
 
-        nutzerAusAlterListeEntfernen(mitgliedInAlterRolle);
-
+        nutzerAusAlterListeEntfernen(gast);
     }
 
     public void nutzereintragAendern(String mitgliedsID, Personendaten attr, String wert) throws NoSuchObjectException {
         try {
             (fetch(mitgliedsID)).datenVerwalten(attr, wert);
         } catch (NoSuchObjectException e) {
-            throw new NoSuchObjectException("");
+            try {
+                (fetchGaeste(mitgliedsID)).datenVerwalten(attr, wert);
+            } catch (NoSuchObjectException f) {
+                throw  f;
+            }
         }
     }
 
     public Object[] mahnungsverwaltungAnzeigen() { return mahnungen.toArray(); }
 
-    private void nutzerAusAlterListeEntfernen(Mitglied mitglied) {
+    private void nutzerAusAlterListeEntfernen(Gast mitglied) {
         if (mitglied instanceof Gast) {
             for (int i = 0; i < gaeste.size(); i++) {
                 if (gaeste.get(i).personenID.equals(mitglied.getPersonenID())) {

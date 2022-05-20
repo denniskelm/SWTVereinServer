@@ -42,6 +42,10 @@ public class Gast {
         return personenID;
     }
 
+    public String getNachname() { return nachname; }
+
+    public String getAnschrift() { return anschrift; }
+
     public void datenVerwalten(Personendaten attr, String wert) {
         switch (attr) {
             case PERSONENID -> this.personenID = wert.toString();

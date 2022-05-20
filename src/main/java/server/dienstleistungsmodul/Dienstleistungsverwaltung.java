@@ -4,6 +4,7 @@ import server.VereinssoftwareServer;
 import server.dienstleistungsmodul.*;
 import shared.communication.IDienstleistungsverwaltung;
 
+import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -191,6 +192,11 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         l.addgAnfrage(nutzer, gesuch ,stunden);
     }
 
+
+    public void angebotAnfragen(String angebotsID, String ersteller, String fragender)  { //todo
+
+    }
+
     public Dienstleistungsangebot fetchAngebot(String angebotID){
         Dienstleistungsangebot angebot= null;
         int i=0;
@@ -231,6 +237,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         Anfragenliste l= ersteller.getAnfragenliste();
         l.addaAnfrage(nutzer, angebot,stunden);
     }
+
 
 
 
