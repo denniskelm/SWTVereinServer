@@ -26,7 +26,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
      private static ArrayList<Mitarbeiter> mitarbeiter;
      private static ArrayList<Vorsitz> vorsitze;
      private static ArrayList<Mahnungsverwaltung> mahnungen;
-     private long IdCounter;
+     private int IdCounter;
 
      public Rollenverwaltung(){
          gaeste = new ArrayList<Gast>();
@@ -105,7 +105,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
         return mahnungen;
     }
 
-    public long getIdCounter() {
+    public int getIdCounter() {
         return IdCounter;
     }
 
@@ -304,6 +304,20 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
     public ArrayList<Gast> getGaeste() {
         return null;
+    }
+
+    public String getMitgliedsNamen(String MitgliedsID) throws Exception{
+
+         Mitglied mitglied;
+
+         try{
+             mitglied = fetch(MitgliedsID);
+         }
+         catch(NoSuchObjectException e){
+             throw new RuntimeException(e);
+         }
+
+         return mitglied.getVorname() + " " + mitglied.getNachname();
     }
 
 }

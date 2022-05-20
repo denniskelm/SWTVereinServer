@@ -223,7 +223,7 @@ class GeraeteverwaltungTest {
 
     @Test
     void geraeteAnzeigen() throws NoSuchObjectException {
-        ArrayList<Geraet> gl = gv.geraeteAnzeigen();
+        ArrayList<Geraet> gl = (ArrayList<Geraet>) gv.geraeteAnzeigen();
         assertEquals(2, gl.size());
     }
 
