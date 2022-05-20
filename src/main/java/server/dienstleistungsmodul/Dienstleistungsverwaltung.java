@@ -249,7 +249,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     public Object[][] OmniAngebotDaten() throws NoSuchObjectException {
         Object[][] aliste = new Object[50000][7];
 
-        for(int i = 0; i < aliste.length; i++) {
+        for(int i = 0; i < angebote.size(); i++) {
             aliste[i] = getAngeboteInformationen(angebote.get(i).getAngebots_ID());
         }
 
