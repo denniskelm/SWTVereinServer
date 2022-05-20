@@ -126,7 +126,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
         rolleAendernSwitch(mitgliedInAlterRolle, rolle, mitglied_seit);
     }
 
-        public void gastRolleAendern(Gast gast, Rolle rolle) throws Exception {
+        private void gastRolleAendern(Gast gast, Rolle rolle) throws Exception {
             Gast g;
             LocalDateTime mitglied_seit = LocalDateTime.now();
 
@@ -138,7 +138,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
         }
 
-    public void rolleAendernSwitch(Gast gast, Rolle rolle, LocalDateTime mitglied_seit) {
+    private void rolleAendernSwitch(Gast gast, Rolle rolle, LocalDateTime mitglied_seit) {
         Gast g;
         switch (rolle) {
             case GAST:

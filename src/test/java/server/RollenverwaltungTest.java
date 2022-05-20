@@ -41,7 +41,8 @@ class RollenverwaltungTest {
         }
 
     @Test
-    public void MitgliedHinzufuegen() throws NoSuchObjectException {
+        public void MitgliedHinzufuegen() throws NoSuchObjectException {
+
         rv.mitgliedHinzufuegen("Mustermann", "Max", "we.de@de.de", "hallo", "Am See 3", "123", 87772627, false, LocalDateTime.parse("2016-11-09T11:44:44.797"));
         assertEquals("Mustermann", rv.fetch("3").getNachname());
 
@@ -51,7 +52,7 @@ class RollenverwaltungTest {
     }
 
     @Test
-    public void fetch() throws NoSuchObjectException {
+        public void fetch() throws NoSuchObjectException {
 
         assertEquals("Musterfrau", rv.fetch("2").getNachname());
 
@@ -61,7 +62,7 @@ class RollenverwaltungTest {
     }
 
     @Test
-    public void RolleAendern() throws Exception {
+        public void RolleAendern() throws Exception {
 
         // Rolle von Gast zu Mitglied ändern
         rv.rolleAendern("1", Rolle.MITGLIED);
@@ -113,10 +114,22 @@ class RollenverwaltungTest {
     }
 
     @Test
-    public void nutzereintragAendern() throws NoSuchObjectException {
+        public void nutzereintragAendern() throws NoSuchObjectException {
 
-        rv.nutzereintragAendern("1", Personendaten.ANSCHRIFT, "Am See 2");
-        assertEquals("Am See 2", rv.fetch("1").getAnschrift());
+        rv.nutzereintragAendern("2", Personendaten.ANSCHRIFT, "Am See 2");
+        assertEquals("Am See 2", rv.fetch("2").getAnschrift());
+    }
+    @Test
+        public void login() throws Exception {
+
+        // Richtige Anmeldedaten
+        boolean eingeloggt =  false;
+        eingeloggt = rv.login("we.de@de.de", ("hallo1".hashCode()));
+        assertTrue(eingeloggt);
+
+        // Falsche Anmeldedaten
+        Throwable exception = assertThrows(Exception.class, () -> rv.login("1", 2));
+        assertEquals("E-Mail oder Passwort falsch!", exception.getMessage());
     }
 
     }
