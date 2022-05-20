@@ -103,6 +103,16 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
                 aidliste.add("da" + (anzahl + 1));
             anzahl++;
         }
+
+        try {
+            this.gesuchErstellen("Kaka","Kaka","Kaka","https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg","P00001");
+            this.gesuchErstellen("Kaka","Kaka","Kaka","https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg","P00001");
+            this.gesuchErstellen("Kaka","Kaka","Kaka","https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg","P00001");
+            this.gesuchErstellen("Kaka","Kaka","Kaka","https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg","P00001");
+            this.gesuchErstellen("Kaka","Kaka","Kaka","https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg","P00001");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -258,8 +268,8 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     public Object[][] OmniGesuchDaten() throws NoSuchObjectException{
         Object[][] gliste = new Object[50000][5];
-        
-        for (int i = 0; i < gliste.length; i++)
+
+        for (int i = 0; i < gesuche.size(); i++)
             gliste[i] = getGesucheInformationen(gesuche.get(i).getGesuch_ID());
 
         return gliste;
