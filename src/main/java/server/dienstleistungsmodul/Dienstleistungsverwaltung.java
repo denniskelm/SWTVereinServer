@@ -111,8 +111,8 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
             this.gesuchErstellen("Kaka","Kaka","Kaka","https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg","P00001");
             this.gesuchErstellen("Kaka","Kaka","Kaka","https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg","P00001");
 
-            this.angebotErstellen("Kaka","Kaka","Kaka",LocalDateTime.now(), LocalDateTime.now().plusDays(14), "https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg", "P00001");
-            this.angebotErstellen("Kaka","Kaka","Kaka",LocalDateTime.now(), LocalDateTime.now().plusDays(14), "https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg", "P00001");
+            this.angebotErstellen("Kaka","Kaka","Kaka", LocalDateTime.now(), LocalDateTime.now().plusDays(14), "https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg", "P00001");
+            this.angebotErstellen("Kaka","Kaka","Kaka", LocalDateTime.now(), LocalDateTime.now().plusDays(14), "https://www.gettyimages.de/gi-resources/images/500px/983794168.jpg", "P00001");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -260,7 +260,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     }
 
     public Object[][] OmniAngebotDaten() throws NoSuchObjectException {
-        Object[][] aliste = new Object[50000][7];
+        Object[][] aliste = new Object[50000][6];
 
         for(int i = 0; i < angebote.size(); i++) {
             aliste[i] = getAngeboteInformationen(angebote.get(i).getAngebots_ID());
