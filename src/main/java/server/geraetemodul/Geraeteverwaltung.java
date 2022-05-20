@@ -198,4 +198,31 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         return geraete;
     }
 
+    public Object[][] OmniGeraeteDaten() throws NoSuchObjectException {
+        Object[][] aliste = new Object[50000][8];
+
+        for(int i = 0; i < geraete.size(); i++) {
+            aliste[i] = getAngeboteInformationen(geraete.get(i).getGeraeteID());
+        }
+
+        return aliste;
+    }
+
+    public Object[] getAngeboteInformationen(String geraeteID) throws NoSuchObjectException {
+
+        Geraet a = fetch(geraeteID);
+        Object[] info = new Object[8];
+        info[0] = a.getGeraeteID();
+        info[1] = a.getGeraetName();
+        info[2] = a.getGeraetBeschreibung();
+        info[3] = a.getKategorie();
+        info[4] = a.getSpenderName();
+        info[5] = a.getLeihfrist();
+        info[6] = a.getLeihstatus().getName();
+        info[7] = a.getGeraetAbholort();
+
+
+        return info;
+    }
+
 }
