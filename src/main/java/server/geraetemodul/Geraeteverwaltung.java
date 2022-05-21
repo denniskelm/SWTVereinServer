@@ -157,8 +157,8 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     }
 
 
-    public Object geraeteAnzeigen() { //geraet Fenester anzeigen
-        return (Object) geraete;
+    public ArrayList<Geraet> geraeteAnzeigen() { //geraet Fenester anzeigen
+        return geraete;
     }
 
     //Zum Testen der Geraeteverwaltung
@@ -200,7 +200,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         return geraete;
     }
 
-    public Object[][] OmniGeraeteDaten() throws NoSuchObjectException {
+    public Object[][] omniGeraeteDaten() throws NoSuchObjectException {
         Object[][] aliste = new Object[50000][8];
 
         for(int i = 0; i < geraete.size(); i++) {

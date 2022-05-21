@@ -18,9 +18,9 @@ import java.time.LocalDateTime;
 
 // Interface, um RMI für Klasse Dienstleistungsverwaltung zu ermöglichen
 public interface IAnfragenliste extends Remote {
-    Object[][] OmniAAnfrageDaten() throws NoSuchObjectException;
+    Object[][] omniAAnfrageDaten() throws NoSuchObjectException;
 
-    Object[][] OmniGAnfrageDaten() throws NoSuchObjectException;
+    Object[][] omniGAnfrageDaten() throws NoSuchObjectException;
     Object[] getGAnfragenInfo(GesuchAnfrage g) throws NoSuchObjectException;
     Object[] getAAnfragenInfo(AngebotAnfrage g) throws NoSuchObjectException;
     void removeAAnfrage(AngebotAnfrage a);

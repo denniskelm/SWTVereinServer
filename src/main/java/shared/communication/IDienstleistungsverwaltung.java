@@ -30,7 +30,7 @@ public interface IDienstleistungsverwaltung extends Remote {
     void angebotAnnehmen(String gesuchsID, String ersteller, String nutzer, int stunden) throws RemoteException, Exception;
     Object[] getAngeboteInformationen(String geraeteID) throws RemoteException;
     Object[] getGesucheInformationen(String geraeteID) throws RemoteException;
-    Object[][] OmniAngebotDaten() throws NoSuchObjectException, RemoteException;
-    Object[][] OmniGesuchDaten() throws NoSuchObjectException, RemoteException;
+    Object[][] omniAngebotDaten() throws NoSuchObjectException, RemoteException;
+    Object[][] omniGesuchDaten() throws NoSuchObjectException, RemoteException;
 
 }

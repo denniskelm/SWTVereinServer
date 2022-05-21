@@ -102,7 +102,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
         return mahnungen;
     }
 
-    public int getIdCounter() {
+    public long getIdCounter() {
         return IdCounter;
     }
 

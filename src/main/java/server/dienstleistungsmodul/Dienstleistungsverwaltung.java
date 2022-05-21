@@ -262,7 +262,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         throw new NoSuchObjectException("Angebot mit ID: " + gID + " nicht vorhanden.");
     }
 
-    public Object[][] OmniAngebotDaten() throws NoSuchObjectException {
+    public Object[][] omniAngebotDaten() throws NoSuchObjectException {
         Object[][] aliste = new Object[50000][8];
 
         for(int i = 0; i < angebote.size(); i++) {
@@ -272,7 +272,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         return aliste;
     }
 
-    public Object[][] OmniGesuchDaten() throws NoSuchObjectException{
+    public Object[][] omniGesuchDaten() throws NoSuchObjectException{
         Object[][] gliste = new Object[50000][6];
 
         for (int i = 0; i < gesuche.size(); i++)
