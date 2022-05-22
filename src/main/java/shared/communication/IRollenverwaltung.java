@@ -32,11 +32,11 @@ public interface IRollenverwaltung extends Remote {
     Object[] mahnungsverwaltungAnzeigen() throws RemoteException;   //Object[]
     void gastHinzufuegen(String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, int telefonnummer, boolean spender) throws RemoteException;
     boolean login(String email, String password) throws Exception;
-    ArrayList getGaeste() throws RemoteException;  //ArrayList<Gast>
-    ArrayList getMitglieder() throws RemoteException;  //ArrayList<Mitglied>
-    ArrayList getMitarbeiter() throws RemoteException; //ArrayList<Mitarbeiter>
-    ArrayList getVorsitze() throws RemoteException;    //ArrayList<Vorsitz>
-    ArrayList getMahnungen() throws RemoteException;   //ArrayList<Mahnung>
+    ArrayList<IGast> getGaeste() throws RemoteException;  //ArrayList<Gast>
+    ArrayList<IMitglied> getMitglieder() throws RemoteException;  //ArrayList<Mitglied>
+    ArrayList<IMitarbeiter> getMitarbeiter() throws RemoteException; //ArrayList<Mitarbeiter>
+    ArrayList<IVorsitz> getVorsitze() throws RemoteException;    //ArrayList<Vorsitz>
+    //ArrayList<IMahnung> getMahnungen() throws RemoteException;   //ArrayList<Mahnung>
     long getIdCounter() throws RemoteException;
     public String getMitgliedsNamen(String MitgliedsID) throws RemoteException, Exception;
 

@@ -1,6 +1,8 @@
 package server.db;
 
 import server.geraetemodul.*;
+import shared.communication.IAusleiher;
+import shared.communication.IGeraet;
 
 import java.rmi.NoSuchObjectException;
 import java.sql.*;
@@ -22,8 +24,8 @@ public class GeraeteDB {
         }
     }
 
-    public ArrayList<Geraet> getGeraeteList() {
-        ArrayList<Geraet> geraete;
+    public ArrayList<IGeraet> getGeraeteList() {
+        ArrayList<IGeraet> geraete;
         Geraet g;
 
         geraete = new ArrayList<>();
@@ -52,7 +54,7 @@ public class GeraeteDB {
             getGeraete.close();
 
             // Historien laden
-            for (Geraet geraet : geraete) {
+            for (IGeraet geraet : geraete) {
 
                     PreparedStatement getHistorie = conn.prepareStatement("SELECT * FROM historie WHERE GeraeteID = ? ");
                     getHistorie.setString(1, geraet.getGeraeteID());
@@ -62,7 +64,7 @@ public class GeraeteDB {
             }
 
             // Reservierungslisten laden
-            for (Geraet geraet : geraete) {
+            for (IGeraet geraet : geraete) {
                 if (geraet.getLeihstatus() == Status.FREI)
                     geraet.setReservierungsliste(new ArrayList<>());
                 else {
@@ -82,8 +84,8 @@ public class GeraeteDB {
         return geraete;
     }
 
-    private ArrayList<Ausleiher> getAusleiherList(PreparedStatement prep) throws SQLException {
-        ArrayList<Ausleiher> result;
+    private ArrayList<IAusleiher> getAusleiherList(PreparedStatement prep) throws SQLException {
+        ArrayList<IAusleiher> result;
         ResultSet reservierer = prep.executeQuery();
 
         result = new ArrayList<>();
@@ -151,7 +153,7 @@ public class GeraeteDB {
         }
     }
 
-    public void geraetReservieren(String geraeteID, Ausleiher ausleiher) {
+    public void geraetReservieren(String geraeteID, IAusleiher ausleiher) {
         // TODO Methode noch testen
 
         try {
@@ -163,7 +165,7 @@ public class GeraeteDB {
 
             prep = conn.prepareStatement("INSERT INTO reserviert VALUES (?, ?, ?, ?, ?)");
             prep.setString(1, geraeteID);
-            prep.setString(2, ausleiher.getMitlgiedsID());
+            prep.setString(2, ausleiher.getMitgliedsID());
             prep.setTimestamp(3, Timestamp.valueOf(ausleiher.getReservierdatum()));
             prep.setTimestamp(4, Timestamp.valueOf(ausleiher.getFristBeginn()));
             prep.setString(5, ausleiher.isAbgegeben() ? "Y" : "N");

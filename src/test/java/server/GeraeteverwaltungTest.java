@@ -5,9 +5,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.geraetemodul.*;
-import server.users.Mitglied;
 import server.users.Personendaten;
 import server.users.Rollenverwaltung;
+import shared.communication.IAusleiher;
+import shared.communication.IGeraet;
 
 import javax.naming.NoPermissionException;
 import java.rmi.NoSuchObjectException;
@@ -65,7 +66,7 @@ class GeraeteverwaltungTest {
         Throwable exception = assertThrows(NoSuchObjectException.class, () -> gv.fetch("g00000"));
         assertEquals("Geraet mit ID: g00000 nicht vorhanden.", exception.getMessage());
 
-        Geraet g = gv.fetch("g00002");
+        IGeraet g = gv.fetch("g00002");
 
         assertEquals("g00002", g.getGeraeteID());
         assertEquals("spender", g.getSpenderName());
@@ -74,8 +75,8 @@ class GeraeteverwaltungTest {
 
     @Test
     void geraetReservieren() throws Exception {
-        Geraet g = gv.fetch("g00001");
-        ArrayList<Ausleiher> rl = g.getReservierungsliste();
+        IGeraet g = gv.fetch("g00001");
+        ArrayList<IAusleiher> rl = g.getReservierungsliste();
 
         Assertions.assertEquals(Status.FREI, g.getLeihstatus());
         assertEquals(0,rv.fetch("1").getReservierungen());
@@ -110,8 +111,8 @@ class GeraeteverwaltungTest {
 
     @Test
     void reservierungStornieren() throws Exception {
-        Geraet g = gv.fetch("g00001");
-        ArrayList<Ausleiher> rl = g.getReservierungsliste();
+        IGeraet g = gv.fetch("g00001");
+        ArrayList<IAusleiher> rl = g.getReservierungsliste();
 
 
         gv.geraetReservieren("g00001","1");
@@ -122,7 +123,7 @@ class GeraeteverwaltungTest {
         gv.reservierungStornieren("g00001","1");
         assertEquals(Status.BEANSPRUCHT, g.getLeihstatus());
         assertEquals(1,rl.size());
-        assertEquals("2", rl.get(0).getMitlgiedsID());
+        assertEquals("2", rl.get(0).getMitgliedsID());
         assertEquals(rl.get(0).getFristBeginn().toLocalDate(), LocalDate.now());
 
         gv.reservierungStornieren("g00001","2");
@@ -138,7 +139,7 @@ class GeraeteverwaltungTest {
 
     @Test
     void geraetAusgeben() throws Exception {
-        Geraet g = gv.fetch("g00001");
+        IGeraet g = gv.fetch("g00001");
 
         Throwable exception1 = assertThrows(Exception.class, () -> gv.geraetAusgeben("g00001"));
         assertEquals("keine Reservierung vorhanden.", exception1.getMessage());
@@ -153,8 +154,8 @@ class GeraeteverwaltungTest {
 
     @Test
     void geraetAnnehmen() throws Exception {
-        Geraet g = gv.fetch("g00001");
-        ArrayList<Ausleiher> rl = g.getReservierungsliste();
+        IGeraet g = gv.fetch("g00001");
+        ArrayList<IAusleiher> rl = g.getReservierungsliste();
 
         Throwable exception1 = assertThrows(Exception.class, () -> gv.geraetAnnehmen("g00001"));
         assertEquals("keine Reservierung vorhanden.", exception1.getMessage());
@@ -183,7 +184,7 @@ class GeraeteverwaltungTest {
 
     @Test
     void geraeteDatenVerwalten() throws NoSuchObjectException {
-        Geraet g = gv.fetch("g00001");
+        IGeraet g = gv.fetch("g00001");
 
         Object newNAME = "newNAME";
         gv.geraeteDatenVerwalten("g00001", Geraetedaten.NAME , newNAME);
@@ -208,7 +209,7 @@ class GeraeteverwaltungTest {
 
     @Test
     void historieZuruecksetzen() throws Exception {
-        Geraet g = gv.fetch("g00001");
+        IGeraet g = gv.fetch("g00001");
 
         assertEquals(0, g.getHistorie().size());
 
@@ -223,13 +224,13 @@ class GeraeteverwaltungTest {
 
     @Test
     void geraeteAnzeigen() throws NoSuchObjectException {
-        ArrayList<Geraet> gl = (ArrayList<Geraet>) gv.geraeteAnzeigen();
+        ArrayList<IGeraet> gl = gv.geraeteAnzeigen();
         assertEquals(2, gl.size());
     }
 
     @Test
     void geraeteDatenAusgeben() throws Exception {
-        Geraet g = gv.fetch("g00001");
+        IGeraet g = gv.fetch("g00001");
         gv.geraetReservieren("g00001","1");
 
         String st =   gv.geraeteDatenAusgeben("g00001");

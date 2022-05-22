@@ -8,7 +8,7 @@ Ole Björn Adelmann
 */
 
 import server.Mahnungsverwaltung;
-import shared.communication.IRollenverwaltung;
+import shared.communication.*;
 
 import java.rmi.NoSuchObjectException;
 import java.time.LocalDateTime;
@@ -16,18 +16,18 @@ import java.util.ArrayList;
 
 public class Rollenverwaltung implements IRollenverwaltung {
 
-     private static ArrayList<Gast> gaeste;
-     private static ArrayList<Mitglied> mitglieder;
-     private static ArrayList<Mitarbeiter> mitarbeiter;
-     private static ArrayList<Vorsitz> vorsitze;
+     private static ArrayList<IGast> gaeste;
+     private static ArrayList<IMitglied> mitglieder;
+     private static ArrayList<IMitarbeiter> mitarbeiter;
+     private static ArrayList<IVorsitz> vorsitze;
      private static ArrayList<Mahnungsverwaltung> mahnungen;
      private int IdCounter;
 
      public Rollenverwaltung(){
-         gaeste = new ArrayList<Gast>();
-         mitglieder = new ArrayList<Mitglied>();
-         mitarbeiter = new ArrayList<Mitarbeiter>();
-         vorsitze = new ArrayList<Vorsitz>();
+         gaeste = new ArrayList<IGast>();
+         mitglieder = new ArrayList<IMitglied>();
+         mitarbeiter = new ArrayList<IMitarbeiter>();
+         vorsitze = new ArrayList<IVorsitz>();
          IdCounter = 0;
 
          mitgliedHinzufuegen("Ehrenmann", "Stefan", "stefan.ehrenmann@t-online.de", "12345678", "Huglfingstr. 27", "M4657", 110, false, LocalDateTime.now());
@@ -61,16 +61,16 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
      }
 
-    public Mitglied fetch(String mitgliederID) throws NoSuchObjectException {
-        for (Mitglied m : vorsitze) {
+    public IMitglied fetch(String mitgliederID) throws NoSuchObjectException {
+        for (IMitglied m : vorsitze) {
             if (m.getPersonenID().equals(mitgliederID)) return m;
         }
 
-        for (Mitglied m : mitarbeiter) {
+        for (IMitglied m : mitarbeiter) {
             if (m.getPersonenID().equals(mitgliederID)) return m;
         }
 
-        for (Mitglied m : mitglieder) {
+        for (IMitglied m : mitglieder) {
             if (m.getPersonenID().equals(mitgliederID)) return m;
         }
 
@@ -78,23 +78,23 @@ public class Rollenverwaltung implements IRollenverwaltung {
         throw new NoSuchObjectException("Person mit ID: " + mitgliederID + " nicht vorhanden.");
     }
 
-    public Gast fetchGaeste(String personenID) throws NoSuchObjectException{
-        for (Gast g : gaeste) {
+    public IGast fetchGaeste(String personenID) throws NoSuchObjectException{
+        for (IGast g : gaeste) {
             if (g.getPersonenID().equals(personenID)) return g;
         }
         throw new NoSuchObjectException("Person mit ID: " + personenID + " nicht vorhanden.");
     }
 
-    public  ArrayList<Mitglied> getMitglieder() {
+    public  ArrayList<IMitglied> getMitglieder() {
         return mitglieder;
     }
 
 
-    public ArrayList<Mitarbeiter> getMitarbeiter() {
+    public ArrayList<IMitarbeiter> getMitarbeiter() {
         return mitarbeiter;
     }
 
-    public ArrayList<Vorsitz> getVorsitze() {
+    public ArrayList<IVorsitz> getVorsitze() {
         return vorsitze;
     }
 
@@ -115,9 +115,9 @@ public class Rollenverwaltung implements IRollenverwaltung {
     public Object[] vorsitzListeAnzeigen() { return vorsitze.toArray(); }
 
     public void rolleAendern(String mitgliedsID, Rolle rolle) throws Exception {
-        Mitglied mitgliedInAlterRolle;
-        Gast GastInAlterRolle;
-        Gast g;
+        IMitglied mitgliedInAlterRolle;
+        IGast GastInAlterRolle;
+        IGast g;
         LocalDateTime mitglied_seit;
 
         try {
@@ -141,53 +141,53 @@ public class Rollenverwaltung implements IRollenverwaltung {
         if (mitgliedInAlterRolle.getClass() == rolle.getKlasse())
             throw new Exception("Der Nutzer hat diese Rolle bereits.");
 
-        mitglied_seit = mitgliedInAlterRolle.mitglied_seit;
+        mitglied_seit = mitgliedInAlterRolle.getMitgliedSeit();
 
         rolleAendernSwitch(mitgliedInAlterRolle, rolle, mitglied_seit);
     }
 
-    private void rolleAendernSwitch(Gast gast, Rolle rolle, LocalDateTime mitglied_seit) {
+    private void rolleAendernSwitch(IGast gast, Rolle rolle, LocalDateTime mitglied_seit) {
         Gast g;
         switch (rolle) {
             case GAST:
 
-                g = new Gast(gast.personenID,
-                        gast.nachname,
-                        gast.vorname,
-                        gast.email,
-                        gast.password,
-                        gast.anschrift,
-                        gast.mitgliedsnr,
-                        gast.telefonnummer,
-                        gast.spender);
+                g = new Gast(gast.getPersonenID(),
+                        gast.getNachname(),
+                        gast.getVorname(),
+                        gast.getEmail(),
+                        gast.getPassword(),
+                        gast.getAnschrift(),
+                        gast.getMitgliedsNr(),
+                        gast.getTelefonNr(),
+                        gast.getSpenderStatus());
 
                 gaeste.add(g);
                 break;
             case MITGLIED:
-                g = new Mitglied(gast.personenID,
-                        gast.nachname,
-                        gast.vorname,
-                        gast.email,
-                        gast.password,
-                        gast.anschrift,
-                        gast.mitgliedsnr,
-                        gast.telefonnummer,
-                        gast.spender,
+                g = new Mitglied(gast.getPersonenID(),
+                        gast.getNachname(),
+                        gast.getVorname(),
+                        gast.getEmail(),
+                        gast.getPassword(),
+                        gast.getAnschrift(),
+                        gast.getMitgliedsNr(),
+                        gast.getTelefonNr(),
+                        gast.getSpenderStatus(),
                         mitglied_seit);
 
                 mitglieder.add((Mitglied) g);
                 break;
 
             case MITARBEITER:
-                g = new Mitarbeiter(gast.personenID,
-                        gast.nachname,
-                        gast.vorname,
-                        gast.email,
-                        gast.password,
-                        gast.anschrift,
-                        gast.mitgliedsnr,
-                        gast.telefonnummer,
-                        gast.spender,
+                g = new Mitarbeiter(gast.getPersonenID(),
+                        gast.getNachname(),
+                        gast.getVorname(),
+                        gast.getEmail(),
+                        gast.getPassword(),
+                        gast.getAnschrift(),
+                        gast.getMitgliedsNr(),
+                        gast.getTelefonNr(),
+                        gast.getSpenderStatus(),
                         mitglied_seit,
                         new Mahnungsverwaltung());
 
@@ -195,15 +195,15 @@ public class Rollenverwaltung implements IRollenverwaltung {
                 break;
 
             case VORSITZ:
-                g = new Vorsitz(gast.personenID,
-                        gast.nachname,
-                        gast.vorname,
-                        gast.email,
-                        gast.password,
-                        gast.anschrift,
-                        gast.mitgliedsnr,
-                        gast.telefonnummer,
-                        gast.spender,
+                g = new Vorsitz(gast.getPersonenID(),
+                        gast.getNachname(),
+                        gast.getVorname(),
+                        gast.getEmail(),
+                        gast.getPassword(),
+                        gast.getAnschrift(),
+                        gast.getMitgliedsNr(),
+                        gast.getTelefonNr(),
+                        gast.getSpenderStatus(),
                         mitglied_seit,
                         new Mahnungsverwaltung());
 
@@ -228,31 +228,31 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
     public Object[] mahnungsverwaltungAnzeigen() { return mahnungen.toArray(); }
 
-    private void nutzerAusAlterListeEntfernen(Gast mitglied) {
+    private void nutzerAusAlterListeEntfernen(IGast mitglied) {
         if (mitglied instanceof Gast) {
             for (int i = 0; i < gaeste.size(); i++) {
-                if (gaeste.get(i).personenID.equals(mitglied.getPersonenID())) {
+                if (gaeste.get(i).getPersonenID().equals(mitglied.getPersonenID())) {
                     gaeste.remove(i);
                     break;
                 }
             }
         } else if (mitglied instanceof Mitglied) {
             for (int i = 0; i < mitglieder.size(); i++) {
-                if (mitglieder.get(i).personenID.equals(mitglied.getPersonenID())) {
+                if (mitglieder.get(i).getPersonenID().equals(mitglied.getPersonenID())) {
                     mitglieder.remove(i);
                     break;
                 }
             }
         } else if (mitglied instanceof Mitarbeiter) {
             for (int i = 0; i < mitarbeiter.size(); i++) {
-                if (mitarbeiter.get(i).personenID.equals(mitglied.getPersonenID())) {
+                if (mitarbeiter.get(i).getPersonenID().equals(mitglied.getPersonenID())) {
                     mitarbeiter.remove(i);
                     break;
                 }
             }
         } else if (mitglied instanceof Vorsitz) {
             for (int i = 0; i < vorsitze.size(); i++) {
-                if (vorsitze.get(i).personenID.equals(mitglied.getPersonenID())) {
+                if (vorsitze.get(i).getPersonenID().equals(mitglied.getPersonenID())) {
                     vorsitze.remove(i);
                     break;
                 }
@@ -262,36 +262,36 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
     public boolean login(String email, String password) throws Exception {
 
-        for (Gast m : gaeste) {
-            if (m.email.equals(email)) {
-                if (m.password == password.hashCode())
+        for (IGast m : gaeste) {
+            if (m.getEmail().equals(email)) {
+                if (m.getPassword() == password.hashCode())
                     return true;
                 else
                     throw new Exception("E-Mail oder Passwort falsch!");
             }
         }
 
-        for (Mitglied m : mitglieder) {
-            if (m.email.equals(email)) {
-                if (m.password == password.hashCode())
+        for (IMitglied m : mitglieder) {
+            if (m.getEmail().equals(email)) {
+                if (m.getPassword() == password.hashCode())
                     return true;
                 else
                     throw new Exception("E-Mail oder Passwort falsch!");
             }
         }
 
-        for (Mitglied m : mitarbeiter) {
-            if (m.email.equals(email)) {
-                if (m.password == password.hashCode())
+        for (IMitglied m : mitarbeiter) {
+            if (m.getEmail().equals(email)) {
+                if (m.getPassword() == password.hashCode())
                     return true;
                 else
                     throw new Exception("E-Mail oder Passwort falsch!");
             }
         }
 
-        for (Mitglied m : vorsitze) {
-            if (m.email.equals(email)) {
-                if (m.password == password.hashCode())
+        for (IMitglied m : vorsitze) {
+            if (m.getEmail().equals(email)) {
+                if (m.getPassword() == password.hashCode())
                     return true;
                 else
                     throw new Exception("E-Mail oder Passwort falsch!");
@@ -302,13 +302,13 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
     }
 
-    public ArrayList<Gast> getGaeste() {
+    public ArrayList<IGast> getGaeste() {
         return null;
     }
 
     public String getMitgliedsNamen(String MitgliedsID) throws Exception{
 
-         Mitglied mitglied;
+         IMitglied mitglied;
 
          try{
              mitglied = fetch(MitgliedsID);

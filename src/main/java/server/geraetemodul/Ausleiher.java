@@ -1,9 +1,10 @@
 package server.geraetemodul;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import shared.communication.IAusleiher;
 
-public class Ausleiher {
+import java.time.LocalDateTime;
+
+public class Ausleiher implements IAusleiher {
     private LocalDateTime reservierdatum;
     private LocalDateTime fristBeginn;
     private boolean abgegeben;
@@ -23,7 +24,7 @@ public class Ausleiher {
         this.fristBeginn = fristBeginn;
     }
 
-    public String getMitlgiedsID() {
+    public String getMitgliedsID() {
         return mitgliedsID;
     }
 

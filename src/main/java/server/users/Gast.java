@@ -1,6 +1,10 @@
 package server.users;
 
-public class Gast {
+import shared.communication.IGast;
+
+import java.time.LocalDateTime;
+
+public class Gast implements IGast {
     String personenID;
     String nachname;
     String vorname;
@@ -47,6 +51,11 @@ public class Gast {
     public String getAnschrift() { return anschrift; }
 
     public String getVorname() { return vorname; }
+    public String getEmail() { return email; }
+    public int getPassword() { return password; }
+    public String getMitgliedsNr() { return mitgliedsnr; }
+    public int getTelefonNr() { return telefonnummer; }
+    public boolean getSpenderStatus() { return spender; }
 
     public void datenVerwalten(Personendaten attr, String wert) {
         switch (attr) {

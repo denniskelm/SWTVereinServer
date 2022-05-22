@@ -1,15 +1,16 @@
 package server.users;
 
 import server.dienstleistungsmodul.Anfragenliste;
+import shared.communication.IMitglied;
 
 import java.time.LocalDateTime;
 
-public class Mitglied extends Gast {
+public class Mitglied extends Gast implements IMitglied {
     private int stundenkonto;
     private Anfragenliste anfragenliste; //da Profilseite nicht existiert, habe ich die Anfregenliste direkt zum Mitglied gepackt(kann ja noch verändert werden)
 
     private boolean ist_gesperrt;
-    LocalDateTime mitglied_seit;
+    private LocalDateTime mitglied_seit;
     private int reservierungen;
 
     public Mitglied(String personenID, String nachname, String vorname, String email, String password, String anschrift,
@@ -62,6 +63,7 @@ public class Mitglied extends Gast {
     public Anfragenliste getAnfragenliste(){  //TODO muss wahrscheinlich aus der DB geholt werden
         return this.anfragenliste;
     }
+    public LocalDateTime getMitgliedSeit() { return mitglied_seit; }
 
     @Override
     public void datenVerwalten(Personendaten attr, String wert) {

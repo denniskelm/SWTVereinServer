@@ -11,11 +11,14 @@ Mhd Esmail Kanaan
 //TODO Dennis Kelm
 */
 
+import shared.communication.IAusleiher;
+import shared.communication.IGeraet;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Geraet {
+public class Geraet implements IGeraet {
 
     private String geraeteID;
     private String name;
@@ -24,9 +27,9 @@ public class Geraet {
     private String kategorie;
     private String beschreibung;
     private String abholort;
-    private ArrayList<Ausleiher> reservierungsliste, historie;
+    private ArrayList<IAusleiher> reservierungsliste, historie;
 
-    public ArrayList<Ausleiher> getHistorie() {
+    public ArrayList<IAusleiher> getHistorie() {
         return historie;
     }
 
@@ -44,7 +47,7 @@ public class Geraet {
         this.kategorie = kategorie;
         this.beschreibung = beschreibung;
         this.abholort = abholort;
-        reservierungsliste = new ArrayList<Ausleiher>();
+        reservierungsliste = new ArrayList<IAusleiher>();
         historie = new ArrayList<>();
         leihstatus = Status.FREI;
     }
@@ -57,20 +60,20 @@ public class Geraet {
         this.kategorie = kategorie;
         this.beschreibung = beschreibung;
         this.abholort = abholort;
-        reservierungsliste = new ArrayList<Ausleiher>();
+        reservierungsliste = new ArrayList<IAusleiher>();
         historie = new ArrayList<>();
         this.leihstatus = leihstatus;
     }
 
     public void reservierungHinzufuegen(String personenID) {
-        Ausleiher ausleiher = new Ausleiher(personenID);
+        IAusleiher ausleiher = new Ausleiher(personenID);
 
         // ausrechnen, wann er das Gerät abholen kann
         if (leihstatus == Status.FREI) {
             ausleiher.setFristBeginn(LocalDateTime.now());
             leihstatus = Status.BEANSPRUCHT;
         } else {
-            Ausleiher letzter = reservierungsliste.get(reservierungsliste.size() - 1);
+            IAusleiher letzter = reservierungsliste.get(reservierungsliste.size() - 1);
             ausleiher.setFristBeginn(letzter.getFristBeginn().plusDays(leihfrist));
         }
 
@@ -80,8 +83,8 @@ public class Geraet {
 
     // Entfernt eine Reservierung von der Reservierungsliste.
     public void reservierungEntfernen(String personenID) {
-        for (Ausleiher a : reservierungsliste) {
-            if (Objects.equals(a.getMitlgiedsID(), personenID)) {
+        for (IAusleiher a : reservierungsliste) {
+            if (Objects.equals(a.getMitgliedsID(), personenID)) {
                 reservierungsliste.remove(a);
                 break;
             }
@@ -140,12 +143,12 @@ public class Geraet {
         return leihstatus;
     }
 
-    public ArrayList<Ausleiher> getReservierungsliste() {
+    public ArrayList<IAusleiher> getReservierungsliste() {
         return reservierungsliste;
     }
 
 
-    public void setHistorie(ArrayList<Ausleiher> historie) {
+    public void setHistorie(ArrayList<IAusleiher> historie) {
         this.historie = historie;
         this.leihstatus = Status.FREI;
     }
@@ -174,7 +177,7 @@ public class Geraet {
         this.abholort = abholort;
     }
 
-    public void setReservierungsliste(ArrayList<Ausleiher> reservierungsliste) {
+    public void setReservierungsliste(ArrayList<IAusleiher> reservierungsliste) {
         this.reservierungsliste = reservierungsliste;
     }
 
