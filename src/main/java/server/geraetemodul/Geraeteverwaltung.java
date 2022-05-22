@@ -239,7 +239,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         info[3] = g.getKategorie();
         info[4] = g.getSpenderName();
         info[5] = g.getLeihfrist();
-        info[6] = g.getLeihstatus().getName();
+        info[6] = g.getLeihstatus().toString();
         info[7] = g.getGeraetAbholort();
 
 

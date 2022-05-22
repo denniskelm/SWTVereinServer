@@ -37,7 +37,7 @@ public class GeraeteDB {
             while (result.next()) {
                 String gID = result.getString("GeraeteID");
                 int leihfrist = result.getInt("Leihfrist");
-                Status leihstatus = Status.getStatusByName(result.getString("Leihstatus"));
+                Status leihstatus = Status.valueOf(result.getString("Leihstatus"));
                 String abholort = result.getString("Abholort");
                 String name = result.getString("Name");
                 String beschreibung = result.getString("Beschreibung");
@@ -75,7 +75,7 @@ public class GeraeteDB {
                 }
             }
 
-        } catch (SQLException | NoSuchObjectException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
