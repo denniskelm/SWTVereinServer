@@ -21,12 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class GeraeteverwaltungTest {
 
     private static final Geraeteverwaltung gv = new Geraeteverwaltung();
-    private static final server.users.Rollenverwaltung rv = VereinssoftwareServer.rollenverwaltung;
+    private static final Rollenverwaltung rv = VereinssoftwareServer.rollenverwaltung;
 
     @BeforeAll
     static void mitglieder() {
         rv.mitgliedHinzufuegen("Mustermann","Max","bsp@gmx.de","12345","anschrift","mitgliedsnr",1234567890,true,LocalDateTime.now());
-        rv.mitgliedHinzufuegen("Schmidt","Peter","schmidt@gmx.de","54321","anschrift","mitgliedsnr",987654321,true,LocalDateTime.now());
+        rv.mitgliedHinzufuegen("Schmidt","Peter","schmidt@gmx.de","54321","anschrift","mitgliedsnr2",987654321,true,LocalDateTime.now());
     }
 
     @BeforeEach

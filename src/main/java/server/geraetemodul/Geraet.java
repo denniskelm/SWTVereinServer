@@ -12,7 +12,6 @@ Mhd Esmail Kanaan
 */
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -50,6 +49,19 @@ public class Geraet {
         leihstatus = Status.FREI;
     }
 
+    public Geraet(String geraeteID, String name, String spenderName, int leihfrist, String kategorie, String beschreibung, String abholort, Status leihstatus) {
+        this.geraeteID = geraeteID;
+        this.name = name;
+        this.spenderName = spenderName;
+        this.leihfrist = leihfrist;
+        this.kategorie = kategorie;
+        this.beschreibung = beschreibung;
+        this.abholort = abholort;
+        reservierungsliste = new ArrayList<Ausleiher>();
+        historie = new ArrayList<>();
+        this.leihstatus = leihstatus;
+    }
+
     public void reservierungHinzufuegen(String personenID) {
         Ausleiher ausleiher = new Ausleiher(personenID);
 
@@ -77,7 +89,7 @@ public class Geraet {
         updateFristen();
     }
 
-    public void ausgeben() throws Exception {
+    public void ausgeben() {
         leihstatus = Status.AUSGELIEHEN;
     }
 
@@ -161,4 +173,9 @@ public class Geraet {
     public void setAbholort(String abholort) {
         this.abholort = abholort;
     }
+
+    public void setReservierungsliste(ArrayList<Ausleiher> reservierungsliste) {
+        this.reservierungsliste = reservierungsliste;
+    }
+
 }

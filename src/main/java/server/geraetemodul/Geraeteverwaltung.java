@@ -12,8 +12,9 @@ Jonny Schlutter
 */
 
 import server.VereinssoftwareServer;
+import server.db.GeraeteDB;
 import server.users.Mitglied;
-import server.users.Personendaten;
+import server.users.Rollenverwaltung;
 import shared.communication.IGeraeteverwaltung;
 
 import javax.naming.NoPermissionException;
@@ -22,12 +23,16 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Geraeteverwaltung implements IGeraeteverwaltung {
-    private static ArrayList<Geraet> geraete;
+    private ArrayList<Geraet> geraete;
+    private int IdCounter;
+    private GeraeteDB gDB;
 
-    private static int IdCounter = 0;
 
     public Geraeteverwaltung() {
-        geraete = new ArrayList<>();
+        gDB = new GeraeteDB();
+
+        geraete = gDB.getGeraeteList();
+        IdCounter = gDB.getIdCounter();
 
         geraetHinzufuegen("Rasenmäher", "Gabriel Kleebaum", 5, "Geräte", "Nichts weiter zu sagen.", "Raum 2");
     }
@@ -46,12 +51,14 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
 
         Geraet g = new Geraet(geraeteID, name, spender, leihfrist, kategorie, beschreibung, abholort);
         geraete.add(g);
+        gDB.geraetHinzufuegen(g);
         System.out.println("Geraet mit ID " +  g.getGeraeteID() + " hinzugefuegt. Anzahl Geraete: " +  geraete.size());
         return geraeteID;
     }
 
     public void geraetEntfernen(String geraeteID) throws NoSuchObjectException {
         geraete.remove(fetch(geraeteID));
+        gDB.geraetEntfernen(geraeteID);
         System.out.println("Geraet mit ID " +  geraeteID + " entfernt. Anzahl Geraete: " +  geraete.size());
     }
 
@@ -73,13 +80,14 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
 
     public void reset() {
         geraete = new ArrayList<>();
+        gDB.reset();
         IdCounter = 0;
         System.out.println("Geraeteverwaltung zurueckgesetzt.");
     }
 
     //Mitglied reserviert ein Geraet
     public void geraetReservieren(String geraeteID, String personenID) throws Exception {
-        server.users.Rollenverwaltung rv = VereinssoftwareServer.rollenverwaltung;
+        Rollenverwaltung rv = VereinssoftwareServer.rollenverwaltung;
         Mitglied m = rv.fetch(personenID);
         Geraet g = fetch(geraeteID);
 
@@ -92,7 +100,12 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         }
 
         g.reservierungHinzufuegen(personenID); //Reservierung hinzufuegen
+
+        Ausleiher ausleiher = g.getReservierungsliste().get(g.getReservierungsliste().size() - 1);
+        gDB.geraetReservieren(geraeteID, ausleiher);
+
         m.reservierungenErhöhen(); //Anzahl der Reservierung des Mitglieds erhöhen
+
         System.out.println("Geraet mit ID " +  geraeteID + " reserviert.");
     }
 
@@ -105,6 +118,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
             throw new Exception("Geraet ist momentan von dir ausgeliehen.");
 
         g.reservierungEntfernen(personenID);
+        gDB.reservierungStornieren(geraeteID, personenID);
         m.reservierungenVerringern(); //Anzahl Reservierung des Mitglieds verringern
         System.out.println("Geraet mit ID " +  geraeteID + " storniert.");
     }
@@ -118,6 +132,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
             throw new Exception("ausgeliehenes/freies Geraet kann nicht ausgegeben werden.");
 
         g.ausgeben();
+        gDB.geraetAusgeben(geraeteID);
     }
 
     //Mitarbeiter nimmt das Geraet von einem Mitglied wieder an
@@ -135,6 +150,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         m.reservierungenVerringern();
 
         g.annehmen();
+        gDB.geraetAnnehmen(geraeteID);
     }
 
     //Mitarbeiter aendert Informationen zu einem Geraet
@@ -149,11 +165,14 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
             case BESCHREIBUNG -> g.setBeschreibung(wert.toString());
             case ABHOLORT -> g.setAbholort(wert.toString());
         }
+
+        gDB.geraeteDatenVerwalten(geraeteID, attr, wert);
     }
 
     public void historieZuruecksetzen(String geraeteID) throws NoSuchObjectException {
         Geraet g = fetch(geraeteID);
         g.setHistorie(new ArrayList<>());
+        gDB.historieZuruecksetzen(geraeteID);
     }
 
 
@@ -196,32 +215,32 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         return str.toString();
     }
 
-    public static ArrayList<Geraet> getGeraeteArrayList() {
+    public ArrayList<Geraet> getGeraeteArrayList() {
         return geraete;
     }
 
     public Object[][] omniGeraeteDaten() throws NoSuchObjectException {
-        Object[][] aliste = new Object[50000][8];
+        Object[][] gliste = new Object[50000][8];
 
         for(int i = 0; i < geraete.size(); i++) {
-            aliste[i] = getAngeboteInformationen(geraete.get(i).getGeraeteID());
+            gliste[i] = getGeraeteInformationen(geraete.get(i).getGeraeteID());
         }
 
-        return aliste;
+        return gliste;
     }
 
-    public Object[] getAngeboteInformationen(String geraeteID) throws NoSuchObjectException {
+    public Object[] getGeraeteInformationen(String geraeteID) throws NoSuchObjectException {
 
-        Geraet a = fetch(geraeteID);
+        Geraet g = fetch(geraeteID);
         Object[] info = new Object[8];
-        info[0] = a.getGeraeteID();
-        info[1] = a.getGeraetName();
-        info[2] = a.getGeraetBeschreibung();
-        info[3] = a.getKategorie();
-        info[4] = a.getSpenderName();
-        info[5] = a.getLeihfrist();
-        info[6] = a.getLeihstatus().getName();
-        info[7] = a.getGeraetAbholort();
+        info[0] = g.getGeraeteID();
+        info[1] = g.getGeraetName();
+        info[2] = g.getGeraetBeschreibung();
+        info[3] = g.getKategorie();
+        info[4] = g.getSpenderName();
+        info[5] = g.getLeihfrist();
+        info[6] = g.getLeihstatus().getName();
+        info[7] = g.getGeraetAbholort();
 
 
         return info;

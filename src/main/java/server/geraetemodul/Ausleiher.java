@@ -31,8 +31,15 @@ public class Ausleiher {
         return reservierdatum;
     }
 
+    public void setReservierdatum(LocalDateTime reservierdatum) {
+        this.reservierdatum = reservierdatum;
+    }
+
     public boolean isAbgegeben() {
         return abgegeben;
     }
 
+    public void setAbgegeben(boolean abgegeben) {
+        this.abgegeben = abgegeben;
+    }
 }
