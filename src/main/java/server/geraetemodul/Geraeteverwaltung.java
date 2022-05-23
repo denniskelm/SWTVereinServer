@@ -230,7 +230,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     public Object[] getGeraeteInformationen(String geraeteID) throws NoSuchObjectException {
 
         Geraet g = fetch(geraeteID);
-        Object[] info = new Object[8];
+        Object[] info = new Object[9];
         info[0] = g.getGeraeteID();
         info[1] = g.getGeraetName();
         info[2] = g.getGeraetBeschreibung();
@@ -239,6 +239,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         info[5] = g.getLeihfrist();
         info[6] = g.getLeihstatus().toString();
         info[7] = g.getGeraetAbholort();
+        info[8] = g.getHistorie();
 
 
         return info;
