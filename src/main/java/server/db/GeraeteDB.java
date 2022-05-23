@@ -1,8 +1,6 @@
 package server.db;
 
 import server.geraetemodul.*;
-import shared.communication.IAusleiher;
-import shared.communication.IGeraet;
 
 import java.rmi.NoSuchObjectException;
 import java.sql.*;
@@ -24,8 +22,8 @@ public class GeraeteDB {
         }
     }
 
-    public ArrayList<IGeraet> getGeraeteList() {
-        ArrayList<IGeraet> geraete;
+    public ArrayList<Geraet> getGeraeteList() {
+        ArrayList<Geraet> geraete;
         Geraet g;
 
         geraete = new ArrayList<>();
@@ -54,7 +52,7 @@ public class GeraeteDB {
             getGeraete.close();
 
             // Historien laden
-            for (IGeraet geraet : geraete) {
+            for (Geraet geraet : geraete) {
 
                     PreparedStatement getHistorie = conn.prepareStatement("SELECT * FROM historie WHERE GeraeteID = ? ");
                     getHistorie.setString(1, geraet.getGeraeteID());
@@ -64,9 +62,9 @@ public class GeraeteDB {
             }
 
             // Reservierungslisten laden
-            for (IGeraet geraet : geraete) {
+            for (Geraet geraet : geraete) {
                 if (geraet.getLeihstatus() == Status.FREI)
-                    geraet.setReservierungsliste(new ArrayList<>());
+                    geraet.setReservierungsliste(new ArrayList<Ausleiher>());
                 else {
 
                     PreparedStatement getResListe = conn.prepareStatement("SELECT * FROM reserviert WHERE GeraeteID = ? ");
@@ -84,8 +82,8 @@ public class GeraeteDB {
         return geraete;
     }
 
-    private ArrayList<IAusleiher> getAusleiherList(PreparedStatement prep) throws SQLException {
-        ArrayList<IAusleiher> result;
+    private ArrayList<Ausleiher> getAusleiherList(PreparedStatement prep) throws SQLException {
+        ArrayList<Ausleiher> result;
         ResultSet reservierer = prep.executeQuery();
 
         result = new ArrayList<>();
@@ -153,7 +151,7 @@ public class GeraeteDB {
         }
     }
 
-    public void geraetReservieren(String geraeteID, IAusleiher ausleiher) {
+    public void geraetReservieren(String geraeteID, Ausleiher ausleiher) {
         // TODO Methode noch testen
 
         try {

@@ -1,17 +1,17 @@
 package server.dienstleistungsmodul;
 
-import shared.communication.IMitglied;
+import server.users.Mitglied;
 
 /*
 @author
 Bastian Reichert
 */
 public class AngebotAnfrage {
-    public IMitglied nutzer;
+    public Mitglied nutzer;
     public Dienstleistungsangebot angebot;
     public int stunden;
 
-    public AngebotAnfrage (IMitglied nutzer, Dienstleistungsangebot angebot, int stunden) {
+    public AngebotAnfrage (Mitglied nutzer, Dienstleistungsangebot angebot, int stunden) {
         this.nutzer = nutzer;
         this.stunden = stunden;
         this.angebot = angebot;

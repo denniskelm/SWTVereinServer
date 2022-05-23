@@ -4,8 +4,8 @@ package server.dienstleistungsmodul;
 Bastian Reichert
 */
 import server.VereinssoftwareServer;
+import server.users.Mitglied;
 import shared.communication.IAnfragenliste;
-import shared.communication.IMitglied;
 
 import java.rmi.NoSuchObjectException;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Anfragenliste implements IAnfragenliste {
     private String user_ID;
 
-    public IMitglied nutzer;
+    public Mitglied nutzer;
     private ArrayList<GesuchAnfrage> gliste;
     private ArrayList<AngebotAnfrage> aliste;
 
@@ -60,12 +60,12 @@ public class Anfragenliste implements IAnfragenliste {
         this.aliste = new ArrayList<AngebotAnfrage>();
     }
 
-    public void addaAnfrage(IMitglied nutzer, Dienstleistungsangebot angebot, int stunden) {
+    public void addaAnfrage(Mitglied nutzer, Dienstleistungsangebot angebot, int stunden) {
         AngebotAnfrage a =new AngebotAnfrage(nutzer, angebot,stunden);
         this.aliste.add(a);
     }
 
-    public void addgAnfrage(IMitglied nutzer, Dienstleistungsgesuch gesuch, int stunden) {
+    public void addgAnfrage(Mitglied nutzer, Dienstleistungsgesuch gesuch, int stunden) {
         GesuchAnfrage g = new GesuchAnfrage(nutzer, gesuch, stunden);
         this.gliste.add(g);
     }

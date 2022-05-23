@@ -16,18 +16,18 @@ import java.util.ArrayList;
 
 public class Rollenverwaltung implements IRollenverwaltung {
 
-     private static ArrayList<IGast> gaeste;
-     private static ArrayList<IMitglied> mitglieder;
-     private static ArrayList<IMitarbeiter> mitarbeiter;
-     private static ArrayList<IVorsitz> vorsitze;
+     private static ArrayList<Gast> gaeste;
+     private static ArrayList<Mitglied> mitglieder;
+     private static ArrayList<Mitarbeiter> mitarbeiter;
+     private static ArrayList<Vorsitz> vorsitze;
      private static ArrayList<Mahnungsverwaltung> mahnungen;
      private int IdCounter;
 
      public Rollenverwaltung(){
-         gaeste = new ArrayList<IGast>();
-         mitglieder = new ArrayList<IMitglied>();
-         mitarbeiter = new ArrayList<IMitarbeiter>();
-         vorsitze = new ArrayList<IVorsitz>();
+         gaeste = new ArrayList();
+         mitglieder = new ArrayList();
+         mitarbeiter = new ArrayList();
+         vorsitze = new ArrayList();
          IdCounter = 0;
 
          mitgliedHinzufuegen("Ehrenmann", "Stefan", "stefan.ehrenmann@t-online.de", "12345678", "Huglfingstr. 27", "M4657", 110, false, LocalDateTime.now());
@@ -61,16 +61,16 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
      }
 
-    public IMitglied fetch(String mitgliederID) throws NoSuchObjectException {
-        for (IMitglied m : vorsitze) {
+    public Mitglied fetch(String mitgliederID) throws NoSuchObjectException {
+        for (Mitglied m : vorsitze) {
             if (m.getPersonenID().equals(mitgliederID)) return m;
         }
 
-        for (IMitglied m : mitarbeiter) {
+        for (Mitglied m : mitarbeiter) {
             if (m.getPersonenID().equals(mitgliederID)) return m;
         }
 
-        for (IMitglied m : mitglieder) {
+        for (Mitglied m : mitglieder) {
             if (m.getPersonenID().equals(mitgliederID)) return m;
         }
 
@@ -78,23 +78,23 @@ public class Rollenverwaltung implements IRollenverwaltung {
         throw new NoSuchObjectException("Person mit ID: " + mitgliederID + " nicht vorhanden.");
     }
 
-    public IGast fetchGaeste(String personenID) throws NoSuchObjectException{
-        for (IGast g : gaeste) {
+    public Gast fetchGaeste(String personenID) throws NoSuchObjectException{
+        for (Gast g : gaeste) {
             if (g.getPersonenID().equals(personenID)) return g;
         }
         throw new NoSuchObjectException("Person mit ID: " + personenID + " nicht vorhanden.");
     }
 
-    public  ArrayList<IMitglied> getMitglieder() {
+    public  ArrayList<Mitglied> getMitglieder() {
         return mitglieder;
     }
 
 
-    public ArrayList<IMitarbeiter> getMitarbeiter() {
+    public ArrayList<Mitarbeiter> getMitarbeiter() {
         return mitarbeiter;
     }
 
-    public ArrayList<IVorsitz> getVorsitze() {
+    public ArrayList<Vorsitz> getVorsitze() {
         return vorsitze;
     }
 
@@ -115,9 +115,9 @@ public class Rollenverwaltung implements IRollenverwaltung {
     public Object[] vorsitzListeAnzeigen() { return vorsitze.toArray(); }
 
     public void rolleAendern(String mitgliedsID, Rolle rolle) throws Exception {
-        IMitglied mitgliedInAlterRolle;
-        IGast GastInAlterRolle;
-        IGast g;
+        Mitglied mitgliedInAlterRolle;
+        Gast GastInAlterRolle;
+        Gast g;
         LocalDateTime mitglied_seit;
 
         try {
@@ -146,7 +146,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
         rolleAendernSwitch(mitgliedInAlterRolle, rolle, mitglied_seit);
     }
 
-    private void rolleAendernSwitch(IGast gast, Rolle rolle, LocalDateTime mitglied_seit) {
+    private void rolleAendernSwitch(Gast gast, Rolle rolle, LocalDateTime mitglied_seit) {
         Gast g;
         switch (rolle) {
             case GAST:
@@ -228,7 +228,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
     public Object[] mahnungsverwaltungAnzeigen() { return mahnungen.toArray(); }
 
-    private void nutzerAusAlterListeEntfernen(IGast mitglied) {
+    private void nutzerAusAlterListeEntfernen(Gast mitglied) {
         if (mitglied instanceof Gast) {
             for (int i = 0; i < gaeste.size(); i++) {
                 if (gaeste.get(i).getPersonenID().equals(mitglied.getPersonenID())) {
@@ -262,7 +262,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
     public boolean login(String email, String password) throws Exception {
 
-        for (IGast m : gaeste) {
+        for (Gast m : gaeste) {
             if (m.getEmail().equals(email)) {
                 if (m.getPassword() == password.hashCode())
                     return true;
@@ -271,7 +271,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
             }
         }
 
-        for (IMitglied m : mitglieder) {
+        for (Mitglied m : mitglieder) {
             if (m.getEmail().equals(email)) {
                 if (m.getPassword() == password.hashCode())
                     return true;
@@ -280,7 +280,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
             }
         }
 
-        for (IMitglied m : mitarbeiter) {
+        for (Mitglied m : mitarbeiter) {
             if (m.getEmail().equals(email)) {
                 if (m.getPassword() == password.hashCode())
                     return true;
@@ -289,7 +289,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
             }
         }
 
-        for (IMitglied m : vorsitze) {
+        for (Mitglied m : vorsitze) {
             if (m.getEmail().equals(email)) {
                 if (m.getPassword() == password.hashCode())
                     return true;
@@ -302,13 +302,13 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
     }
 
-    public ArrayList<IGast> getGaeste() {
+    public ArrayList<Gast> getGaeste() {
         return null;
     }
 
     public String getMitgliedsNamen(String MitgliedsID) throws Exception{
 
-         IMitglied mitglied;
+         Mitglied mitglied;
 
          try{
              mitglied = fetch(MitgliedsID);

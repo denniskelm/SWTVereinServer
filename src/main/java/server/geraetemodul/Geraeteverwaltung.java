@@ -13,11 +13,9 @@ Jonny Schlutter
 
 import server.VereinssoftwareServer;
 import server.db.GeraeteDB;
+import server.users.Mitglied;
 import server.users.Rollenverwaltung;
-import shared.communication.IAusleiher;
-import shared.communication.IGeraet;
 import shared.communication.IGeraeteverwaltung;
-import shared.communication.IMitglied;
 
 import javax.naming.NoPermissionException;
 import java.rmi.NoSuchObjectException;
@@ -25,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Geraeteverwaltung implements IGeraeteverwaltung {
-    private ArrayList<IGeraet> geraete;
+    private ArrayList<Geraet> geraete;
     private int IdCounter;
     private GeraeteDB gDB;
 
@@ -62,7 +60,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         System.out.println("Geraet mit ID " +  geraeteID + " entfernt. Anzahl Geraete: " +  geraete.size());
     }
 
-    public ArrayList<IGeraet> getGeraete() {
+    public ArrayList<Geraet> getGeraete() {
         return geraete;
     }
 
@@ -70,8 +68,8 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         return IdCounter;
     }
 
-    public IGeraet fetch(String geraeteID) throws NoSuchObjectException {
-        for (IGeraet g : geraete) {
+    public Geraet fetch(String geraeteID) throws NoSuchObjectException {
+        for (Geraet g : geraete) {
             if (g.getGeraeteID().equals(geraeteID)) return g;
         }
 
@@ -88,12 +86,12 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     //Mitglied reserviert ein Geraet
     public void geraetReservieren(String geraeteID, String personenID) throws Exception {
         Rollenverwaltung rv = VereinssoftwareServer.rollenverwaltung;
-        IMitglied m = rv.fetch(personenID);
-        IGeraet g = fetch(geraeteID);
+        Mitglied m = rv.fetch(personenID);
+        Geraet g = fetch(geraeteID);
 
         if (m.isGesperrt()) throw new NoPermissionException("Mitglied ist gesperrt.");
         if (m.getReservierungen() >= 3) throw new ArrayIndexOutOfBoundsException("Mitglied hat bereits 3 oder mehr Reservierungen.");
-        for (IAusleiher a :  g.getReservierungsliste()) {
+        for (Ausleiher a :  g.getReservierungsliste()) {
             if (Objects.equals(a.getMitgliedsID(), personenID)) {
                 throw new Exception("Mitglied hat das Geraet bereits reserviert.");
             }
@@ -101,7 +99,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
 
         g.reservierungHinzufuegen(personenID); //Reservierung hinzufuegen
 
-        IAusleiher ausleiher = g.getReservierungsliste().get(g.getReservierungsliste().size() - 1);
+        Ausleiher ausleiher = g.getReservierungsliste().get(g.getReservierungsliste().size() - 1);
         gDB.geraetReservieren(geraeteID, ausleiher);
 
         m.reservierungenErhöhen(); //Anzahl der Reservierung des Mitglieds erhöhen
@@ -112,8 +110,8 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     //Mitglied storniert eine Reservierung für ein Geraet
     public void reservierungStornieren(String geraeteID, String personenID) throws Exception {
         server.users.Rollenverwaltung rv = VereinssoftwareServer.rollenverwaltung;
-        IMitglied m = rv.fetch(personenID);
-        IGeraet g = fetch(geraeteID);
+        Mitglied m = rv.fetch(personenID);
+        Geraet g = fetch(geraeteID);
         if (Objects.equals(g.getReservierungsliste().get(0).getMitgliedsID(), personenID) && g.getLeihstatus() == Status.AUSGELIEHEN)
             throw new Exception("Geraet ist momentan von dir ausgeliehen.");
 
@@ -125,7 +123,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
 
     //Mitarbeiter gibt das Geraet an ein Mitglied aus
     public void geraetAusgeben(String geraeteID) throws Exception {
-        IGeraet g = fetch(geraeteID);
+        Geraet g = fetch(geraeteID);
         if (g.getReservierungsliste().isEmpty())
             throw new Exception("keine Reservierung vorhanden.");
         if (g.getLeihstatus() != Status.BEANSPRUCHT)
@@ -137,7 +135,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
 
     //Mitarbeiter nimmt das Geraet von einem Mitglied wieder an
     public void geraetAnnehmen(String geraeteID) throws Exception {
-        IGeraet g = fetch(geraeteID);
+        Geraet g = fetch(geraeteID);
 
         if (g.getReservierungsliste().isEmpty())
             throw new Exception("keine Reservierung vorhanden.");
@@ -146,7 +144,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
 
         //Anzahl Reservierung des Mitglieds verringern
         server.users.Rollenverwaltung rv = VereinssoftwareServer.rollenverwaltung;
-        IMitglied m = rv.fetch(g.getReservierungsliste().get(0).getMitgliedsID());
+        Mitglied m = rv.fetch(g.getReservierungsliste().get(0).getMitgliedsID());
         m.reservierungenVerringern();
 
         g.annehmen();
@@ -155,7 +153,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
 
     //Mitarbeiter aendert Informationen zu einem Geraet
     public void geraeteDatenVerwalten(String geraeteID, Geraetedaten attr, Object wert) throws NoSuchObjectException {
-        IGeraet g = fetch(geraeteID);
+        Geraet g = fetch(geraeteID);
 
         switch (attr) { //wie setter methoden
             case NAME -> g.setName(wert.toString());
@@ -170,19 +168,19 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     }
 
     public void historieZuruecksetzen(String geraeteID) throws NoSuchObjectException {
-        IGeraet g = fetch(geraeteID);
+        Geraet g = fetch(geraeteID);
         g.setHistorie(new ArrayList<>());
         gDB.historieZuruecksetzen(geraeteID);
     }
 
 
-    public ArrayList<IGeraet> geraeteAnzeigen() { //geraet Fenester anzeigen
+    public ArrayList<Geraet> geraeteAnzeigen() { //geraet Fenester anzeigen
         return geraete;
     }
 
     //Zum Testen der Geraeteverwaltung
     public String geraeteDatenAusgeben(String geraeteID) throws NoSuchObjectException {
-        IGeraet geraet = fetch(geraeteID);
+        Geraet geraet = fetch(geraeteID);
         StringBuilder str = new StringBuilder();
 
         str.append("ID: ");
@@ -215,7 +213,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         return str.toString();
     }
 
-    public ArrayList<IGeraet> getGeraeteArrayList() {
+    public ArrayList<Geraet> getGeraeteArrayList() {
         return geraete;
     }
 
@@ -231,7 +229,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
 
     public Object[] getGeraeteInformationen(String geraeteID) throws NoSuchObjectException {
 
-        IGeraet g = fetch(geraeteID);
+        Geraet g = fetch(geraeteID);
         Object[] info = new Object[8];
         info[0] = g.getGeraeteID();
         info[1] = g.getGeraetName();

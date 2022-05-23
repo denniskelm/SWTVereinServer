@@ -2,9 +2,8 @@ package server.dienstleistungsmodul;
 
 import server.VereinssoftwareServer;
 import server.dienstleistungsmodul.*;
-import shared.communication.IAnfragenliste;
+import server.users.Mitglied;
 import shared.communication.IDienstleistungsverwaltung;
-import shared.communication.IMitglied;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -239,9 +238,9 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         server.users.Rollenverwaltung r= VereinssoftwareServer.rollenverwaltung;
         Dienstleistungsgesuch gesuch = fetchGesuch(gesuchsID);
 
-        IMitglied ersteller=r.fetch(erstellerID);
-        IMitglied nutzer=r.fetch(nutzerID);
-        IAnfragenliste l= ersteller.getAnfragenliste();
+        Mitglied ersteller=r.fetch(erstellerID);
+        Mitglied nutzer=r.fetch(nutzerID);
+        Anfragenliste l= ersteller.getAnfragenliste();
         l.addgAnfrage(nutzer, gesuch ,stunden);
     }
 
@@ -288,9 +287,9 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         Dienstleistungsangebot angebot = fetchAngebot(angebotID);
 
 
-        IMitglied ersteller=r.fetch(erstellerID);
-        IMitglied nutzer=r.fetch(nutzerID);
-        IAnfragenliste l= ersteller.getAnfragenliste();
+        Mitglied ersteller=r.fetch(erstellerID);
+        Mitglied nutzer=r.fetch(nutzerID);
+        Anfragenliste l= ersteller.getAnfragenliste();
         l.addaAnfrage(nutzer, angebot,stunden);
     }
 

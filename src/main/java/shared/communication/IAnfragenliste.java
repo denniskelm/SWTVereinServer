@@ -10,6 +10,7 @@ import server.dienstleistungsmodul.AngebotAnfrage;
 import server.dienstleistungsmodul.Dienstleistungsangebot;
 import server.dienstleistungsmodul.Dienstleistungsgesuch;
 import server.dienstleistungsmodul.GesuchAnfrage;
+import server.users.Mitglied;
 //import server.dienstleistungsmodul.GesuchAnfragedaten;
 
 import java.rmi.NoSuchObjectException;
@@ -29,8 +30,8 @@ public interface IAnfragenliste {
     void removeGAnfrage(GesuchAnfrage g);
     void gAnfrageAnnehmen(GesuchAnfrage g) throws Exception;
     void aAnfrageAnnehmen(AngebotAnfrage a) throws Exception;
-    void addaAnfrage(IMitglied nutzer, Dienstleistungsangebot angebot, int stunden);
-    void addgAnfrage(IMitglied nutzer, Dienstleistungsgesuch gesuch, int stunden);
+    void addaAnfrage(Mitglied nutzer, Dienstleistungsangebot angebot, int stunden);
+    void addgAnfrage(Mitglied nutzer, Dienstleistungsgesuch gesuch, int stunden);
 
 
 }

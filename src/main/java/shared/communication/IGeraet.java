@@ -1,11 +1,12 @@
 package shared.communication;
 
+import server.geraetemodul.Ausleiher;
 import server.geraetemodul.Status;
 import java.util.ArrayList;
 
 public interface IGeraet {
 
-    ArrayList<IAusleiher> getHistorie();
+    ArrayList<Ausleiher> getHistorie();
     void reservierungHinzufuegen(String personenID);
     void reservierungEntfernen(String personenID);
     void ausgeben();
@@ -19,14 +20,14 @@ public interface IGeraet {
     String getGeraetBeschreibung();
     int getLeihfrist();
     Status getLeihstatus();
-    ArrayList<IAusleiher> getReservierungsliste();
-    void setHistorie(ArrayList<IAusleiher> historie);
+    ArrayList<Ausleiher> getReservierungsliste();
+    void setHistorie(ArrayList<Ausleiher> historie);
     void setName(String name);
     void setSpenderName(String spenderName);
     void setLeihfrist(int leihfrist);
     void setKategorie(String kategorie);
     void setBeschreibung(String beschreibung);
     void setAbholort(String abholort);
-    void setReservierungsliste(ArrayList<IAusleiher> reservierungsliste);
+    void setReservierungsliste(ArrayList<Ausleiher> reservierungsliste);
 
 }

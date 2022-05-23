@@ -1,6 +1,7 @@
 package shared.communication;
 
 
+import server.dienstleistungsmodul.Anfragenliste;
 import server.users.Personendaten;
 
 import java.time.LocalDateTime;
@@ -12,7 +13,7 @@ public interface IMitglied extends IGast {
     int getReservierungen();
     void veraendereStundenkonto(int change);
     boolean isGesperrt();
-    IAnfragenliste getAnfragenliste();
+    Anfragenliste getAnfragenliste();
     LocalDateTime getMitgliedSeit();
     void datenVerwalten(Personendaten attr, String wert);
 
