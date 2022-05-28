@@ -320,4 +320,19 @@ public class Rollenverwaltung implements IRollenverwaltung {
          return mitglied.getVorname() + " " + mitglied.getNachname();
     }
 
+    //@author Dennis Kelm
+    public String getMitgliedsMail(String MitgliedsID) throws Exception{
+
+        Mitglied mitglied;
+
+        try{
+            mitglied = fetch(MitgliedsID);
+        }
+        catch(NoSuchObjectException e){
+            throw new RuntimeException(e);
+        }
+
+        return mitglied.getEmail();
+    }
+
 }

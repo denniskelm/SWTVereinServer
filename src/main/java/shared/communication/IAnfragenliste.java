@@ -24,14 +24,14 @@ public interface IAnfragenliste {
     Object[][] omniAAnfrageDaten() throws NoSuchObjectException;
 
     Object[][] omniGAnfrageDaten() throws NoSuchObjectException;
-    Object[] getGAnfragenInfo(GesuchAnfrage g) throws NoSuchObjectException;
+    /*Object[] getGAnfragenInfo(GesuchAnfrage g) throws NoSuchObjectException;
     Object[] getAAnfragenInfo(AngebotAnfrage g) throws NoSuchObjectException;
     void removeAAnfrage(AngebotAnfrage a);
     void removeGAnfrage(GesuchAnfrage g);
     void gAnfrageAnnehmen(GesuchAnfrage g) throws Exception;
     void aAnfrageAnnehmen(AngebotAnfrage a) throws Exception;
     void addaAnfrage(Mitglied nutzer, Dienstleistungsangebot angebot, int stunden);
-    void addgAnfrage(Mitglied nutzer, Dienstleistungsgesuch gesuch, int stunden);
+    void addgAnfrage(Mitglied nutzer, Dienstleistungsgesuch gesuch, int stunden);*/
 
 
 }
