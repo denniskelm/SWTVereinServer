@@ -8,6 +8,7 @@ Ole Björn Adelmann
 */
 
 import server.Mahnungsverwaltung;
+import server.db.RollenDB;
 import shared.communication.*;
 
 import java.rmi.NoSuchObjectException;
@@ -22,20 +23,23 @@ public class Rollenverwaltung implements IRollenverwaltung {
      private static ArrayList<Vorsitz> vorsitze;
      private static ArrayList<Mahnungsverwaltung> mahnungen;
      private int IdCounter;
+     private RollenDB rDB;
 
      public Rollenverwaltung(){
-         gaeste = new ArrayList();
-         mitglieder = new ArrayList();
-         mitarbeiter = new ArrayList();
-         vorsitze = new ArrayList();
-         IdCounter = 0;
+         rDB = new RollenDB();
 
-         mitgliedHinzufuegen("Ehrenmann", "Stefan", "stefan.ehrenmann@t-online.de", "12345678", "Huglfingstr. 27", "M4657", 110, false, LocalDateTime.now());
-         mitgliedHinzufuegen("Tran", "Huy", "huy@email.de", "1234", "Musterstr. 1", "ABC", 123, true, LocalDateTime.now().minusDays(3));
-         mitgliedHinzufuegen("Kelm", "Dennis", "dennis@email.de", "2345", "Teststr. 4", "DEF", 234, false, LocalDateTime.now().minusDays(20));
+         gaeste = rDB.getGaeste();
+         mitglieder = rDB.getMitglieder();
+         mitarbeiter = rDB.getMitarbeiter();
+         vorsitze = rDB.getVorsitze();
+         IdCounter = rDB.getIdCounter();
+
+         //mitgliedHinzufuegen("Ehrenmann", "Stefan", "stefan.ehrenmann@t-online.de", "12345678", "Huglfingstr. 27", "M4657", "110", false, LocalDateTime.now());
+         //mitgliedHinzufuegen("Tran", "Huy", "huy@email.de", "1234", "Musterstr. 1", "ABC", "123", true, LocalDateTime.now().minusDays(3));
+         //mitgliedHinzufuegen("Kelm", "Dennis", "dennis@email.de", "2345", "Teststr. 4", "DEF", "234", false, LocalDateTime.now().minusDays(20));
      }
 
-     public void gastHinzufuegen(String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, int telefonnummer, boolean spender) {
+     public void gastHinzufuegen(String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, String telefonnummer, boolean spender) {
          if (gaeste.size() >= 50000) throw new ArrayIndexOutOfBoundsException();
 
          //naechste ID generieren
@@ -44,11 +48,12 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
          Gast gast = new Gast(personenID,nachname,vorname,email,password,anschrift,mitgliedsnr,telefonnummer,spender);
          gaeste.add(gast);
+         rDB.gastHinzufuegen(gast);
          System.out.println("Gast mit ID " +  personenID + " hinzugefuegt. Anzahl Gaeste: " +  gaeste.size());
      }
      
      public void mitgliedHinzufuegen(String nachname, String vorname, String email, String password, String anschrift,
-                                     String mitgliedsnr, int telefonnummer, boolean spender/*, Mahnungsverwaltung mahnungen, Profilseite profilseite */,
+                                     String mitgliedsnr, String telefonnummer, boolean spender/*, Mahnungsverwaltung mahnungen, Profilseite profilseite */,
                                      LocalDateTime mitglied_seit) {
          if (mitglieder.size() >= 50000) throw new ArrayIndexOutOfBoundsException();
 
@@ -59,6 +64,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
          Mitglied m = new Mitglied(personenID, nachname, vorname, email, password, anschrift, mitgliedsnr, telefonnummer, spender, mitglied_seit);
          mitglieder.add(m);
 
+         rDB.MitgliedHinzufuegen(m);
      }
 
     public Mitglied fetch(String mitgliederID) throws NoSuchObjectException {
@@ -73,7 +79,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
         for (Mitglied m : mitglieder) {
             if (m.getPersonenID().equals(mitgliederID)) return m;
         }
-
 
         throw new NoSuchObjectException("Person mit ID: " + mitgliederID + " nicht vorhanden.");
     }
@@ -117,8 +122,9 @@ public class Rollenverwaltung implements IRollenverwaltung {
     public void rolleAendern(String mitgliedsID, Rolle rolle) throws Exception {
         Mitglied mitgliedInAlterRolle;
         Gast GastInAlterRolle;
-        Gast g;
         LocalDateTime mitglied_seit;
+
+        rDB.rolleAendern(mitgliedsID, rolle);
 
         try {
             mitgliedInAlterRolle = fetch(mitgliedsID);
@@ -150,7 +156,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
         Gast g;
         switch (rolle) {
             case GAST:
-
                 g = new Gast(gast.getPersonenID(),
                         gast.getNachname(),
                         gast.getVorname(),
@@ -217,12 +222,10 @@ public class Rollenverwaltung implements IRollenverwaltung {
     public void nutzereintragAendern(String mitgliedsID, Personendaten attr, String wert) throws NoSuchObjectException {
         try {
             (fetch(mitgliedsID)).datenVerwalten(attr, wert);
+            rDB.nutzerEintragAendern(mitgliedsID, attr, wert);
         } catch (NoSuchObjectException e) {
-            try {
                 (fetchGaeste(mitgliedsID)).datenVerwalten(attr, wert);
-            } catch (NoSuchObjectException f) {
-                throw  f;
-            }
+                rDB.nutzerEintragAendern(mitgliedsID, attr, wert);
         }
     }
 
@@ -303,11 +306,10 @@ public class Rollenverwaltung implements IRollenverwaltung {
     }
 
     public ArrayList<Gast> getGaeste() {
-        return null;
+        return gaeste;
     }
 
-    public String getMitgliedsNamen(String MitgliedsID) throws Exception{
-
+    public String getMitgliedsNamen(String MitgliedsID) {
          Mitglied mitglied;
 
          try{
@@ -321,8 +323,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
     }
 
     //@author Dennis Kelm
-    public String getMitgliedsMail(String MitgliedsID) throws Exception{
-
+    public String getMitgliedsMail(String MitgliedsID) {
         Mitglied mitglied;
 
         try{
@@ -333,6 +334,16 @@ public class Rollenverwaltung implements IRollenverwaltung {
         }
 
         return mitglied.getEmail();
+    }
+
+    public void reset() {
+        gaeste = new ArrayList<>();
+        mitglieder = new ArrayList<>();
+        mitarbeiter = new ArrayList<>();
+        vorsitze = new ArrayList<>();
+        rDB.reset();
+        IdCounter = 0;
+        System.out.println("Rollenverwaltung zurueckgesetzt.");
     }
 
 }

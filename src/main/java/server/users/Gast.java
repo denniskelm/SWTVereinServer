@@ -12,11 +12,11 @@ public class Gast implements IGast {
     int password;
     String anschrift;
     String mitgliedsnr;
-    int telefonnummer;
+    String telefonnummer;
     boolean spender;
 
     public Gast(String personenID, String nachname, String vorname, String email, String password, String anschrift,
-                String mitgliedsnr, int telefonnummer, boolean spender ){
+                String mitgliedsnr, String telefonnummer, boolean spender ){
         this.personenID = personenID;
         this.nachname = nachname;
         this.vorname = vorname;
@@ -30,7 +30,7 @@ public class Gast implements IGast {
 
     // Weiterer Konstruktor, falls man die Rolle von einem Gast ändert, da dann das Passwort schon gehasht ist
     public Gast(String personenID, String nachname, String vorname, String email, int password, String anschrift,
-                String mitgliedsnr, int telefonnummer, boolean spender ){
+                String mitgliedsnr, String telefonnummer, boolean spender ){
         this.personenID = personenID;
         this.nachname = nachname;
         this.vorname = vorname;
@@ -54,7 +54,7 @@ public class Gast implements IGast {
     public String getEmail() { return email; }
     public int getPassword() { return password; }
     public String getMitgliedsNr() { return mitgliedsnr; }
-    public int getTelefonNr() { return telefonnummer; }
+    public String getTelefonNr() { return telefonnummer; }
     public boolean getSpenderStatus() { return spender; }
 
     public void datenVerwalten(Personendaten attr, String wert) {
@@ -66,7 +66,7 @@ public class Gast implements IGast {
             case PASSWORD -> this.password = Integer.parseInt(wert.toString());
             case ANSCHRIFT -> this.anschrift = wert.toString();
             case MITGLIEDSNR -> this.mitgliedsnr = wert.toString();
-            case TELEFONNUMMER -> this.telefonnummer = Integer.parseInt(wert.toString());
+            case TELEFONNUMMER -> this.telefonnummer = wert.toString();
 
             //Attribut kann für diese Rolle nicht geändert werden
             default -> {return;}

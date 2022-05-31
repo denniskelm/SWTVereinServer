@@ -13,7 +13,7 @@ public interface IGast {
     String getEmail();
     int getPassword();
     String getMitgliedsNr();
-    int getTelefonNr();
+    String getTelefonNr();
     boolean getSpenderStatus();
     void datenVerwalten(Personendaten attr, String wert);
 

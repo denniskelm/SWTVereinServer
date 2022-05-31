@@ -1,8 +1,18 @@
 package server.db;
 
 import server.geraetemodul.*;
+/*
+@author
+Raphael Kleebaum
+//TODO Jonny Schlutter
+//TODO Gabriel Kleebaum
+//TODO Mhd Esmail Kanaan
+//TODO Gia Huy Hans Tran
+//TODO Ole Björn Adelmann
+//TODO Bastian Reichert
+//TODO Dennis Kelm
+*/
 
-import java.rmi.NoSuchObjectException;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -51,26 +61,19 @@ public class GeraeteDB {
 
             getGeraete.close();
 
-            // Historien laden
+            // Historien & Reservierungslisten laden
             for (Geraet geraet : geraete) {
 
-                    PreparedStatement getHistorie = conn.prepareStatement("SELECT * FROM historie WHERE GeraeteID = ? ");
-                    getHistorie.setString(1, geraet.getGeraeteID());
+                geraet.setHistorie(getListeVonAusleihern(geraet.getGeraeteID(), "historie"));
 
-                    geraet.setHistorie(getAusleiherList(getHistorie));
-
-            }
-
-            // Reservierungslisten laden
-            for (Geraet geraet : geraete) {
                 if (geraet.getLeihstatus() == Status.FREI)
-                    geraet.setReservierungsliste(new ArrayList<Ausleiher>());
+                    geraet.setReservierungsliste(new ArrayList<>());
                 else {
 
                     PreparedStatement getResListe = conn.prepareStatement("SELECT * FROM reserviert WHERE GeraeteID = ? ");
                     getResListe.setString(1, geraet.getGeraeteID());
 
-                    geraet.setReservierungsliste(getAusleiherList(getResListe));
+                    geraet.setReservierungsliste(getListeVonAusleihern(geraet.getGeraeteID(), "reserviert"));
 
                 }
             }
@@ -80,32 +83,6 @@ public class GeraeteDB {
         }
 
         return geraete;
-    }
-
-    private ArrayList<Ausleiher> getAusleiherList(PreparedStatement prep) throws SQLException {
-        ArrayList<Ausleiher> result;
-        ResultSet reservierer = prep.executeQuery();
-
-        result = new ArrayList<>();
-
-        while (reservierer.next()) {
-
-            String personenID = reservierer.getString("PersonenID");
-            LocalDateTime fristBeginn = reservierer.getTimestamp("Fristbeginn").toLocalDateTime();
-            LocalDateTime reservierDatum = reservierer.getTimestamp("Reservierdatum").toLocalDateTime();
-            boolean isAbgegeben = reservierer.getString("Abgegeben").equals("Y");
-
-            Ausleiher a = new Ausleiher(personenID);
-            a.setFristBeginn(fristBeginn);
-            a.setReservierdatum(reservierDatum);
-            a.setAbgegeben(isAbgegeben);
-
-            result.add(a);
-        }
-
-        prep.close();
-
-        return result;
     }
 
     public void geraetHinzufuegen(Geraet g) {
@@ -187,23 +164,7 @@ public class GeraeteDB {
             prep.executeUpdate();
             prep.close();
 
-            // herausfinden, ob die Reservierungsliste leer ist
-            prep = conn.prepareStatement("SELECT COUNT(GeraeteID) FROM reserviert WHERE GeraeteID = ? AND PersonenID = ?");
-            prep.setString(1, geraeteID);
-            prep.setString(2, personenID);
-
-            ResultSet result = prep.executeQuery();
-            result.next();
-
-            // wenn leer, dann Gerät auf Frei setzen
-            // TODO sonst auf Beansprucht?
-            if (result.getInt(1) == 0) {
-                PreparedStatement updateLeihstatus = conn.prepareStatement("UPDATE geraet SET Leihstatus = 'FREI' WHERE geraeteID = ?");
-                updateLeihstatus.setString(1, geraeteID);
-
-                updateLeihstatus.executeUpdate();
-                updateLeihstatus.close();
-            }
+            updateLeihstatus(geraeteID);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -248,21 +209,11 @@ public class GeraeteDB {
         }
     }
 
-    public void geraeteDatenVerwalten(String geraeteID, Geraetedaten attr, Object wert) throws NoSuchObjectException {
+    public void geraeteDatenVerwalten(String geraeteID, Geraetedaten attr, Object wert) {
         String value = String.valueOf(wert);
 
         try {
-            PreparedStatement prep;
-
-            switch (attr) {
-                case NAME -> prep = conn.prepareStatement("UPDATE geraet SET Name = ? WHERE GeraeteID = ?");
-                case SPENDERNAME -> prep = conn.prepareStatement("UPDATE geraet SET Spendername = ? WHERE GeraeteID = ?");
-                case LEIHFRIST -> prep = conn.prepareStatement("UPDATE geraet SET Leihfrist = ? WHERE GeraeteID = ?");
-                case KATEGORIE -> prep = conn.prepareStatement("UPDATE geraet SET Kategorie = ? WHERE GeraeteID = ?");
-                case BESCHREIBUNG -> prep = conn.prepareStatement("UPDATE geraet SET Beschreibung    = ? WHERE GeraeteID = ?");
-                case ABHOLORT -> prep = conn.prepareStatement("UPDATE geraet SET Abholort = ? WHERE GeraeteID = ?");
-                default -> throw new NoSuchObjectException("Dieses Attribut existiert nicht.");
-            }
+            PreparedStatement prep = conn.prepareStatement(String.format("UPDATE geraet SET %s = ? WHERE GeraeteID = ?", attr.toString()));
 
             if (attr == Geraetedaten.LEIHFRIST)
                 prep.setInt(1, Integer.parseInt(value));
@@ -312,17 +263,9 @@ public class GeraeteDB {
 
     public void reset() {
         try {
-            PreparedStatement historieReset = conn.prepareStatement("DELETE FROM historie");
-            historieReset.executeUpdate();
-            historieReset.close();
-
-            PreparedStatement reserviertReset = conn.prepareStatement("DELETE FROM reserviert");
-            reserviertReset.executeUpdate();
-            reserviertReset.close();
-
-            PreparedStatement gereateReset = conn.prepareStatement("DELETE FROM geraet");
-            gereateReset.executeUpdate();
-            gereateReset.close();
+            resetTabelle("historie");
+            resetTabelle("reserviert");
+            resetTabelle("geraet");
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -377,7 +320,7 @@ public class GeraeteDB {
         return result.getInt(1);
     }
 
-    private int getReslisteSize(String geraeteID) throws SQLException {
+    private int getResListeSize(String geraeteID) throws SQLException {
         PreparedStatement prep = conn.prepareStatement("SELECT COUNT(GeraeteID) FROM reserviert WHERE GeraeteID = ?");
         prep.setString(1, geraeteID);
 
@@ -392,7 +335,7 @@ public class GeraeteDB {
         PreparedStatement prep;
 
         // herausfinden, ob die Reservierungsliste leer ist
-        int resListeGroesse = getReslisteSize(geraeteID);
+        int resListeGroesse = getResListeSize(geraeteID);
 
         if (resListeGroesse == 0)
             prep = conn.prepareStatement("UPDATE geraet SET Leihstatus = 'FREI' WHERE geraeteID = ?");
@@ -410,10 +353,8 @@ public class GeraeteDB {
         prep.setString(1, geraeteID);
         ResultSet result = prep.executeQuery();
 
-        int anzahlPersonen = getReslisteSize(geraeteID);
-
+        int anzahlPersonen = getResListeSize(geraeteID);
         Timestamp[] fristBeginne = new Timestamp[anzahlPersonen];
-
         int j = 0;
 
         while (result.next())
@@ -435,6 +376,39 @@ public class GeraeteDB {
 
         prep.executeBatch();
         prep.close();
+    }
+
+    private void resetTabelle(String tabelle) throws SQLException {
+        PreparedStatement prep = conn.prepareStatement(String.format("DELETE FROM %s", tabelle));
+        prep.executeUpdate();
+        prep.close();
+    }
+
+    private ArrayList<Ausleiher> getListeVonAusleihern(String geraeteID, String tabelle) throws SQLException {
+        ArrayList<Ausleiher> ausleiherList = new ArrayList<>();
+        PreparedStatement prep = conn.prepareStatement(String.format("SELECT * FROM %s WHERE GeraeteID = ?", tabelle));
+
+        prep.setString(1, geraeteID);
+        ResultSet result = prep.executeQuery();
+
+        while (result.next()) {
+
+            String personenID = result.getString("PersonenID");
+            LocalDateTime fristBeginn = result.getTimestamp("Fristbeginn").toLocalDateTime();
+            LocalDateTime reservierDatum = result.getTimestamp("Reservierdatum").toLocalDateTime();
+            boolean isAbgegeben = result.getString("Abgegeben").equals("Y");
+
+            Ausleiher a = new Ausleiher(personenID);
+            a.setFristBeginn(fristBeginn);
+            a.setReservierdatum(reservierDatum);
+            a.setAbgegeben(isAbgegeben);
+
+            ausleiherList.add(a);
+        }
+
+        prep.close();
+
+        return ausleiherList;
     }
 
 }

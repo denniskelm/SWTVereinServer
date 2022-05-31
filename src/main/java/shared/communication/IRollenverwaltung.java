@@ -30,7 +30,7 @@ public interface IRollenverwaltung extends Remote {
     void rolleAendern(String mitgliedsID, Rolle rolle) throws RemoteException, Exception;
     void nutzereintragAendern(String mitgliedsID, Personendaten attr, String wert) throws RemoteException;
     Object[] mahnungsverwaltungAnzeigen() throws RemoteException;   //Object[]
-    void gastHinzufuegen(String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, int telefonnummer, boolean spender) throws RemoteException;
+    void gastHinzufuegen(String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, String telefonnummer, boolean spender) throws RemoteException;
     boolean login(String email, String password) throws Exception;
     ArrayList<Gast> getGaeste() throws RemoteException;  //ArrayList<Gast>
     ArrayList<Mitglied> getMitglieder() throws RemoteException;  //ArrayList<Mitglied>

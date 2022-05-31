@@ -1,9 +1,6 @@
 package server;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import server.geraetemodul.*;
 import server.users.Personendaten;
 import server.users.Rollenverwaltung;
@@ -24,8 +21,8 @@ class GeraeteverwaltungTest {
 
     @BeforeAll
     static void mitglieder() {
-        rv.mitgliedHinzufuegen("Mustermann","Max","bsp@gmx.de","12345","anschrift","mitgliedsnr",1234567890,true,LocalDateTime.now());
-        rv.mitgliedHinzufuegen("Schmidt","Peter","schmidt@gmx.de","54321","anschrift","mitgliedsnr2",987654321,true,LocalDateTime.now());
+        rv.mitgliedHinzufuegen("Mustermann","Max","bsp@gmx.de","12345","anschrift","mitgliedsnr","1234567890",true,LocalDateTime.now());
+        rv.mitgliedHinzufuegen("Schmidt","Peter","schmidt@gmx.de","54321","anschrift","mitgliedsnr2","987654321",true,LocalDateTime.now());
     }
 
     @BeforeEach
@@ -35,6 +32,12 @@ class GeraeteverwaltungTest {
         gv.reset();
         gv.geraetHinzufuegen("Ball", "spender", 15, "Spielzeug", "beschreibung", "abholort");
         gv.geraetHinzufuegen("Bohrer", "spender", 15, "Werkzeug", "beschreibung", "abholort");
+    }
+
+    @AfterAll
+    static void reset() {
+        gv.reset();
+        rv.reset();
     }
 
     @Test
@@ -142,7 +145,7 @@ class GeraeteverwaltungTest {
         Throwable exception1 = assertThrows(Exception.class, () -> gv.geraetAusgeben("g00001"));
         assertEquals("keine Reservierung vorhanden.", exception1.getMessage());
 
-        gv.geraetReservieren("g00001","1");
+        gv.geraetReservieren("g00001","2");
         gv.geraetAusgeben("g00001");
         assertEquals(g.getLeihstatus(),Status.AUSGELIEHEN);
 
