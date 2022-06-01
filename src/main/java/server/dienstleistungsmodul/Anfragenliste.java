@@ -35,7 +35,7 @@ public class Anfragenliste implements IAnfragenliste {
         return info;
     }
 
-    public Object[][] omniAAnfrageDaten() throws NoSuchObjectException {
+    public Object[][] omniAngebotsAnfrageDaten() throws NoSuchObjectException {
         Object[][] liste = new Object[50][3];//TODO index out of range
 
         for(int i = 0; i < aliste.size(); i++) {
@@ -45,7 +45,7 @@ public class Anfragenliste implements IAnfragenliste {
         return liste;
     }
 
-    public Object[][] omniGAnfrageDaten() throws NoSuchObjectException {
+    public Object[][] omniGesuchsAnfrageDaten() throws NoSuchObjectException {
         Object[][] liste = new Object[50][3];
 
         for(int i = 0; i < gliste.size(); i++) {
