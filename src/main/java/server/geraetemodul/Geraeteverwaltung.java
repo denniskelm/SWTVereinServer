@@ -218,7 +218,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     }
 
     public Object[][] omniGeraeteDaten() throws NoSuchObjectException {
-        Object[][] gliste = new Object[50000][8];
+        Object[][] gliste = new Object[50000][9];
 
         for(int i = 0; i < geraete.size(); i++) {
             gliste[i] = getGeraeteInformationen(geraete.get(i).getGeraeteID());
