@@ -9,10 +9,11 @@ Bastian Reichert
 //import server.dienstleistungsmodul.GesuchAnfragedaten;
 
 import java.rmi.NoSuchObjectException;
+import java.rmi.Remote;
 //TODO Objekte durch Idetifikator ersetzen
 
 // Interface, um RMI für Klasse Dienstleistungsverwaltung zu ermöglichen
-public interface IAnfragenliste {
+public interface IAnfragenliste extends Remote {
     Object[][] omniAngebotsAnfrageDaten() throws NoSuchObjectException;
 
     Object[][] omniGesuchsAnfrageDaten() throws NoSuchObjectException;
