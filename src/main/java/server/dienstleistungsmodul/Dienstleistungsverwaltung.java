@@ -163,6 +163,9 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
         Dienstleistungsangebot g = new Dienstleistungsangebot(angebot_ID, titel, beschreibung, kategorie, ab, bis,imageUrl, personen_ID);
         angebote.add(g);
+
+        System.out.println(titel + " " + beschreibung + kategorie + ab + bis + personen_ID);
+
         return angebot_ID;
     }
 

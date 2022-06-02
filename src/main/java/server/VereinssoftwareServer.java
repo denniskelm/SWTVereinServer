@@ -22,7 +22,7 @@ public class VereinssoftwareServer {
     public static Dienstleistungsverwaltung dienstleistungsverwaltung;
     public static Mahnungsverwaltung mahnungsverwaltung;
 
-    public static Anfragenliste anfragenliste;
+    //public static Anfragenliste anfragenliste;
     public static Rollenverwaltung rollenverwaltung = new Rollenverwaltung();
 
     public static void main(String[] args) {
@@ -30,7 +30,7 @@ public class VereinssoftwareServer {
         dienstleistungsverwaltung = new Dienstleistungsverwaltung();
         mahnungsverwaltung = new Mahnungsverwaltung();
         rollenverwaltung = new Rollenverwaltung();
-        anfragenliste = new Anfragenliste();
+        //anfragenliste = new Anfragenliste();
 
         //Klassen zur Kommunikation mit dem Server vorbereiten
         //System.setProperty("java.rmi.server.hostname", "meta.informatik.uni-rostock.de");
@@ -42,7 +42,7 @@ public class VereinssoftwareServer {
             IDienstleistungsverwaltung dVerwaltungInterface = (IDienstleistungsverwaltung) UnicastRemoteObject.exportObject(dienstleistungsverwaltung, 0);
             IMahnungsverwaltung mVerwaltungInterface = (IMahnungsverwaltung) UnicastRemoteObject.exportObject(mahnungsverwaltung, 0);
             IRollenverwaltung rVerwaltungInterface = (IRollenverwaltung) UnicastRemoteObject.exportObject(rollenverwaltung, 0);
-            IAnfragenliste rAnfragelisteInterface = (IAnfragenliste) UnicastRemoteObject.exportObject(anfragenliste, 0);
+            //IAnfragenliste rAnfragelisteInterface = (IAnfragenliste) UnicastRemoteObject.exportObject(anfragenliste, 0);
 
             //Einmalig - Objekte im Registry registrieren, damit RMI vom Client aus ausgeführt werden kann
             Registry registry = LocateRegistry.createRegistry(1234);
@@ -52,7 +52,7 @@ public class VereinssoftwareServer {
             registry.bind("Dienstleistungsverwaltung", dVerwaltungInterface);
             registry.bind("Mahnungsverwaltung", mVerwaltungInterface);
             registry.bind("Rollenverwaltung", rVerwaltungInterface);
-            registry.bind("Anfragenliste", rAnfragelisteInterface);
+            //registry.bind("Anfragenliste", rAnfragelisteInterface);
 
             System.out.println("Server erfolgreich gestartet!");
         } catch (RemoteException e) {
