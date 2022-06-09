@@ -16,7 +16,7 @@ Dennis Kelm
 
 //TODO WAS MACHT DIESE KLASSE?
 public class MysqlConnectionTest {
-/*
+
         public static void main(String[] args){
 
             String url = "jdbc:mysql://localhost:3306/sakila";
@@ -41,5 +41,5 @@ public class MysqlConnectionTest {
                 System.out.println(e.getMessage());
             }
         }
-*/
+
 }

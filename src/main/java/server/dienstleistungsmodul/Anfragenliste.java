@@ -17,6 +17,8 @@ public class Anfragenliste implements IAnfragenliste {
     private ArrayList<GesuchAnfrage> gliste;
     private ArrayList<AngebotAnfrage> aliste;
 
+    //TODO @Bastian Exception für fehlende ofUserID Angabe (Zeile 65) - RMI darf keine Parameter bekommen im Konstruktor
+
     public Object[] getGAnfragenInfo(GesuchAnfrage g) throws NoSuchObjectException {
 
         Object[] info = new Object[3];
@@ -35,7 +37,7 @@ public class Anfragenliste implements IAnfragenliste {
         return info;
     }
 
-    public Object[][] omniAAnfrageDaten() throws NoSuchObjectException {
+    public Object[][] omniAngebotsAnfrageDaten() throws NoSuchObjectException {
         Object[][] liste = new Object[50][3];//TODO index out of range
 
         for(int i = 0; i < aliste.size(); i++) {
@@ -45,7 +47,7 @@ public class Anfragenliste implements IAnfragenliste {
         return liste;
     }
 
-    public Object[][] omniGAnfrageDaten() throws NoSuchObjectException {
+    public Object[][] omniGesuchsAnfrageDaten() throws NoSuchObjectException {
         Object[][] liste = new Object[50][3];
 
         for(int i = 0; i < gliste.size(); i++) {
@@ -54,10 +56,15 @@ public class Anfragenliste implements IAnfragenliste {
 
         return liste;
     }
-    public Anfragenliste(String user_ID) {
-        this.user_ID = user_ID;
+    public Anfragenliste(/*String user_ID*/) {
+        //this.user_ID = user_ID;
         this.gliste = new ArrayList<GesuchAnfrage>();
         this.aliste = new ArrayList<AngebotAnfrage>();
+    }
+
+    public Anfragenliste ofUser_ID(String user_ID){
+        this.user_ID = user_ID;
+        return this;
     }
 
     public void addaAnfrage(Mitglied nutzer, Dienstleistungsangebot angebot, int stunden) {
