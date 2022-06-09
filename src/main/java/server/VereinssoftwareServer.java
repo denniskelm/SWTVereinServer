@@ -14,10 +14,7 @@ Dennis Kelm
 import server.dienstleistungsmodul.Dienstleistungsverwaltung;
 import server.geraetemodul.Geraeteverwaltung;
 import server.users.Rollenverwaltung;
-import shared.communication.IDienstleistungsverwaltung;
-import shared.communication.IGeraeteverwaltung;
-import shared.communication.IMahnungsverwaltung;
-import shared.communication.IRollenverwaltung;
+import shared.communication.*;
 
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
@@ -30,7 +27,7 @@ public class VereinssoftwareServer {
     public static Geraeteverwaltung geraeteverwaltung;
     public static Dienstleistungsverwaltung dienstleistungsverwaltung;
     public static Mahnungsverwaltung mahnungsverwaltung;
-    public static Rollenverwaltung rollenverwaltung = new Rollenverwaltung();
+    public static Rollenverwaltung rollenverwaltung;
 
     public static void main(String[] args) {
         geraeteverwaltung = new Geraeteverwaltung();

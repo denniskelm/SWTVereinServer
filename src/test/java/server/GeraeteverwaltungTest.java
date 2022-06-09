@@ -21,8 +21,8 @@ class GeraeteverwaltungTest {
 
     @BeforeAll
     static void mitglieder() {
-        rv.mitgliedHinzufuegen("Mustermann","Max","bsp@gmx.de","12345","anschrift","mitgliedsnr","1234567890",true,LocalDateTime.now());
-        rv.mitgliedHinzufuegen("Schmidt","Peter","schmidt@gmx.de","54321","anschrift","mitgliedsnr2","987654321",true,LocalDateTime.now());
+        rv.mitgliedHinzufuegen("Mustermann","Max","bsp@gmx.de","12345","anschrift","mitgliedsnr","1234567890",true, new Mahnungsverwaltung(), LocalDateTime.now());
+        rv.mitgliedHinzufuegen("Schmidt","Peter","schmidt@gmx.de","54321","anschrift","mitgliedsnr2","987654321",true, new Mahnungsverwaltung(), LocalDateTime.now());
     }
 
     @BeforeEach
@@ -30,8 +30,8 @@ class GeraeteverwaltungTest {
         rv.fetch("1").datenVerwalten(Personendaten.RESERVIERUNGEN, String.valueOf(0));
         rv.fetch("2").datenVerwalten(Personendaten.RESERVIERUNGEN, String.valueOf(0));
         gv.reset();
-        gv.geraetHinzufuegen("Ball", "spender", 15, "Spielzeug", "beschreibung", "abholort");
-        gv.geraetHinzufuegen("Bohrer", "spender", 15, "Werkzeug", "beschreibung", "abholort");
+        gv.geraetHinzufuegen("Ball", "spender", 15, "Spielzeug", "beschreibung", "abholort", null);
+        gv.geraetHinzufuegen("Bohrer", "spender", 15, "Werkzeug", "beschreibung", "abholort", null);
     }
 
     @AfterAll
@@ -42,7 +42,7 @@ class GeraeteverwaltungTest {
 
     @Test
     void geraetHinzufuegen() throws NoSuchObjectException {
-        String Id = gv.geraetHinzufuegen("Schere", "spender", 15, "Werkzeug", "beschreibung", "abholort");
+        String Id = gv.geraetHinzufuegen("Schere", "spender", 15, "Werkzeug", "beschreibung", "abholort", null);
 
         assertEquals("g00001", gv.fetch("g00001").getGeraeteID());
         assertEquals("g00003", Id);
@@ -98,7 +98,7 @@ class GeraeteverwaltungTest {
         Throwable exception3 = assertThrows(Exception.class, () -> gv.geraetReservieren("g00001","1"));
         assertEquals("Mitglied hat das Geraet bereits reserviert.", exception3.getMessage());
 
-        gv.geraetHinzufuegen("Schere", "spender", 15, "Werkzeug", "beschreibung", "abholort");
+        gv.geraetHinzufuegen("Schere", "spender", 15, "Werkzeug", "beschreibung", "abholort", null);
         gv.geraetReservieren("g00002","1");
         gv.geraetReservieren("g00003","1");
         Throwable exception4 = assertThrows(ArrayIndexOutOfBoundsException.class, () -> gv.geraetReservieren("g00001","1"));

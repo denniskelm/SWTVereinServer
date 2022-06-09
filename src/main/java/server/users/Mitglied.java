@@ -1,5 +1,6 @@
 package server.users;
 
+import server.Mahnungsverwaltung;
 import server.dienstleistungsmodul.Anfragenliste;
 import shared.communication.IMitglied;
 
@@ -14,8 +15,8 @@ public class Mitglied extends Gast implements IMitglied {
     private int reservierungen;
 
     public Mitglied(String personenID, String nachname, String vorname, String email, String password, String anschrift,
-                    String mitgliedsnr, String telefonnummer, boolean spender/*, Mahnungsverwaltung mahnungen, Profilseite profilseite */,
-                    LocalDateTime mitglied_seit){
+                    String mitgliedsnr, String telefonnummer, boolean spender, Mahnungsverwaltung mahnungen/*, Profilseite profilseite */,
+                    LocalDateTime mitglied_seit) {
 
         super(personenID, nachname, vorname, email, password, anschrift, mitgliedsnr, telefonnummer, spender);
         this.stundenkonto = 0;
@@ -28,8 +29,8 @@ public class Mitglied extends Gast implements IMitglied {
 
     // Weiterer Konstruktor, falls man die Rolle von einem Gast ändert, da dann das Passwort schon gehasht ist
     public Mitglied(String personenID, String nachname, String vorname, String email, int password, String anschrift,
-                    String mitgliedsnr, String telefonnummer, boolean spender/*, Mahnungsverwaltung mahnungen, Profilseite profilseite */,
-                    LocalDateTime mitglied_seit){
+                    String mitgliedsnr, String telefonnummer, boolean spender, Mahnungsverwaltung mahnungen/*, Profilseite profilseite */,
+                    LocalDateTime mitglied_seit) {
 
         super(personenID, nachname, vorname, email, password, anschrift, mitgliedsnr, telefonnummer, spender);
         this.stundenkonto = 0;
@@ -41,8 +42,8 @@ public class Mitglied extends Gast implements IMitglied {
     }
 
     public Mitglied(String personenID, String nachname, String vorname, String email, int password, String anschrift,
-                    String mitgliedsnr, String telefonnummer, boolean spender/*, Mahnungsverwaltung mahnungen, Profilseite profilseite */,
-                    LocalDateTime mitglied_seit, boolean ist_gesperrt){
+                    String mitgliedsnr, String telefonnummer, boolean spender, Mahnungsverwaltung mahnungen/*, Profilseite profilseite */,
+                    LocalDateTime mitglied_seit, boolean ist_gesperrt) {
 
         super(personenID, nachname, vorname, email, password, anschrift, mitgliedsnr, telefonnummer, spender);
         this.stundenkonto = 0;

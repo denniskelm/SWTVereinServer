@@ -23,7 +23,7 @@ TODO Dennis Kelm
 // Interface, um RMI für Klasse Geraeteverwaltung zu ermöglichen
 public interface IGeraeteverwaltung extends Remote {
 
-    String geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort) throws RemoteException;
+    String geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort, String bild) throws RemoteException;
     void geraetReservieren(String geraeteID, String ausleiherID) throws Exception;
     void geraetAusgeben(String geraeteID) throws Exception;
     void geraetAnnehmen(String geraeteID) throws Exception;

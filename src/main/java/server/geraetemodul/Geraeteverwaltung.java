@@ -35,7 +35,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         IdCounter = gDB.getIdCounter();
     }
 
-    public String geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort) {
+    public String geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort, String bild) {
         if (geraete.size() >= 50000) throw new ArrayIndexOutOfBoundsException();
 
         //naechste ID generieren
@@ -47,7 +47,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         else if (IdCounter < 10000) geraeteID = "g0" + (IdCounter);
         else geraeteID = "g" + (IdCounter);
 
-        Geraet g = new Geraet(geraeteID, name, spender, leihfrist, kategorie, beschreibung, abholort);
+        Geraet g = new Geraet(geraeteID, name, spender, leihfrist, kategorie, beschreibung, abholort, bild);
         geraete.add(g);
         gDB.geraetHinzufuegen(g);
         System.out.println("Geraet mit ID " +  g.getGeraeteID() + " hinzugefuegt. Anzahl Geraete: " +  geraete.size());
@@ -92,7 +92,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         if (m.isGesperrt()) throw new NoPermissionException("Mitglied ist gesperrt.");
         if (m.getReservierungen() >= 3) throw new ArrayIndexOutOfBoundsException("Mitglied hat bereits 3 oder mehr Reservierungen.");
         for (Ausleiher a :  g.getReservierungsliste()) {
-            if (Objects.equals(a.getMitgliedsID(), personenID)) {
+            if (a.getMitgliedsID().equals(personenID)) {
                 throw new Exception("Mitglied hat das Geraet bereits reserviert.");
             }
         }
@@ -218,7 +218,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     }
 
     public Object[][] omniGeraeteDaten() throws NoSuchObjectException {
-        Object[][] gliste = new Object[50000][9];
+        Object[][] gliste = new Object[50000][10];
 
         for(int i = 0; i < geraete.size(); i++) {
             gliste[i] = getGeraeteInformationen(geraete.get(i).getGeraeteID());
@@ -230,7 +230,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     public Object[] getGeraeteInformationen(String geraeteID) throws NoSuchObjectException {
 
         Geraet g = fetch(geraeteID);
-        Object[] info = new Object[9];
+        Object[] info = new Object[10];
         info[0] = g.getGeraeteID();
         info[1] = g.getGeraetName();
         info[2] = g.getGeraetBeschreibung();
@@ -240,6 +240,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         info[6] = g.getLeihstatus().toString();
         info[7] = g.getGeraetAbholort();
         info[8] = g.getHistorie();
+        info[9] = g.getReservierungsliste();
 
 
         return info;

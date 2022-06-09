@@ -23,7 +23,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
      private static ArrayList<Vorsitz> vorsitze;
      private static ArrayList<Mahnungsverwaltung> mahnungen;
      private int IdCounter;
-     private RollenDB rDB;
+     private final RollenDB rDB;
 
      public Rollenverwaltung(){
          rDB = new RollenDB();
@@ -46,14 +46,14 @@ public class Rollenverwaltung implements IRollenverwaltung {
          IdCounter++;
          String personenID = Long.toString(IdCounter);
 
-         Gast gast = new Gast(personenID,nachname,vorname,email,password,anschrift,mitgliedsnr,telefonnummer,spender);
+         Gast gast = new Gast(personenID, nachname, vorname, email, password, anschrift, mitgliedsnr, telefonnummer, spender);
          gaeste.add(gast);
          rDB.gastHinzufuegen(gast);
          System.out.println("Gast mit ID " +  personenID + " hinzugefuegt. Anzahl Gaeste: " +  gaeste.size());
      }
      
      public void mitgliedHinzufuegen(String nachname, String vorname, String email, String password, String anschrift,
-                                     String mitgliedsnr, String telefonnummer, boolean spender/*, Mahnungsverwaltung mahnungen, Profilseite profilseite */,
+                                     String mitgliedsnr, String telefonnummer, boolean spender, Mahnungsverwaltung mahnungen/*, Profilseite profilseite */,
                                      LocalDateTime mitglied_seit) {
          if (mitglieder.size() >= 50000) throw new ArrayIndexOutOfBoundsException();
 
@@ -61,7 +61,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
          IdCounter++;
          String personenID = Long.toString(IdCounter);
 
-         Mitglied m = new Mitglied(personenID, nachname, vorname, email, password, anschrift, mitgliedsnr, telefonnummer, spender, mitglied_seit);
+         Mitglied m = new Mitglied(personenID, nachname, vorname, email, password, anschrift, mitgliedsnr, telefonnummer, spender, mahnungen, mitglied_seit);
          mitglieder.add(m);
 
          rDB.MitgliedHinzufuegen(m);
@@ -178,6 +178,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
                         gast.getMitgliedsNr(),
                         gast.getTelefonNr(),
                         gast.getSpenderStatus(),
+                        new Mahnungsverwaltung(),
                         mitglied_seit);
 
                 mitglieder.add((Mitglied) g);
@@ -222,11 +223,12 @@ public class Rollenverwaltung implements IRollenverwaltung {
     public void nutzereintragAendern(String mitgliedsID, Personendaten attr, String wert) throws NoSuchObjectException {
         try {
             (fetch(mitgliedsID)).datenVerwalten(attr, wert);
-            rDB.nutzerEintragAendern(mitgliedsID, attr, wert);
         } catch (NoSuchObjectException e) {
                 (fetchGaeste(mitgliedsID)).datenVerwalten(attr, wert);
-                rDB.nutzerEintragAendern(mitgliedsID, attr, wert);
         }
+
+        rDB.nutzerEintragAendern(mitgliedsID, attr, wert);
+
     }
 
     public Object[] mahnungsverwaltungAnzeigen() { return mahnungen.toArray(); }

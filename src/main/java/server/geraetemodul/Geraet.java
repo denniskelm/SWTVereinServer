@@ -20,26 +20,19 @@ import java.util.Objects;
 
 public class Geraet implements IGeraet, Serializable {
 
-    private String geraeteID;
+    private final String geraeteID;
     private String name;
     private String spenderName;
-    private int leihfrist; // muss in Tagen angegeben werden
+
     private String kategorie;
     private String beschreibung;
     private String abholort;
+    private String bild;
+    private int leihfrist; // muss in Tagen angegeben werden
     private ArrayList<Ausleiher> reservierungsliste, historie;
+    private Status leihstatus;
 
-    public ArrayList<Ausleiher> getHistorie() {
-        return historie;
-    }
-
-    // reservierdatum: LocalDateTime
-    // fristbeginn: LocalDateTime
-    // abgegeben: boolean
-    // mitgliedsID: int
-    private Status leihstatus; // frei / beansprucht / ausgeliehen
-
-    public Geraet(String geraeteID, String name, String spenderName, int leihfrist, String kategorie, String beschreibung, String abholort) {
+    public Geraet(String geraeteID, String name, String spenderName, int leihfrist, String kategorie, String beschreibung, String abholort, String bild) {
         this.geraeteID = geraeteID;
         this.name = name;
         this.spenderName = spenderName;
@@ -47,12 +40,13 @@ public class Geraet implements IGeraet, Serializable {
         this.kategorie = kategorie;
         this.beschreibung = beschreibung;
         this.abholort = abholort;
-        reservierungsliste = new ArrayList<Ausleiher>();
+        this.bild = bild;
+        reservierungsliste = new ArrayList<>();
         historie = new ArrayList<>();
         leihstatus = Status.FREI;
     }
 
-    public Geraet(String geraeteID, String name, String spenderName, int leihfrist, String kategorie, String beschreibung, String abholort, Status leihstatus) {
+    public Geraet(String geraeteID, String name, String spenderName, int leihfrist, String kategorie, String beschreibung, String abholort, Status leihstatus, String bild) {
         this.geraeteID = geraeteID;
         this.name = name;
         this.spenderName = spenderName;
@@ -60,7 +54,8 @@ public class Geraet implements IGeraet, Serializable {
         this.kategorie = kategorie;
         this.beschreibung = beschreibung;
         this.abholort = abholort;
-        reservierungsliste = new ArrayList<Ausleiher>();
+        this.bild = bild;
+        reservierungsliste = new ArrayList<>();
         historie = new ArrayList<>();
         this.leihstatus = leihstatus;
     }
@@ -135,6 +130,10 @@ public class Geraet implements IGeraet, Serializable {
         return beschreibung;
     }
 
+    public String getBild() {
+        return bild;
+    }
+
     public int getLeihfrist() {
         return leihfrist;
     }
@@ -147,7 +146,9 @@ public class Geraet implements IGeraet, Serializable {
         return reservierungsliste;
     }
 
-
+    public ArrayList<Ausleiher> getHistorie() {
+        return historie;
+    }
     public void setHistorie(ArrayList<Ausleiher> historie) {
         this.historie = historie;
         this.leihstatus = Status.FREI;
@@ -175,6 +176,10 @@ public class Geraet implements IGeraet, Serializable {
 
     public void setAbholort(String abholort) {
         this.abholort = abholort;
+    }
+
+    public void setBild(String bild) {
+        this.bild = bild;
     }
 
     public void setReservierungsliste(ArrayList<Ausleiher> reservierungsliste) {
