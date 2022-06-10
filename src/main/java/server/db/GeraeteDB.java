@@ -18,18 +18,12 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
-public class GeraeteDB {
+public class GeraeteDB extends Database {
     private final Connection conn;
 
-    public GeraeteDB() {
-        final String URL = "meta.informatik.uni-rostock.de";
-        final String USER = "rootuser", PASSWORD = "rootuser";
-
-        try {
-            conn = DriverManager.getConnection("jdbc:mysql://" + URL + ":3306/vswt22", USER, PASSWORD);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public GeraeteDB() throws SQLException {
+        super();
+        conn = super.getConnection();
     }
 
     public ArrayList<Geraet> getGeraeteList() {

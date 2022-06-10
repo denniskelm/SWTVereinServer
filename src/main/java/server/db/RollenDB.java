@@ -23,21 +23,16 @@ import java.util.ArrayList;
 
 import static server.users.Rolle.*;
 
-public class RollenDB {
+public class RollenDB extends Database {
 
     private final Connection conn;
     private final Rollenverwaltung rv;
 
-    public RollenDB() {
-        final String URL = "meta.informatik.uni-rostock.de";
-        final String USER = "rootuser", PASSWORD = "rootuser";
-        rv = VereinssoftwareServer.rollenverwaltung;
+    public RollenDB() throws SQLException {
+        super();
 
-        try {
-            conn = DriverManager.getConnection("jdbc:mysql://" + URL + ":3306/vswt22", USER, PASSWORD);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        conn = super.getConnection();
+        rv = VereinssoftwareServer.rollenverwaltung;
     }
 
     public void gastHinzufuegen(Gast g) {

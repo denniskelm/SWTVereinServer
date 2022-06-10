@@ -1,11 +1,13 @@
 package server.dienstleistungsmodul;
 
 import server.VereinssoftwareServer;
+import server.db.DienstleistungsDB;
 import server.dienstleistungsmodul.*;
 import server.users.Mitglied;
 import shared.communication.IDienstleistungsverwaltung;
 
 import java.lang.reflect.Array;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
@@ -29,6 +31,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     private ArrayList<Dienstleistungsangebot> angebote;
     private ArrayList<Dienstleistungsgesuch> gesuche;
+    private DienstleistungsDB database;
 
     public ArrayList<Dienstleistungsangebot> getAngeboteArrayList() {
         return angebote;
@@ -76,10 +79,18 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
 
     public Dienstleistungsverwaltung() {
-        angebote = new ArrayList<>();
-        gesuche = new ArrayList<>();
+        try {
+            database = new DienstleistungsDB();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        angebote = database.getAngeboteArrayList();
+        gesuche = database.getGesucheArrayList();
         aidliste = new ArrayList<>();
         gidliste = new ArrayList<>();
+
+        //Liste mit verfuegbaren IDs für Gesuche fuellen
         int anzahl=0;
         while (anzahl<500) {
             if (anzahl < 9)  // todo : nach dem testen ist die Rueckgabe nicht wie gewunscht???
@@ -94,6 +105,8 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
                 gidliste.add("dg" + (anzahl + 1));
             anzahl++;
         }
+
+        //Liste mit verfuegbaren IDs für Angebote fuellen
         anzahl=0;
         while (anzahl<500) {
             if (anzahl < 9)  // todo : nach dem testen ist die Rueckgabe nicht wie gewunscht???
@@ -110,11 +123,11 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         }
 
         try {
-            gesuchErstellen("Rasen mähen", "Ich brauche jemanden, der meine Wiese mäht", "Gartenarbeiten", "https://www.gartentipps.com/wp-content/uploads/2013/08/spindelmaeher-1.jpg", "1");
-            gesuchErstellen("Pinsel", "Ich möchte meinen Zaun streichen und brauche dafür einen Pinsel.", "Werkzeuge", "https://cdn.hornbach.de/data/shop/D04/001/780/491/350/564/DV_8_8447763_02_4c_DE_20180410170240.jpg", "2");
+            //gesuchErstellen("Rasen maehen", "Ich brauche jemanden, der meine Wiese maeht", "Gartenarbeiten", "https://www.gartentipps.com/wp-content/uploads/2013/08/spindelmaeher-1.jpg", "1");
+            //gesuchErstellen("Pinsel", "Ich möchte meinen Zaun streichen und brauche dafür einen Pinsel.", "Werkzeuge", "https://cdn.hornbach.de/data/shop/D04/001/780/491/350/564/DV_8_8447763_02_4c_DE_20180410170240.jpg", "2");
 
-            angebotErstellen("Gartenschere", "Braucht jemand eine Schere?", "Werkzeuge", LocalDateTime.now().minusDays(2), LocalDateTime.now().plusDays(3), "https://bilder.gartenpaul.de/item/images/456/full/456-IMG-0840.JPG", "3");
-            angebotErstellen("Vogelhaus", "Gebe mein Vogelhäuschen ab.", "Sonstiges", LocalDateTime.now().minusDays(4), LocalDateTime.now().plusDays(1), "https://master.opitec.com/out/pictures/master/product/1/101290-01-z.jpg", "1");
+            //angebotErstellen("Gartenschere", "Braucht jemand eine Schere?", "Werkzeuge", LocalDateTime.now().minusDays(2), LocalDateTime.now().plusDays(3), "https://bilder.gartenpaul.de/item/images/456/full/456-IMG-0840.JPG", "3");
+            //angebotErstellen("Vogelhaus", "Gebe mein Vogelhäuschen ab.", "Sonstiges", LocalDateTime.now().minusDays(4), LocalDateTime.now().plusDays(1), "https://master.opitec.com/out/pictures/master/product/1/101290-01-z.jpg", "1");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -151,8 +164,12 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         else
             throw new Exception();
         */
+        System.out.println(ersteller);
         Dienstleistungsgesuch g = new Dienstleistungsgesuch(gesuch_ID, titel, beschreibung, kategorie, imageUrl, ersteller);
         gesuche.add(g);
+
+        database.gesuchErstellen(g);
+
         return gesuch_ID;
     }
 
@@ -161,8 +178,11 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         angebot_ID=this.gidliste.get(0);
         angebot_ID=this.gidliste.remove(0);
 
-        Dienstleistungsangebot g = new Dienstleistungsangebot(angebot_ID, titel, beschreibung, kategorie, ab, bis,imageUrl, personen_ID);
-        angebote.add(g);
+        Dienstleistungsangebot a = new Dienstleistungsangebot(angebot_ID, titel, beschreibung, kategorie, ab, bis,imageUrl, personen_ID);
+        angebote.add(a);
+
+        database.angebotErstellen(a);
+
 
         System.out.println(titel + " " + beschreibung + kategorie + ab + bis + personen_ID);
 
@@ -177,6 +197,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
             }
         }
 
+        database.gesuchLoeschen(gesuch_ID);
     }
 
     public void angebotLoeschen(String angebots_ID) {
@@ -187,6 +208,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
             }
         }
 
+        database.angebotLoeschen(angebots_ID);
     }
 
     public void gesuchAendern(String gesuchsID, Dienstleistungsgesuchdaten attr, Object wert) {
@@ -203,6 +225,8 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
                 break;
             }
         }
+
+        database.gesuchAendern(gesuchsID, attr, wert);
     }
     public void angebotAendern(String angebotsID, Dienstleistungsangebotdaten attr, Object wert) {
         for (Dienstleistungsangebot a : angebote) {
@@ -220,6 +244,8 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
                 break;
             }
         }
+
+        database.angebotAendern(angebotsID, attr, wert);
     }
 
     /*public void gesuchAnnehmen(String gesuchs_ID, String ersteller_ID, String nutzer_ID, int stunden) throws Exception {
@@ -245,6 +271,8 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         Mitglied nutzer=r.fetch(nutzerID);
         Anfragenliste l= ersteller.getAnfragenliste();
         l.addgAnfrage(nutzer, gesuch ,stunden);
+
+        database.gesuchAnnhemen(gesuchsID, erstellerID, nutzerID ,stunden);
     }
 
     public Dienstleistungsangebot fetchAngebot(String angebotID) throws NoSuchObjectException {
@@ -294,6 +322,8 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         Mitglied nutzer=r.fetch(nutzerID);
         Anfragenliste l= ersteller.getAnfragenliste();
         l.addaAnfrage(nutzer, angebot,stunden);
+
+        database.angebotAnnehmen(angebotID, erstellerID, nutzerID, stunden);
     }
 
 
