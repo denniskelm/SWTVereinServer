@@ -25,7 +25,23 @@ public class DienstleistungsDB extends Database {
         conn = super.getConnection();
     }
 
-    public ArrayList<Dienstleistungsangebot> getAngeboteArrayList() {
+    //todo reset methode machen
+    /*
+    public void reset() {
+        try {
+            resetTabelle("historie");
+            resetTabelle("reserviert");
+            resetTabelle("geraet");
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+     */
+
+
+
+        public ArrayList<Dienstleistungsangebot> getAngeboteArrayList() {
         ArrayList<Dienstleistungsangebot> angebote = new ArrayList<>();
 
         try {

@@ -39,6 +39,11 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     private ArrayList<Dienstleistungsgesuch> gesuche;
     private final DienstleistungsDB dlDB;
 
+
+
+    public ArrayList<String> aidliste;//Angebote
+    public ArrayList<String> gidliste;//Gesuche
+
     public ArrayList<Dienstleistungsangebot> getAngeboteArrayList() {
         return angebote;
     }
@@ -47,24 +52,24 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         return gesuche;
     }
 
-    public ArrayList<String> aidliste;
-    public ArrayList<String> gidliste;
-
-
 
 
 
 // todo reset methode um testen einfach zu machen
-/*
+
     public void reset() {
         angebote = new ArrayList<>();
         gesuche = new ArrayList<>();
-        gDB.reset();
-        IdCounter = 0;
+        aidliste = new ArrayList<>();
+        gidliste = new ArrayList<>();
+
+
+      //  dlDB.reset();
+      //  IdCounter = 0;
         System.out.println("Dienstleistungsverwaltung zurueckgesetzt.");
 
     }
-    */
+
 
 
     public Object[] getAngeboteInformationen(String angebotID) throws NoSuchObjectException {
