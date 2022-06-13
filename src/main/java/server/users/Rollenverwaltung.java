@@ -8,6 +8,7 @@ Ole Björn Adelmann
 */
 
 import server.Mahnungsverwaltung;
+import server.db.DienstleistungsDB;
 import server.db.RollenDB;
 import shared.communication.*;
 
@@ -25,6 +26,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
      private static ArrayList<Mahnungsverwaltung> mahnungen;
      private int IdCounter;
      private final RollenDB rDB;
+
 
      public Rollenverwaltung(){
          try {

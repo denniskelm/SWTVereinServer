@@ -2,6 +2,8 @@ package server.dienstleistungsmodul;
 
 import server.VereinssoftwareServer;
 import server.db.DienstleistungsDB;
+
+import server.db.RollenDB;
 import server.dienstleistungsmodul.*;
 import server.users.Mitglied;
 import shared.communication.IDienstleistungsverwaltung;
@@ -27,11 +29,15 @@ Bastian Reichert
 Dennis Kelm
 */
 
+
+
+
 public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
+//    private LocalDateTime now = LocalDateTime.now();
     private ArrayList<Dienstleistungsangebot> angebote;
     private ArrayList<Dienstleistungsgesuch> gesuche;
-    private DienstleistungsDB database;
+    private final DienstleistungsDB dlDB;
 
     public ArrayList<Dienstleistungsangebot> getAngeboteArrayList() {
         return angebote;
@@ -43,6 +49,23 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     public ArrayList<String> aidliste;
     public ArrayList<String> gidliste;
+
+
+
+
+
+// todo reset methode um testen einfach zu machen
+/*
+    public void reset() {
+        angebote = new ArrayList<>();
+        gesuche = new ArrayList<>();
+        gDB.reset();
+        IdCounter = 0;
+        System.out.println("Dienstleistungsverwaltung zurueckgesetzt.");
+
+    }
+    */
+
 
     public Object[] getAngeboteInformationen(String angebotID) throws NoSuchObjectException {
 
@@ -80,15 +103,17 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     public Dienstleistungsverwaltung() {
         try {
-            database = new DienstleistungsDB();
+            dlDB = new DienstleistungsDB();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        angebote = database.getAngeboteArrayList();
-        gesuche = database.getGesucheArrayList();
-        aidliste = new ArrayList<>();
-        gidliste = new ArrayList<>();
+
+
+        angebote = dlDB.getAngeboteArrayList();
+        gesuche = dlDB.getGesucheArrayList();
+        aidliste = new ArrayList<>(); //Anfrage ID
+        gidliste = new ArrayList<>(); //Gesuche ID
 
         //Liste mit verfuegbaren IDs für Gesuche fuellen
         int anzahl=0;
@@ -168,7 +193,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         Dienstleistungsgesuch g = new Dienstleistungsgesuch(gesuch_ID, titel, beschreibung, kategorie, imageUrl, ersteller);
         gesuche.add(g);
 
-        database.gesuchErstellen(g);
+        dlDB.gesuchErstellen(g);
 
         return gesuch_ID;
     }
@@ -181,7 +206,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         Dienstleistungsangebot a = new Dienstleistungsangebot(angebot_ID, titel, beschreibung, kategorie, ab, bis,imageUrl, personen_ID);
         angebote.add(a);
 
-        database.angebotErstellen(a);
+        dlDB.angebotErstellen(a);
 
 
         System.out.println(titel + " " + beschreibung + kategorie + ab + bis + personen_ID);
@@ -197,7 +222,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
             }
         }
 
-        database.gesuchLoeschen(gesuch_ID);
+        dlDB.gesuchLoeschen(gesuch_ID);
     }
 
     public void angebotLoeschen(String angebots_ID) {
@@ -208,7 +233,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
             }
         }
 
-        database.angebotLoeschen(angebots_ID);
+        dlDB.angebotLoeschen(angebots_ID);
     }
 
     public void gesuchAendern(String gesuchsID, Dienstleistungsgesuchdaten attr, Object wert) {
@@ -226,7 +251,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
             }
         }
 
-        database.gesuchAendern(gesuchsID, attr, wert);
+        dlDB.gesuchAendern(gesuchsID, attr, wert);
     }
     public void angebotAendern(String angebotsID, Dienstleistungsangebotdaten attr, Object wert) {
         for (Dienstleistungsangebot a : angebote) {
@@ -245,7 +270,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
             }
         }
 
-        database.angebotAendern(angebotsID, attr, wert);
+        dlDB.angebotAendern(angebotsID, attr, wert);
     }
 
     /*public void gesuchAnnehmen(String gesuchs_ID, String ersteller_ID, String nutzer_ID, int stunden) throws Exception {
@@ -272,7 +297,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         Anfragenliste l= ersteller.getAnfragenliste();
         l.addgAnfrage(nutzer, gesuch ,stunden);
 
-        database.gesuchAnnhemen(gesuchsID, erstellerID, nutzerID ,stunden);
+        dlDB.gesuchAnnhemen(gesuchsID, erstellerID, nutzerID ,stunden);
     }
 
     public Dienstleistungsangebot fetchAngebot(String angebotID) throws NoSuchObjectException {
@@ -323,7 +348,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         Anfragenliste l= ersteller.getAnfragenliste();
         l.addaAnfrage(nutzer, angebot,stunden);
 
-        database.angebotAnnehmen(angebotID, erstellerID, nutzerID, stunden);
+        dlDB.angebotAnnehmen(angebotID, erstellerID, nutzerID, stunden);
     }
 
 
