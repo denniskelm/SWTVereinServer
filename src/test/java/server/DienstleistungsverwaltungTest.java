@@ -24,6 +24,7 @@ class DienstleistungsverwaltungTest {
     private static final Dienstleistungsverwaltung dv = new Dienstleistungsverwaltung();
     private static final Rollenverwaltung rv = VereinssoftwareServer.rollenverwaltung;
 
+    private static final Rollenverwaltung rvv = VereinssoftwareServer.rollenverwaltung;
 
 
     @BeforeAll
