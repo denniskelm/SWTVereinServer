@@ -179,7 +179,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     public String gesuchErstellen(String titel, String beschreibung, String kategorie, String imageUrl, String ersteller) throws Exception {
         String gesuch_ID;
         gesuch_ID=this.gidliste.get(0);
-        gesuch_ID=this.gidliste.remove(0);
+        this.gidliste.remove(0);
 
 
         /*int anzahl = gesuche.size();
@@ -210,7 +210,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     public String angebotErstellen(String titel, String beschreibung, String kategorie, LocalDateTime ab, LocalDateTime bis ,String imageUrl, String personen_ID) throws Exception {
         String angebot_ID;
         angebot_ID=this.gidliste.get(0);
-        angebot_ID=this.gidliste.remove(0);
+        this.gidliste.remove(0);
 
         Dienstleistungsangebot a = new Dienstleistungsangebot(angebot_ID, titel, beschreibung, kategorie, ab, bis,imageUrl, personen_ID);
         angebote.add(a);
