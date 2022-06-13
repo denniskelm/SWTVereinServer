@@ -12,6 +12,7 @@ import server.db.RollenDB;
 import shared.communication.*;
 
 import java.rmi.NoSuchObjectException;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -26,13 +27,18 @@ public class Rollenverwaltung implements IRollenverwaltung {
      private final RollenDB rDB;
 
      public Rollenverwaltung(){
-         rDB = new RollenDB();
+         try {
+             rDB = new RollenDB();
 
-         gaeste = rDB.getGaeste();
-         mitglieder = rDB.getMitglieder();
-         mitarbeiter = rDB.getMitarbeiter();
-         vorsitze = rDB.getVorsitze();
-         IdCounter = rDB.getIdCounter();
+             gaeste = rDB.getGaeste();
+             mitglieder = rDB.getMitglieder();
+             mitarbeiter = rDB.getMitarbeiter();
+             vorsitze = rDB.getVorsitze();
+             IdCounter = rDB.getIdCounter();
+         } catch (SQLException e) {
+             System.err.println("Verbindung zu Datenbank konnte nicht hergestellt werden!");
+             throw new RuntimeException(e);
+         }
 
          //mitgliedHinzufuegen("Ehrenmann", "Stefan", "stefan.ehrenmann@t-online.de", "12345678", "Huglfingstr. 27", "M4657", "110", false, LocalDateTime.now());
          //mitgliedHinzufuegen("Tran", "Huy", "huy@email.de", "1234", "Musterstr. 1", "ABC", "123", true, LocalDateTime.now().minusDays(3));

@@ -19,6 +19,7 @@ import shared.communication.IGeraeteverwaltung;
 
 import javax.naming.NoPermissionException;
 import java.rmi.NoSuchObjectException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -29,7 +30,12 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
 
 
     public Geraeteverwaltung() {
-        gDB = new GeraeteDB();
+        try {
+            gDB = new GeraeteDB();
+        } catch (SQLException e) {
+            System.err.println("Verbindung zu Datenbank konnte nicht hergestellt werden!");
+            throw new RuntimeException(e);
+        }
 
         geraete = gDB.getGeraeteList();
         IdCounter = gDB.getIdCounter();
