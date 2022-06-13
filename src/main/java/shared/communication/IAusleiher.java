@@ -1,15 +1,17 @@
 package shared.communication;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 
-public interface IAusleiher {
+public interface IAusleiher extends Remote {
 
-    LocalDateTime getFristBeginn();
-    void setFristBeginn(LocalDateTime fristBeginn);
-    String getMitgliedsID();
-    LocalDateTime getReservierdatum();
-    void setReservierdatum(LocalDateTime reservierdatum);
-    boolean isAbgegeben();
-    void setAbgegeben(boolean abgegeben);
+    LocalDateTime getFristBeginn() throws RemoteException;
+    void setFristBeginn(LocalDateTime fristBeginn) throws RemoteException;
+    String getMitgliedsID() throws RemoteException;
+    LocalDateTime getReservierdatum() throws RemoteException;
+    void setReservierdatum(LocalDateTime reservierdatum) throws RemoteException;
+    boolean isAbgegeben() throws RemoteException;
+    void setAbgegeben(boolean abgegeben) throws RemoteException;
 
 }

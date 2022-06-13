@@ -169,7 +169,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
 
     public void historieZuruecksetzen(String geraeteID) throws NoSuchObjectException {
         Geraet g = fetch(geraeteID);
-        g.setHistorie(new ArrayList<>());
+        g.setHistorie(new ArrayList<Ausleiher>());
         gDB.historieZuruecksetzen(geraeteID);
     }
 
@@ -218,7 +218,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     }
 
     public Object[][] omniGeraeteDaten() throws NoSuchObjectException {
-        Object[][] gliste = new Object[50000][10];
+        Object[][] gliste = new Object[50000][11];
 
         for(int i = 0; i < geraete.size(); i++) {
             gliste[i] = getGeraeteInformationen(geraete.get(i).getGeraeteID());
@@ -230,7 +230,7 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
     public Object[] getGeraeteInformationen(String geraeteID) throws NoSuchObjectException {
 
         Geraet g = fetch(geraeteID);
-        Object[] info = new Object[10];
+        Object[] info = new Object[11];
         info[0] = g.getGeraeteID();
         info[1] = g.getGeraetName();
         info[2] = g.getGeraetBeschreibung();
@@ -240,7 +240,9 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         info[6] = g.getLeihstatus().toString();
         info[7] = g.getGeraetAbholort();
         info[8] = g.getHistorie();
-        info[9] = g.getReservierungsliste();
+        info[9] = g.getReservierungsListeAlsArray();
+        System.out.println(g.getReservierungsliste().size());
+        info[10] = g.getBild();
 
 
         return info;

@@ -13,12 +13,11 @@ Mhd Esmail Kanaan
 
 import shared.communication.IGeraet;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Geraet implements IGeraet, Serializable {
+public class Geraet implements IGeraet {
 
     private final String geraeteID;
     private String name;
@@ -146,12 +145,25 @@ public class Geraet implements IGeraet, Serializable {
         return reservierungsliste;
     }
 
+    public Object[][] getReservierungsListeAlsArray() {
+        Object[][] result = new Object[reservierungsliste.size()][4];
+
+        for (int i = 0; i < reservierungsliste.size(); i++) {
+            result[i][0] = reservierungsliste.get(i).getMitgliedsID();
+            result[i][1] = reservierungsliste.get(i).getReservierdatum();
+            result[i][2] = reservierungsliste.get(i).getFristBeginn();
+            result[i][3] = reservierungsliste.get(i).isAbgegeben();
+        }
+
+        return result;
+    }
+
+
     public ArrayList<Ausleiher> getHistorie() {
         return historie;
     }
     public void setHistorie(ArrayList<Ausleiher> historie) {
         this.historie = historie;
-        this.leihstatus = Status.FREI;
     }
 
     public void setName(String name) {

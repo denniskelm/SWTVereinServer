@@ -13,6 +13,7 @@ public class Mitglied extends Gast implements IMitglied {
     private boolean ist_gesperrt;
     private LocalDateTime mitglied_seit;
     private int reservierungen;
+    private Mahnungsverwaltung mahnungen;
 
     public Mitglied(String personenID, String nachname, String vorname, String email, String password, String anschrift,
                     String mitgliedsnr, String telefonnummer, boolean spender, Mahnungsverwaltung mahnungen/*, Profilseite profilseite */,
@@ -25,6 +26,7 @@ public class Mitglied extends Gast implements IMitglied {
         this.anfragenliste = (new server.dienstleistungsmodul.Anfragenliste()).ofUser_ID(personenID);
         this.anfragenliste.nutzer = this;
         this.reservierungen = 0;
+        this.mahnungen = mahnungen;
     }
 
     // Weiterer Konstruktor, falls man die Rolle von einem Gast ändert, da dann das Passwort schon gehasht ist
@@ -39,6 +41,7 @@ public class Mitglied extends Gast implements IMitglied {
         this.anfragenliste = new server.dienstleistungsmodul.Anfragenliste().ofUser_ID(personenID);
         this.anfragenliste.nutzer = this;
         this.reservierungen = 0;
+        this.mahnungen = mahnungen;
     }
 
     public Mitglied(String personenID, String nachname, String vorname, String email, int password, String anschrift,
@@ -52,6 +55,7 @@ public class Mitglied extends Gast implements IMitglied {
         this.anfragenliste = new server.dienstleistungsmodul.Anfragenliste().ofUser_ID(personenID);
         this.anfragenliste.nutzer = this;
         this.reservierungen = 0;
+        this.mahnungen = mahnungen;
     }
 
     public void reservierungenErhöhen() {

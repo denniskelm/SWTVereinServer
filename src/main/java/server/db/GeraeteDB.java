@@ -380,15 +380,10 @@ public class GeraeteDB {
 
         while (result.next()) {
 
-            String personenID = result.getString("PersonenID");
-            LocalDateTime fristBeginn = result.getTimestamp("Fristbeginn").toLocalDateTime();
-            LocalDateTime reservierDatum = result.getTimestamp("Reservierdatum").toLocalDateTime();
-            boolean isAbgegeben = result.getString("Abgegeben").equals("Y");
-
-            Ausleiher a = new Ausleiher(personenID);
-            a.setFristBeginn(fristBeginn);
-            a.setReservierdatum(reservierDatum);
-            a.setAbgegeben(isAbgegeben);
+            Ausleiher a = new Ausleiher(result.getString("PersonenID"));
+            a.setReservierdatum(result.getTimestamp("Reservierdatum").toLocalDateTime());
+            a.setFristBeginn(result.getTimestamp("Fristbeginn").toLocalDateTime());
+            a.setAbgegeben(result.getString("Abgegeben").equals("Y"));
 
             ausleiherList.add(a);
         }
