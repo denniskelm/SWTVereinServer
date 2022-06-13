@@ -25,19 +25,6 @@ public class DienstleistungsDB extends Database {
         conn = super.getConnection();
     }
 
-    //todo reset methode machen
-    /*
-    public void reset() {
-        try {
-            resetTabelle("historie");
-            resetTabelle("reserviert");
-            resetTabelle("geraet");
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-     */
 
 
 
@@ -97,6 +84,21 @@ public class DienstleistungsDB extends Database {
         }
 
         return gesuche;
+    }
+
+    public void reset(){
+        try {
+            resetTabelle("dienstleistung"); //TODO ids in Datenbank?
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void resetTabelle(String tabelle) throws SQLException {
+        PreparedStatement prep = conn.prepareStatement(String.format("DELETE FROM %s", tabelle));
+        prep.executeUpdate();
+        prep.close();
     }
 
     public void gesuchErstellen(Dienstleistungsgesuch gesuch) {

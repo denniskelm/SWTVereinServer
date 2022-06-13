@@ -64,8 +64,9 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         gidliste = new ArrayList<>();
 
 
-      //  dlDB.reset();
-      //  IdCounter = 0;
+        dlDB.reset();
+
+        createIdListen();
         System.out.println("Dienstleistungsverwaltung zurueckgesetzt.");
 
     }
@@ -121,6 +122,20 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         gidliste = new ArrayList<>(); //Gesuche ID
 
         //Liste mit verfuegbaren IDs für Gesuche fuellen
+        createIdListen();
+
+        try {
+            //gesuchErstellen("Rasen maehen", "Ich brauche jemanden, der meine Wiese maeht", "Gartenarbeiten", "https://www.gartentipps.com/wp-content/uploads/2013/08/spindelmaeher-1.jpg", "1");
+            //gesuchErstellen("Pinsel", "Ich möchte meinen Zaun streichen und brauche dafür einen Pinsel.", "Werkzeuge", "https://cdn.hornbach.de/data/shop/D04/001/780/491/350/564/DV_8_8447763_02_4c_DE_20180410170240.jpg", "2");
+
+            //angebotErstellen("Gartenschere", "Braucht jemand eine Schere?", "Werkzeuge", LocalDateTime.now().minusDays(2), LocalDateTime.now().plusDays(3), "https://bilder.gartenpaul.de/item/images/456/full/456-IMG-0840.JPG", "3");
+            //angebotErstellen("Vogelhaus", "Gebe mein Vogelhäuschen ab.", "Sonstiges", LocalDateTime.now().minusDays(4), LocalDateTime.now().plusDays(1), "https://master.opitec.com/out/pictures/master/product/1/101290-01-z.jpg", "1");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void createIdListen(){
         int anzahl=0;
         while (anzahl<500) {
             if (anzahl < 9)  // todo : nach dem testen ist die Rueckgabe nicht wie gewunscht???
@@ -151,18 +166,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
                 aidliste.add("da" + (anzahl + 1));
             anzahl++;
         }
-
-        try {
-            //gesuchErstellen("Rasen maehen", "Ich brauche jemanden, der meine Wiese maeht", "Gartenarbeiten", "https://www.gartentipps.com/wp-content/uploads/2013/08/spindelmaeher-1.jpg", "1");
-            //gesuchErstellen("Pinsel", "Ich möchte meinen Zaun streichen und brauche dafür einen Pinsel.", "Werkzeuge", "https://cdn.hornbach.de/data/shop/D04/001/780/491/350/564/DV_8_8447763_02_4c_DE_20180410170240.jpg", "2");
-
-            //angebotErstellen("Gartenschere", "Braucht jemand eine Schere?", "Werkzeuge", LocalDateTime.now().minusDays(2), LocalDateTime.now().plusDays(3), "https://bilder.gartenpaul.de/item/images/456/full/456-IMG-0840.JPG", "3");
-            //angebotErstellen("Vogelhaus", "Gebe mein Vogelhäuschen ab.", "Sonstiges", LocalDateTime.now().minusDays(4), LocalDateTime.now().plusDays(1), "https://master.opitec.com/out/pictures/master/product/1/101290-01-z.jpg", "1");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
-
 
     public ArrayList<Dienstleistungsangebot> getAngebote() {
         return angebote;
