@@ -287,8 +287,13 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
         for (Gast m : gaeste) {
             if (m.getEmail().equals(email)) {
-                if (m.getPassword() == password.hashCode())
-                    return true;
+                if (m.getPassword() == password.hashCode()) {
+                    result = new Object[2];
+                    result[0] = m.getPersonenID();
+                    result[1] = Rolle.GAST;
+
+                    return result;
+                }
                 else
                     throw new Exception("E-Mail oder Passwort falsch!");
             }
