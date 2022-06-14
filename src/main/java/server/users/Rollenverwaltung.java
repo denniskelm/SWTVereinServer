@@ -47,7 +47,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
          //mitgliedHinzufuegen("Kelm", "Dennis", "dennis@email.de", "2345", "Teststr. 4", "DEF", "234", false, LocalDateTime.now().minusDays(20));
      }
 
-     public void gastHinzufuegen(String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, String telefonnummer, boolean spender) {
+     public Object[] gastHinzufuegen(String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, String telefonnummer, boolean spender) {
          if (gaeste.size() >= 50000) throw new ArrayIndexOutOfBoundsException();
 
          //naechste ID generieren
@@ -58,6 +58,12 @@ public class Rollenverwaltung implements IRollenverwaltung {
          gaeste.add(gast);
          rDB.gastHinzufuegen(gast);
          System.out.println("Gast mit ID " +  personenID + " hinzugefuegt. Anzahl Gaeste: " +  gaeste.size());
+
+         Object[] result = new Object[2];
+         result[0] = personenID;
+         result[1] = Rolle.GAST;
+
+         return result;
      }
      
      public void mitgliedHinzufuegen(String nachname, String vorname, String email, String password, String anschrift,
@@ -283,7 +289,8 @@ public class Rollenverwaltung implements IRollenverwaltung {
         }
     }
 
-    public boolean login(String email, String password) throws Exception {
+    public Object[] login(String email, String password) throws Exception {
+        Object[] result = new Object[2];
 
         for (Gast m : gaeste) {
             if (m.getEmail().equals(email)) {
@@ -301,8 +308,13 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
         for (Mitglied m : mitglieder) {
             if (m.getEmail().equals(email)) {
-                if (m.getPassword() == password.hashCode())
-                    return true;
+                if (m.getPassword() == password.hashCode()) {
+                    result = new Object[2];
+                    result[0] = m.getPersonenID();
+                    result[1] = Rolle.MITGLIED;
+
+                    return result;
+                }
                 else
                     throw new Exception("E-Mail oder Passwort falsch!");
             }
@@ -310,8 +322,13 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
         for (Mitglied m : mitarbeiter) {
             if (m.getEmail().equals(email)) {
-                if (m.getPassword() == password.hashCode())
-                    return true;
+                if (m.getPassword() == password.hashCode()) {
+                    result = new Object[2];
+                    result[0] = m.getPersonenID();
+                    result[1] = Rolle.MITARBEITER;
+
+                    return result;
+                }
                 else
                     throw new Exception("E-Mail oder Passwort falsch!");
             }
@@ -319,8 +336,12 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
         for (Mitglied m : vorsitze) {
             if (m.getEmail().equals(email)) {
-                if (m.getPassword() == password.hashCode())
-                    return true;
+                if (m.getPassword() == password.hashCode()) {
+                    result[0] = m.getPersonenID();
+                    result[1] = Rolle.VORSITZ;
+
+                    return result;
+                }
                 else
                     throw new Exception("E-Mail oder Passwort falsch!");
             }

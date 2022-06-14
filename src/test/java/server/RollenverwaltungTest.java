@@ -123,9 +123,9 @@ class RollenverwaltungTest {
         public void login () throws Exception {
 
             // Richtige Anmeldedaten
-            boolean eingeloggt = false;
-            eingeloggt = rv.login("we.de@de.de", ("hallo1"));
-            assertTrue(eingeloggt);
+            Object[] eingeloggt;
+            eingeloggt = rv.login("we.de@de.de", "hallo1");
+            assertNotNull(eingeloggt);
 
             // Falsche Anmeldedaten
             Throwable exception = assertThrows(Exception.class, () -> rv.login("1", "2"));
