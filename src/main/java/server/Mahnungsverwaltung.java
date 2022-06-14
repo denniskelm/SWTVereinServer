@@ -14,6 +14,7 @@ public class Mahnungsverwaltung implements IMahnungsverwaltung {
         mahnungen = new ArrayList<>();
     }
 
+    // Die Methode gibt die passende Mahnung zu der MahnungsId zurück
     public Mahnung fetch(String mahnungsID) throws NoSuchObjectException {
         for (Mahnung m : mahnungen) {
             if (m.getMahnungsID().equals(mahnungsID)) return m;
@@ -37,4 +38,6 @@ public class Mahnungsverwaltung implements IMahnungsverwaltung {
             e.printStackTrace();
         }
     }
+
+
 }

@@ -83,7 +83,7 @@ public class Mitglied extends Gast implements IMitglied {
     }
     public LocalDateTime getMitgliedSeit() { return mitglied_seit; }
 
-    @Override
+    // aendert ein angegebenes Attribut auf den angegbenen Wert
     public void datenVerwalten(Personendaten attr, String wert) {
         switch (attr) {
             case PERSONENID -> this.personenID = wert;

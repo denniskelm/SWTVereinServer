@@ -75,6 +75,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
          rDB.MitgliedHinzufuegen(m);
      }
 
+     // Gibt das passende Mitglied anhand der MitgliedsID zurück
     public Mitglied fetch(String mitgliederID) throws NoSuchObjectException {
         for (Mitglied m : vorsitze) {
             if (m.getPersonenID().equals(mitgliederID)) return m;
@@ -91,6 +92,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
         throw new NoSuchObjectException("Person mit ID: " + mitgliederID + " nicht vorhanden.");
     }
 
+    // Gibt den passenden Gast anhand der MitgliedsID zurück
     public Gast fetchGaeste(String personenID) throws NoSuchObjectException{
         for (Gast g : gaeste) {
             if (g.getPersonenID().equals(personenID)) return g;
@@ -134,10 +136,12 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
         rDB.rolleAendern(mitgliedsID, rolle);
 
+        // Es wird das passende Mitglied zur Id gesucht
         try {
             mitgliedInAlterRolle = fetch(mitgliedsID);
         } catch (NoSuchObjectException e) {
             try {
+                // Da die PersonenID unter den Mitgliedern nicht gefunden wurde, wird bei den Gaesten weiter gesucht
                 GastInAlterRolle = fetchGaeste(mitgliedsID);
                 mitglied_seit = LocalDateTime.now();
 
@@ -148,6 +152,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
                 return;
 
             } catch (NoSuchObjectException f) {
+                // Wirft Exception falls die Person nicht gefunden wurde
                 throw new RuntimeException(f);
             }
         }
@@ -160,6 +165,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
         rolleAendernSwitch(mitgliedInAlterRolle, rolle, mitglied_seit);
     }
 
+    // Methode löscht die Person in der alten Rolle und erstellt eine Instanz der neuen Rolle der Person
     private void rolleAendernSwitch(Gast gast, Rolle rolle, LocalDateTime mitglied_seit) {
         Gast g;
         switch (rolle) {
@@ -242,6 +248,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
     public Object[] mahnungsverwaltungAnzeigen() { return mahnungen.toArray(); }
 
     private void nutzerAusAlterListeEntfernen(Gast mitglied) {
+         //überprüft ob der Nutzer der Rolle Gast angehört und löscht dann diesen
         if (mitglied instanceof Gast) {
             for (int i = 0; i < gaeste.size(); i++) {
                 if (gaeste.get(i).getPersonenID().equals(mitglied.getPersonenID())) {
@@ -249,6 +256,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
                     break;
                 }
             }
+            //überprüft ob der Nutzer der Rolle Mitglied angehört und löscht dann diesen
         } else if (mitglied instanceof Mitglied) {
             for (int i = 0; i < mitglieder.size(); i++) {
                 if (mitglieder.get(i).getPersonenID().equals(mitglied.getPersonenID())) {
@@ -256,6 +264,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
                     break;
                 }
             }
+            //überprüft ob der Nutzer der Rolle Mitarbeiter angehört und löscht dann diesen
         } else if (mitglied instanceof Mitarbeiter) {
             for (int i = 0; i < mitarbeiter.size(); i++) {
                 if (mitarbeiter.get(i).getPersonenID().equals(mitglied.getPersonenID())) {
@@ -263,6 +272,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
                     break;
                 }
             }
+            //überprüft ob der Nutzer der Rolle Vorsitz angehört und löscht dann diesen
         } else if (mitglied instanceof Vorsitz) {
             for (int i = 0; i < vorsitze.size(); i++) {
                 if (vorsitze.get(i).getPersonenID().equals(mitglied.getPersonenID())) {
@@ -346,6 +356,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
         return mitglied.getEmail();
     }
 
+    //setzt die gesamte Rollenverwaltung zurück
     public void reset() {
         gaeste = new ArrayList<>();
         mitglieder = new ArrayList<>();

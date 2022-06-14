@@ -57,6 +57,7 @@ public class Gast implements IGast {
     public String getTelefonNr() { return telefonnummer; }
     public boolean getSpenderStatus() { return spender; }
 
+    // aendert ein angegebenes Attribut auf den angegbenen Wert
     public void datenVerwalten(Personendaten attr, String wert) {
         switch (attr) {
             case PERSONENID -> this.personenID = wert.toString();

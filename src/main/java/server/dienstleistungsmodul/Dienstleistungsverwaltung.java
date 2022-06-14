@@ -72,7 +72,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     }
 
 
-
+    // Für die Gui von Nöten
     public Object[] getAngeboteInformationen(String angebotID) throws NoSuchObjectException {
 
         Dienstleistungsangebot a = fetchAngebot(angebotID);
@@ -88,6 +88,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         return info;
     }
 
+    // Für die Gui von Nöten
     public Object[] getGesucheInformationen(String gesucheID) throws NoSuchObjectException {
 
         Dienstleistungsgesuch g= fetchGesuch(gesucheID);
@@ -102,11 +103,15 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     }
 
 
+    public int anzahlAngebote(){
+        return angebote.size();
+    }
 
-    //TODO??? - public int howManyAngebote
-    //TODO??? - public int howManyGesuche
+    public int anzahlGesuche(){
+        return gesuche.size();
+    }
 
-
+    //Konstruktor der Klasse
     public Dienstleistungsverwaltung() {
         try {
             dlDB = new DienstleistungsDB();
@@ -134,6 +139,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
             throw new RuntimeException(e);
         }
     }
+
 
     public void createIdListen(){
         int anzahl=0;
@@ -181,23 +187,6 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         gesuch_ID=this.gidliste.get(0);
         this.gidliste.remove(0);
 
-
-        /*int anzahl = gesuche.size();
-        String gesuch_ID;
-
-        if (anzahl < 9)  //
-            gesuch_ID = "dg0000" + (anzahl + 1); // klammern hinzugefügt damit test richtig
-        else if (anzahl < 99)
-            gesuch_ID = "dg000" + (anzahl + 1);
-        else if (anzahl < 999)
-            gesuch_ID = "dg00" + (anzahl + 1);
-        else if (anzahl < 9999)
-            gesuch_ID = "dg0" + (anzahl + 1);
-        else if (anzahl < 50000)
-            gesuch_ID = "dg" + (anzahl + 1);
-        else
-            throw new Exception();
-        */
         System.out.println(ersteller);
         Dienstleistungsgesuch g = new Dienstleistungsgesuch(gesuch_ID, titel, beschreibung, kategorie, imageUrl, ersteller);
         gesuche.add(g);
@@ -224,77 +213,67 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     }
 
     public void gesuchLoeschen(String gesuch_ID) {
-        for (Dienstleistungsgesuch g : gesuche){
-            if(g.getGesuch_ID().equals(gesuch_ID)) {
-                gesuche.remove(g);
-                break;
-            }
+        try{
+            gesuche.remove(fetchGesuch(gesuch_ID));
+        }
+        catch (NoSuchObjectException e){
+            throw new RuntimeException();
         }
 
         dlDB.gesuchLoeschen(gesuch_ID);
     }
 
     public void angebotLoeschen(String angebots_ID) {
-        for (Dienstleistungsangebot a : angebote){
-            if(a.getAngebots_ID().equals(angebots_ID)) {
-                angebote.remove(a);
-                break;
-            }
+        try{
+            gesuche.remove(fetchAngebot(angebots_ID));
+        }
+        catch (NoSuchObjectException e){
+            throw new RuntimeException();
         }
 
         dlDB.angebotLoeschen(angebots_ID);
     }
 
     public void gesuchAendern(String gesuchsID, Dienstleistungsgesuchdaten attr, Object wert) {
-        for (Dienstleistungsgesuch a : gesuche) {
-            if (a.getGesuch_ID().equals(gesuchsID)) {
-                switch (attr) {
-                    case GESUCH_ID -> a.setGesuch_ID(wert.toString());
-                    case TITEL -> a.setTitel(wert.toString());
-                    case BESCHREIBUNG -> a.setBeschreibung(wert.toString());
-                    case KATEGORIE -> a.setKategorie(wert.toString());
-                    case SUCHENDER_ID -> a.setSuchender_ID((wert.toString()));
-                    case URL -> a.setImageUrl(wert.toString());
-                }
-                break;
-            }
+        try {
+            Dienstleistungsgesuch a = fetchGesuch(gesuchsID);
+                    switch (attr) {
+                        case GESUCH_ID -> a.setGesuch_ID(wert.toString());
+                        case TITEL -> a.setTitel(wert.toString());
+                        case BESCHREIBUNG -> a.setBeschreibung(wert.toString());
+                        case KATEGORIE -> a.setKategorie(wert.toString());
+                        case SUCHENDER_ID -> a.setSuchender_ID((wert.toString()));
+                        case URL -> a.setImageUrl(wert.toString());
+                    }
         }
+        catch(NoSuchObjectException e){
+            throw new RuntimeException();
+        }
+
 
         dlDB.gesuchAendern(gesuchsID, attr, wert);
     }
     public void angebotAendern(String angebotsID, Dienstleistungsangebotdaten attr, Object wert) {
-        for (Dienstleistungsangebot a : angebote) {
-            if (a.getAngebots_ID().equals(angebotsID)) {
-                switch(attr){
-                    case ANGEBOTS_ID -> a.setAngebots_ID(wert.toString());
-                    case TITEL -> a.setTitel(wert.toString());
-                    case BESCHREIBUNG -> a.setBeschreibung(wert.toString());
-                    case KATEGORIE -> a.setKategorie(wert.toString());
-                    case AB -> a.setAb((LocalDateTime) wert);
-                    case BIS -> a.setBis((LocalDateTime) wert);
-                    case PERSONEN_ID -> a.setPersonenID(wert.toString());
-                    case URL -> a.setImageUrl(wert.toString());
-                }
-                break;
+        try {
+            Dienstleistungsangebot a = fetchAngebot(angebotsID);
+            switch (attr) {
+                case ANGEBOTS_ID -> a.setAngebots_ID(wert.toString());
+                case TITEL -> a.setTitel(wert.toString());
+                case BESCHREIBUNG -> a.setBeschreibung(wert.toString());
+                case KATEGORIE -> a.setKategorie(wert.toString());
+                case AB -> a.setAb((LocalDateTime) wert);
+                case BIS -> a.setBis((LocalDateTime) wert);
+                case PERSONEN_ID -> a.setPersonenID(wert.toString());
+                case URL -> a.setImageUrl(wert.toString());
             }
+        }
+        catch(NoSuchObjectException e){
+            throw new RuntimeException();
         }
 
         dlDB.angebotAendern(angebotsID, attr, wert);
     }
 
-    /*public void gesuchAnnehmen(String gesuchs_ID, String ersteller_ID, String nutzer_ID, int stunden) throws Exception {
-        Dienstleistungsgesuch gesuch;
-        int anzahl = gesuche.size();
-        int counter = 0;
-
-        for (Dienstleistungsgesuch g : gesuche) {
-            if (g.getGesuch_ID() == gesuchs_ID && counter <= anzahl) {
-                gesuch = g;
-                //TODO g.getSuchender().veraendereStundenkonto(-stunden);
-            } else
-                throw new Exception();
-        }
-    }*/
 
     public void gesuchAnnehmen(String gesuchID, String erstellerID, String nutzerID, int stunden) throws Exception{
 
@@ -309,6 +288,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         dlDB.gesuchAnnhemen(gesuchID, erstellerID, nutzerID ,stunden);
     }
 
+    // Gibt das zugehörige Angebot zu der gegebenen AngebotsID
     public Dienstleistungsangebot fetchAngebot(String angebotID) throws NoSuchObjectException {
 
         for (Dienstleistungsangebot da : angebote) {
@@ -318,6 +298,8 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
         throw new NoSuchObjectException("Angebot mit ID: " + angebotID + " nicht vorhanden.");
     }
+
+    // Gibt das zugehörige Gesuch zu der gegebenen GesuchsID
     public Dienstleistungsgesuch fetchGesuch(String gID) throws NoSuchObjectException {
 
         for (Dienstleistungsgesuch ds : gesuche) {
@@ -328,6 +310,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         throw new NoSuchObjectException("Angebot mit ID: " + gID + " nicht vorhanden.");
     }
 
+    // Für die Gui
     public Object[][] omniAngebotDaten() throws NoSuchObjectException {
         Object[][] aliste = new Object[50000][8];
 
@@ -338,6 +321,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         return aliste;
     }
 
+    // Für die Gui
     public Object[][] omniGesuchDaten() throws NoSuchObjectException{
         Object[][] gliste = new Object[50000][6];
 

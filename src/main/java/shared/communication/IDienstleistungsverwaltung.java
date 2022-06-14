@@ -34,5 +34,7 @@ public interface IDienstleistungsverwaltung extends Remote {
     Object[] getGesucheInformationen(String geraeteID) throws RemoteException;
     Object[][] omniAngebotDaten() throws NoSuchObjectException, RemoteException;
     Object[][] omniGesuchDaten() throws NoSuchObjectException, RemoteException;
+    public int anzahlAngebote() throws RemoteException;
+    public int anzahlGesuche() throws RemoteException;
 
 }
