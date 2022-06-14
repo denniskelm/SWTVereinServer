@@ -296,17 +296,17 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         }
     }*/
 
-    public void gesuchAnnehmen(String gesuchsID, String erstellerID, String nutzerID, int stunden) throws Exception{
+    public void gesuchAnnehmen(String gesuchID, String erstellerID, String nutzerID, int stunden) throws Exception{
 
         server.users.Rollenverwaltung r= VereinssoftwareServer.rollenverwaltung;
-        Dienstleistungsgesuch gesuch = fetchGesuch(gesuchsID);
+        //Dienstleistungsgesuch gesuch = fetchGesuch(gesuchID);
 
         Mitglied ersteller=r.fetch(erstellerID);
-        Mitglied nutzer=r.fetch(nutzerID);
+        //Mitglied nutzer=r.fetch(nutzerID);
         Anfragenliste l= ersteller.getAnfragenliste();
-        l.addgAnfrage(nutzer, gesuch ,stunden);
+        l.addgAnfrage(nutzerID, gesuchID ,stunden);
 
-        dlDB.gesuchAnnhemen(gesuchsID, erstellerID, nutzerID ,stunden);
+        dlDB.gesuchAnnhemen(gesuchID, erstellerID, nutzerID ,stunden);
     }
 
     public Dienstleistungsangebot fetchAngebot(String angebotID) throws NoSuchObjectException {
@@ -349,13 +349,13 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     public void angebotAnnehmen(String angebotID, String erstellerID, String nutzerID, int stunden) throws Exception{
 
         server.users.Rollenverwaltung r= VereinssoftwareServer.rollenverwaltung;
-        Dienstleistungsangebot angebot = fetchAngebot(angebotID);
+        //Dienstleistungsangebot angebot = fetchAngebot(angebotID);
 
 
         Mitglied ersteller=r.fetch(erstellerID);
-        Mitglied nutzer=r.fetch(nutzerID);
+        //Mitglied nutzer=r.fetch(nutzerID);
         Anfragenliste l= ersteller.getAnfragenliste();
-        l.addaAnfrage(nutzer, angebot,stunden);
+        l.addaAnfrage(nutzerID, angebotID, stunden);//nutzer ist der, welcher die Anfrage stellt
 
         dlDB.angebotAnnehmen(angebotID, erstellerID, nutzerID, stunden);
     }

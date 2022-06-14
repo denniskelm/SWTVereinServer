@@ -112,42 +112,38 @@ public class Anfragenliste implements IAnfragenliste {
         return this;
     }
 
-    public void addaAnfrage(Mitglied nutzer, Dienstleistungsangebot angebot, int stunden) {
+    public void addaAnfrage(String anfragenderID, String angebotID, int stunden) throws NoSuchObjectException {
+        Dienstleistungsangebot angebot= VereinssoftwareServer.dienstleistungsverwaltung.fetchAngebot(angebotID);
+        Mitglied anfragender=VereinssoftwareServer.rollenverwaltung.fetch(anfragenderID);
         String anfrageID=this.gaidliste.get(0);
         this.gaidliste.remove(0);
-        AngebotAnfrage a =new AngebotAnfrage(anfrageID, nutzer, angebot,stunden);
+        AngebotAnfrage a =new AngebotAnfrage(anfrageID, anfragender, angebot, stunden);
         this.aliste.add(a);
     }
 
-    public void addgAnfrage(Mitglied nutzer, Dienstleistungsgesuch gesuch, int stunden) {
+    public void addgAnfrage(String anfragenderID, String gesuchID, int stunden) throws NoSuchObjectException {
+        Dienstleistungsgesuch gesuch= VereinssoftwareServer.dienstleistungsverwaltung.fetchGesuch(gesuchID);
+        Mitglied anfragender=VereinssoftwareServer.rollenverwaltung.fetch(anfragenderID);
         String anfrageID=this.aaidliste.get(0);
         this.aaidliste.remove(0);
         GesuchAnfrage g = new GesuchAnfrage(anfrageID, nutzer, gesuch, stunden);
         this.gliste.add(g);
     }
-    public void removeAAnfrage(String id){
+    public void removeAAnfrage(String id) throws NoSuchObjectException{
         AngebotAnfrage a= null;
-        try {
-            a = afetch(id);
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
+        a = afetch(id);
         this.aaidliste.add(a.anfrageID);
         this.aliste.remove(a);
     }
 
-    public void removeGAnfrage(String id){
+    public void removeGAnfrage(String id) throws NoSuchObjectException{
         GesuchAnfrage g= null;
-        try {
-            g = gfetch(id);
-        } catch (NoSuchObjectException e) {
-            throw new RuntimeException(e);
-        }
+        g = gfetch(id);
         this.gaidliste.add(g.anfrageID);
         this.gliste.remove(g);
     }
 
-    public void gAnfrageAnnehmenaAnfrageAnnehmen(String id) throws Exception{
+    public void gAnfrageAnnehmen(String id) throws Exception{
         GesuchAnfrage g= null;
         g = gfetch(id);
         this.gaidliste.add(g.anfrageID);
