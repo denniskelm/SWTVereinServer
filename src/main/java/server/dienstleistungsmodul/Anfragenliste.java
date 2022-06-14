@@ -21,6 +21,8 @@ public class Anfragenliste implements IAnfragenliste {
     private ArrayList<String> gaidliste;
 
     public void createIdListen(){
+        this.aaidliste = new ArrayList<String>();
+        this.gaidliste = new ArrayList<String>();
         int anzahl=0;
         while (anzahl<50) {
             if (anzahl < 9)  // todo : nach dem testen ist die Rueckgabe nicht wie gewunscht???
@@ -39,6 +41,12 @@ public class Anfragenliste implements IAnfragenliste {
                 gaidliste.add("ga000" + (anzahl + 1));
             anzahl++;
         }
+    }
+
+    public void reset(){
+        this.gliste = new ArrayList<GesuchAnfrage>();
+        this.aliste = new ArrayList<AngebotAnfrage>();
+        createIdListen();
     }
 
     public Anfragenliste(/*String user_ID*/) {
