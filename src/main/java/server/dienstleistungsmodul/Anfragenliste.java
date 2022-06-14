@@ -48,9 +48,28 @@ public class Anfragenliste implements IAnfragenliste {
         createIdListen();
     }
 
-    public Object[] getGAnfragenInfo(GesuchAnfrage g) throws NoSuchObjectException {
+    public GesuchAnfrage gfetch(String id) throws NoSuchObjectException {
+        for (GesuchAnfrage ga : gliste) {
+        if (ga.anfrageID.equals(id))
+            return ga;
+    }
+
+        throw new NoSuchObjectException("Anfrage mit ID: " + id + " nicht vorhanden.");
+    }
+
+    public AngebotAnfrage afetch(String id) throws NoSuchObjectException {
+        for (AngebotAnfrage aa : aliste) {
+            if (aa.anfrageID.equals(id))
+                return aa;
+        }
+
+        throw new NoSuchObjectException("Anfrage mit ID: " + id + " nicht vorhanden.");
+    }
+
+    public Object[] getGAnfragenInfo(String id) throws NoSuchObjectException {
         //Dienstleistungsverwaltung d= VereinssoftwareServer.dienstleistungsverwaltung;
         //Dienstleistungsgesuch g = d.fetchGesuch(gesuchID);
+        GesuchAnfrage g = gfetch(id);
         Object[] info = new Object[3];
         info[0] = g.nutzer.getPersonenID();
         info[1] = g.gesuch.getGesuch_ID();
@@ -58,8 +77,8 @@ public class Anfragenliste implements IAnfragenliste {
         return info;
     }
 
-    public Object[] getAAnfragenInfo(AngebotAnfrage a) throws NoSuchObjectException {
-
+    public Object[] getAAnfragenInfo(String id) throws NoSuchObjectException {
+        AngebotAnfrage a = afetch(id);
         Object[] info = new Object[3];
         info[0] = a.nutzer.getPersonenID();
         info[1] = a.angebot.getAngebots_ID();
@@ -71,7 +90,7 @@ public class Anfragenliste implements IAnfragenliste {
         Object[][] liste = new Object[50][3];//TODO index out of range
 
         for(int i = 0; i < aliste.size(); i++) {
-            liste[i] = getAAnfragenInfo(aliste.get(i));
+            liste[i] = getAAnfragenInfo(aliste.get(i).anfrageID);
         }
 
         return liste;
@@ -81,7 +100,7 @@ public class Anfragenliste implements IAnfragenliste {
         Object[][] liste = new Object[50][3];
 
         for(int i = 0; i < gliste.size(); i++) {
-            liste[i] = getGAnfragenInfo(gliste.get(i));
+            liste[i] = getGAnfragenInfo(gliste.get(i).anfrageID);
         }
 
         return liste;
@@ -106,24 +125,31 @@ public class Anfragenliste implements IAnfragenliste {
         GesuchAnfrage g = new GesuchAnfrage(anfrageID, nutzer, gesuch, stunden);
         this.gliste.add(g);
     }
-    public void removeAAnfrage(AngebotAnfrage a){
+    public void removeAAnfrage(String id){
+        AngebotAnfrage a= null;
+        try {
+            a = afetch(id);
+        } catch (NoSuchObjectException e) {
+            throw new RuntimeException(e);
+        }
         this.aaidliste.add(a.anfrageID);
         this.aliste.remove(a);
     }
 
-    public void removeGAnfrage(GesuchAnfrage g){
+    public void removeGAnfrage(String id){
+        GesuchAnfrage g= null;
+        try {
+            g = gfetch(id);
+        } catch (NoSuchObjectException e) {
+            throw new RuntimeException(e);
+        }
         this.gaidliste.add(g.anfrageID);
         this.gliste.remove(g);
     }
 
-    public void gAnfrageAnnehmen(GesuchAnfrage g) throws Exception{
-        /*int i=0;
-        while (i<this.gliste.size()){
-            if (this.gliste.get(i)==g){
-
-            }
-
-        }*/
+    public void gAnfrageAnnehmenaAnfrageAnnehmen(String id) throws Exception{
+        GesuchAnfrage g= null;
+        g = gfetch(id);
         this.gaidliste.add(g.anfrageID);
         this.gliste.remove(g);
         this.nutzer.veraendereStundenkonto(g.stunden);
@@ -131,7 +157,9 @@ public class Anfragenliste implements IAnfragenliste {
         VereinssoftwareServer.dienstleistungsverwaltung.gidliste.add(g.gesuch.getGesuch_ID());
     }
 
-    public void aAnfrageAnnehmen(AngebotAnfrage a) throws Exception{
+    public void aAnfrageAnnehmen(String id) throws Exception{
+        AngebotAnfrage a= null;
+        a = afetch(id);
         this.aaidliste.add(a.anfrageID);
         this.gliste.remove(a);
         this.nutzer.veraendereStundenkonto(a.stunden);
