@@ -19,7 +19,7 @@ class RollenverwaltungTest {
     @BeforeAll
     static void mitglieder() {
         rv.gastHinzufuegen("Mustermann", "Max", "web.de@de.de", "hallo", "Am See 3", "123", "87772627", false);
-        rv.mitgliedHinzufuegen("Musterfrau", "Maxi", "we.de@de.de", "hallo1", "Am See 32", "1234", "87772627", false, LocalDateTime.parse("2016-11-09T11:44:44.797"));
+        rv.mitgliedHinzufuegen("Musterfrau", "Maxi", "we.de@de.de", "hallo1", "Am See 32", "1234", "87772627", false, new Mahnungsverwaltung(), LocalDateTime.parse("2016-11-09T11:44:44.797"));
 
     }
 
@@ -43,7 +43,7 @@ class RollenverwaltungTest {
     @Test
     public void MitgliedHinzufuegen() throws NoSuchObjectException {
 
-        rv.mitgliedHinzufuegen("Mustermann", "Max", "we3.de@de.de", "hallo", "Am See 3", "12345", "87772627", false, LocalDateTime.parse("2016-11-09T11:44:44.797"));
+        rv.mitgliedHinzufuegen("Mustermann", "Max", "we3.de@de.de", "hallo", "Am See 3", "12345", "87772627", false, new Mahnungsverwaltung(), LocalDateTime.parse("2016-11-09T11:44:44.797"));
         assertEquals("Mustermann", rv.fetch("4").getNachname());
 
         Assertions.assertThrows(NoSuchObjectException.class, () -> {

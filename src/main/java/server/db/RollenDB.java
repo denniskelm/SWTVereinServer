@@ -11,54 +11,46 @@ Raphael Kleebaum
 //TODO Dennis Kelm
 */
 
+import server.Mahnung;
 import server.Mahnungsverwaltung;
+import server.VereinssoftwareServer;
 import server.users.*;
 
+import java.rmi.NoSuchObjectException;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static server.users.Rolle.*;
 
-public class RollenDB {
+public class RollenDB extends Database {
 
     private final Connection conn;
+    private final Rollenverwaltung rv;
 
-    public RollenDB() {
-        final String URL = "meta.informatik.uni-rostock.de";
-        final String USER = "rootuser", PASSWORD = "rootuser";
+    public RollenDB() throws SQLException {
+        super();
 
-        try {
-            conn = DriverManager.getConnection("jdbc:mysql://" + URL + ":3306/vswt22", USER, PASSWORD);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        conn = super.getConnection();
+        rv = VereinssoftwareServer.rollenverwaltung;
     }
 
     public void gastHinzufuegen(Gast g) {
 
         try {
 
-            String personenID = g.getPersonenID();
-            String nachname = g.getNachname();
-            String vorname = g.getVorname();
-            String email = g.getEmail();
-            int password = g.getPassword();
-            String anschrift = g.getAnschrift();
-            String mitgliedsNr = g.getMitgliedsNr();
-            String telefonNr = g.getTelefonNr();
             String spender = g.getSpenderStatus() ? "Y" : "N";
 
             PreparedStatement prep = conn.prepareStatement("INSERT INTO gast VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            prep.setString(1, personenID);
-            prep.setString(2, mitgliedsNr);
-            prep.setString(3, anschrift);
-            prep.setString(4, email);
+            prep.setString(1, g.getPersonenID());
+            prep.setString(2, g.getMitgliedsNr());
+            prep.setString(3, g.getAnschrift());
+            prep.setString(4, g.getEmail());
             prep.setString(5, spender);
-            prep.setString(6, telefonNr);
-            prep.setInt(7, password);
-            prep.setString(8, vorname);
-            prep.setString(9, nachname);
+            prep.setString(6, g.getTelefonNr());
+            prep.setInt(7, g.getPassword());
+            prep.setString(8, g.getVorname());
+            prep.setString(9, g.getNachname());
 
             prep.executeUpdate();
             prep.close();
@@ -80,17 +72,9 @@ public class RollenDB {
             if (!gastVorhandenResult.next()) // Gast muss erst erstellt werden
                 gastHinzufuegen(m);
 
-            String personenID = m.getPersonenID();
-            Timestamp mitglied_seit = Timestamp.valueOf(m.getMitgliedSeit());
             String gesperrt = m.isGesperrt() ? "Y" : "N";
 
-            PreparedStatement prep = conn.prepareStatement("INSERT INTO mitglied VALUES (?, ?, ?)");
-            prep.setString(1, personenID);
-            prep.setTimestamp(2, mitglied_seit);
-            prep.setString(3, gesperrt);
-
-            prep.executeUpdate();
-            prep.close();
+            zuDBHinzufuegen(m.getPersonenID(), m.getMitgliedSeit(), gesperrt, "mitglied");
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -98,66 +82,58 @@ public class RollenDB {
 
     }
 
-    public void rolleAendern(String mitgliedsID, Rolle rolle) {
+    public void rolleAendern(String personenID, Rolle rolle) {
         String[] dbs = {"vorstand", "mitarbeiter", "mitglied", "gast"};
-        String personenID, nachname, vorname, email, anschrift, mitgliedsNr, telefonNr;
         String dbFound = null;
-        int password;
         LocalDateTime mitglied_seit;
-        boolean spender;
-
-        Gast g = null;
+        Mahnungsverwaltung mahnungsverwaltung = null;
+        Gast g;
 
         try {
-            PreparedStatement prep = conn.prepareStatement("SELECT * FROM gast WHERE PersonenID = ?");
+            try {
+                g = rv.fetch(personenID);
 
-            prep.setString(1, mitgliedsID);
+                PreparedStatement getMitgliedSeit = conn.prepareStatement("SELECT Mitglied_seit FROM mitglied WHERE PersonenID = ?");
+                getMitgliedSeit.setString(1, personenID);
 
-            ResultSet result = prep.executeQuery();
+                ResultSet mitgliedSeit = getMitgliedSeit.executeQuery();
+                mitgliedSeit.next();
 
-            result.next();
-
-            personenID = result.getString("PersonenID");
-            nachname = result.getString("Nachname");
-            vorname = result.getString("Vorname");
-            email = result.getString("E-Mail");
-            password = result.getInt("Passwort");
-            anschrift = result.getString("Anschrift");
-            mitgliedsNr = result.getString("MitgliedsNr");
-            telefonNr = result.getString("Telefonnummer");
-            spender = result.getString("ist_spender").equals("Y");
-
-            // herausfinden welchen Rang er hat und mitglied_seit holen
-            PreparedStatement getMitgliedSeit = conn.prepareStatement("SELECT Mitglied_seit FROM mitglied WHERE PersonenID = ?");
-            getMitgliedSeit.setString(1, personenID);
-
-            ResultSet mitgliedSeit = getMitgliedSeit.executeQuery();
-            if (mitgliedSeit.next())
                 mitglied_seit = mitgliedSeit.getTimestamp(1).toLocalDateTime();
-            else mitglied_seit = LocalDateTime.now();
+                mahnungsverwaltung = getMahnungsVerwaltungOfUser(personenID);
 
-            for (String db : dbs) {
-                PreparedStatement getCorrectTable = conn.prepareStatement(String.format("SELECT * FROM %s WHERE PersonenID = ?", db));
-                getCorrectTable.setString(1, personenID);
-                ResultSet correctTable = getCorrectTable.executeQuery();
+            } catch (NoSuchObjectException e) {
+                g = rv.fetchGaeste(personenID);
+                dbFound = "gast";
+                mitglied_seit = LocalDateTime.now();
+            }
 
-                try {
-                    correctTable.next();
-                    if (correctTable.getString("PersonenID").equals(mitgliedsID)) {
-                        dbFound = db;
-                        break;
+
+            // herausfinden welchen Rang er hat
+            if (dbFound == null) {
+                for (String db : dbs) {
+                    PreparedStatement getCorrectTable = conn.prepareStatement(String.format("SELECT * FROM %s WHERE PersonenID = ?", db));
+                    getCorrectTable.setString(1, personenID);
+                    ResultSet correctTable = getCorrectTable.executeQuery();
+
+                    try {
+                        correctTable.next();
+                        if (correctTable.getString("PersonenID").equals(personenID)) {
+                            dbFound = db;
+                            break;
+                        }
+                    } catch (SQLException e) {
+                        continue;
                     }
-                } catch (SQLException e) {
-                    continue;
                 }
             }
 
             switch (dbFound) {
                 // TODO richtige Mahnungsverwaltung für Mitarbeiter & Vorsitz finden
-                case "gast" -> g = new Gast(personenID, nachname, vorname, email, password, anschrift, mitgliedsNr, telefonNr, spender);
-                case "mitglied" -> g = new Mitglied(personenID, nachname, vorname, email, password, anschrift, mitgliedsNr, telefonNr, spender, mitglied_seit);
-                case "mitarbeiter" -> g = new Mitarbeiter(personenID, nachname, vorname, email, password, anschrift, mitgliedsNr, telefonNr, spender, mitglied_seit, new Mahnungsverwaltung());
-                case "vorstand" -> g = new Vorsitz(personenID, nachname, vorname, email, password, anschrift, mitgliedsNr, telefonNr, spender, mitglied_seit, new Mahnungsverwaltung());
+                case "gast" -> g = new Gast(personenID, g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(), g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus());
+                case "mitglied" -> g = new Mitglied(personenID, g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(), g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(), mahnungsverwaltung, mitglied_seit);
+                case "mitarbeiter" -> g = new Mitarbeiter(personenID, g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(), g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(), mitglied_seit, mahnungsverwaltung);
+                case "vorstand" -> g = new Vorsitz(personenID, g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(), g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(), mitglied_seit, mahnungsverwaltung);
             }
 
             if (g.getClass() == rolle.getKlasse())
@@ -176,12 +152,17 @@ public class RollenDB {
 
         if (rolle == GAST) {
             gastHinzufuegen(gast);
+            ausDBEntfernen(gast.getPersonenID(), "vorstand");
+            ausDBEntfernen(gast.getPersonenID(), "mitarbeiter");
+            ausDBEntfernen(gast.getPersonenID(), "mitglied");
             return;
         }
 
         // Wird für alles hierunter gebraucht
         if (gast.getClass() == GAST.getKlasse())
-            zuDBHinzufuegen(gast.getPersonenID(), mitglied_seit, "mitglied");
+            zuDBHinzufuegen(gast.getPersonenID(), mitglied_seit, "N", "mitglied");
+
+        // TODO wo wird das Stundenkonto gespeichert?
 
         if (rolle == MITGLIED) {
             if (gast.getClass() == MITARBEITER.getKlasse())
@@ -214,12 +195,10 @@ public class RollenDB {
 
         try {
             PreparedStatement prep = null;
-            if (attr != Personendaten.IST_GESPERRT && attr != Personendaten.RESERVIERUNGEN) { // muss in Gast geändert werden
+            if (attr != Personendaten.IST_GESPERRT && attr != Personendaten.RESERVIERUNGEN) { // muss in Mitglied geändert werden
                 prep = conn.prepareStatement(String.format("UPDATE gast SET %s = ? WHERE PersonenID = ?", attr.toString()));
             } else if (attr == Personendaten.IST_GESPERRT) {
                 prep = conn.prepareStatement("UPDATE mitglied SET ist_gesperrt = ? WHERE PersonenID = ?");
-            } else {
-                // TODO Wie Reservierungen ändern?
             }
 
             if (attr.equals(Personendaten.PASSWORD))
@@ -308,6 +287,7 @@ public class RollenDB {
         ArrayList<Mitglied> mitglieder;
         Mitglied m;
         LocalDateTime mitglied_seit;
+        Mahnungsverwaltung mahnungsverwaltung;
 
         mitglieder = new ArrayList<>();
 
@@ -326,10 +306,11 @@ public class RollenDB {
 
             for (Gast g : mitgliederAlsGaeste) {
                 mitglied_seit = getMitgliedSeit(g.getPersonenID());
+                mahnungsverwaltung = getMahnungsVerwaltungOfUser(g.getPersonenID());
 
                 m = new Mitglied(g.getPersonenID(), g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(),
                         g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(),
-                        mitglied_seit);
+                        mahnungsverwaltung, mitglied_seit);
 
                 mitglieder.add(m);
             }
@@ -347,6 +328,7 @@ public class RollenDB {
         ArrayList<Mitarbeiter> mitarbeiter;
         Mitarbeiter m;
         LocalDateTime mitglied_seit;
+        Mahnungsverwaltung mahnungsverwaltung;
 
         mitarbeiter = new ArrayList<>();
 
@@ -364,18 +346,19 @@ public class RollenDB {
             ArrayList<Gast> mitarbeiterAlsGaeste = getGaesteWithIDs(vorstandIDs);
 
             for (Gast g : mitarbeiterAlsGaeste) {
-                mitglied_seit = getMitgliedSeit(g.getPersonenID());
+                mitglied_seit = rv.fetch(g.getPersonenID()).getMitgliedSeit();
+                mahnungsverwaltung = getMahnungsVerwaltungOfUser(g.getPersonenID());
 
                 m = new Mitarbeiter(g.getPersonenID(), g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(),
                         g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(),
-                        mitglied_seit, new Mahnungsverwaltung());
+                        mitglied_seit, mahnungsverwaltung);
 
                 mitarbeiter.add(m);
             }
 
             getMitarbeiter.close();
 
-        } catch (SQLException e) {
+        } catch (SQLException | NoSuchObjectException e) {
             throw new RuntimeException(e);
         }
 
@@ -386,6 +369,7 @@ public class RollenDB {
         ArrayList<Vorsitz> vorsitze;
         Vorsitz v;
         LocalDateTime mitglied_seit;
+        Mahnungsverwaltung mahnungsverwaltung;
 
         vorsitze = new ArrayList<>();
 
@@ -402,18 +386,19 @@ public class RollenDB {
             ArrayList<Gast> vorstaendeAlsGaeste = getGaesteWithIDs(vorstandIDs);
 
             for (Gast g : vorstaendeAlsGaeste) {
-                mitglied_seit = getMitgliedSeit(g.getPersonenID());
+                mitglied_seit = rv.fetch(g.getPersonenID()).getMitgliedSeit();
+                mahnungsverwaltung = getMahnungsVerwaltungOfUser(g.getPersonenID());
 
                 v = new Vorsitz(g.getPersonenID(), g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(),
-                                g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(),
-                                mitglied_seit, new Mahnungsverwaltung());
+                        g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(),
+                        mitglied_seit, mahnungsverwaltung);
 
                 vorsitze.add(v);
             }
 
             getVorsitze.close();
 
-        } catch (SQLException e) {
+        } catch (SQLException | NoSuchObjectException e) {
             throw new RuntimeException(e);
         }
 
@@ -429,11 +414,11 @@ public class RollenDB {
     }
 
     // für Mitgliedertabelle
-    private void zuDBHinzufuegen(String personenID, LocalDateTime mitglied_seit, String tabelle) throws SQLException {
+    private void zuDBHinzufuegen(String personenID, LocalDateTime mitglied_seit, String ist_gesperrt, String tabelle) throws SQLException {
         PreparedStatement prep = conn.prepareStatement(String.format("INSERT INTO %S VALUES (?, ?, ?)", tabelle));
         prep.setString(1, personenID);
         prep.setTimestamp(2, Timestamp.valueOf(mitglied_seit));
-        prep.setString(3, "N");
+        prep.setString(3, ist_gesperrt);
         prep.executeUpdate();
         prep.close();
     }
@@ -460,6 +445,31 @@ public class RollenDB {
         }
 
         return result;
+    }
+
+    // TODO aus Mahnungsverwaltung holen
+    private Mahnungsverwaltung getMahnungsVerwaltungOfUser(String personenID) throws SQLException {
+        Mahnungsverwaltung mv;
+
+        mv = new Mahnungsverwaltung();
+
+        PreparedStatement prep = conn.prepareStatement("SELECT * FROM mahnung WHERE MitgliedID = ?");
+        prep.setString(1, personenID);
+
+        ResultSet result = prep.executeQuery();
+
+        while (result.next()) {
+            String mahnungID = result.getString("MahnungID"),
+                    grund = result.getString("Grund"),
+                    mitgliedID = result.getString("MitgliedID");
+            LocalDateTime datum = result.getTimestamp("Verfallsdatum").toLocalDateTime();
+
+            Mahnung m = new Mahnung(mahnungID, mitgliedID, grund, datum);
+
+            mv.mahnungen.add(m);
+        }
+
+        return mv;
     }
 
     private LocalDateTime getMitgliedSeit(String personenID) throws SQLException {

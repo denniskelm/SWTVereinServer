@@ -6,5 +6,6 @@ public enum Geraetedaten {
     LEIHFRIST,
     KATEGORIE,
     BESCHREIBUNG,
-    ABHOLORT
+    ABHOLORT,
+    BILD
 }

@@ -1,6 +1,5 @@
 package shared.communication;
 
-import server.geraetemodul.Geraet;
 import server.geraetemodul.Geraetedaten;
 
 import java.rmi.NoSuchObjectException;
@@ -15,15 +14,15 @@ TODO Jonny Schlutter
 Gabriel Kleebaum
 TODO Mhd Esmail Kanaan
 TODO Gia Huy Hans Tran
-TODO Ole Björn Adelmann
+TODO Ole Bjoern Adelmann
 TODO Bastian Reichert
 TODO Dennis Kelm
 */
 
-// Interface, um RMI für Klasse Geraeteverwaltung zu ermöglichen
+// Interface, um RMI fuer Klasse Geraeteverwaltung zu ermoeglichen
 public interface IGeraeteverwaltung extends Remote {
 
-    String geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort) throws RemoteException;
+    String geraetHinzufuegen(String name, String spender, int leihfrist, String kategorie, String beschreibung, String abholort, String bild) throws RemoteException;
     void geraetReservieren(String geraeteID, String ausleiherID) throws Exception;
     void geraetAusgeben(String geraeteID) throws Exception;
     void geraetAnnehmen(String geraeteID) throws Exception;

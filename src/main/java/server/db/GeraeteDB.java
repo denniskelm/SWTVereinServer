@@ -18,18 +18,12 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
-public class GeraeteDB {
-    private Connection conn;
+public class GeraeteDB extends Database {
+    private final Connection conn;
 
-    public GeraeteDB() {
-        final String URL = "meta.informatik.uni-rostock.de";
-        final String USER = "rootuser", PASSWORD = "rootuser";
-
-        try {
-            conn = DriverManager.getConnection("jdbc:mysql://" + URL + ":3306/vswt22", USER, PASSWORD);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public GeraeteDB() throws SQLException {
+        super();
+        conn = super.getConnection();
     }
 
     public ArrayList<Geraet> getGeraeteList() {
@@ -53,8 +47,9 @@ public class GeraeteDB {
                 String beschreibung = result.getString("Beschreibung");
                 String kategorie = result.getString("Kategorie");
                 String spenderName = result.getString("Spendername");
+                String bild = result.getString("Bild");
 
-                g = new Geraet(gID, name, spenderName, leihfrist, kategorie, beschreibung, abholort, leihstatus);
+                g = new Geraet(gID, name, spenderName, leihfrist, kategorie, beschreibung, abholort, leihstatus, bild);
 
                 geraete.add(g);
             }
@@ -68,14 +63,8 @@ public class GeraeteDB {
 
                 if (geraet.getLeihstatus() == Status.FREI)
                     geraet.setReservierungsliste(new ArrayList<>());
-                else {
-
-                    PreparedStatement getResListe = conn.prepareStatement("SELECT * FROM reserviert WHERE GeraeteID = ? ");
-                    getResListe.setString(1, geraet.getGeraeteID());
-
+                else
                     geraet.setReservierungsliste(getListeVonAusleihern(geraet.getGeraeteID(), "reserviert"));
-
-                }
             }
 
         } catch (SQLException e) {
@@ -87,25 +76,17 @@ public class GeraeteDB {
 
     public void geraetHinzufuegen(Geraet g) {
         try {
-            String gID = g.getGeraeteID();
-            int leihfrist = g.getLeihfrist();
-            String leihstatus = g.getLeihstatus().toString();
-            String abholort = g.getGeraetAbholort();
-            String name = g.getGeraetName();
-            String beschreibung = g.getGeraetBeschreibung();
-            String kategorie = g.getKategorie();
-            String spender = g.getSpenderName();
 
-            PreparedStatement prep = conn.prepareStatement("INSERT INTO geraet VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            prep.setString(1, gID);
-            prep.setInt(2, leihfrist);
-            prep.setString(3, leihstatus);
-            prep.setString(4, abholort);
-            prep.setString(5, name);
-            prep.setString(6, beschreibung);
-            prep.setString(7, kategorie);
-            prep.setString(8, spender);
-
+            PreparedStatement prep = conn.prepareStatement("INSERT INTO geraet VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            prep.setString(1, g.getGeraeteID());
+            prep.setInt(2, g.getLeihfrist());
+            prep.setString(3, g.getLeihstatus().toString());
+            prep.setString(4, g.getGeraetAbholort());
+            prep.setString(5, g.getGeraetName());
+            prep.setString(6, g.getGeraetBeschreibung());
+            prep.setString(7, g.getKategorie());
+            prep.setString(8, g.getSpenderName());
+            prep.setString(9, g.getBild());
 
             prep.executeUpdate();
             prep.close();
@@ -393,15 +374,10 @@ public class GeraeteDB {
 
         while (result.next()) {
 
-            String personenID = result.getString("PersonenID");
-            LocalDateTime fristBeginn = result.getTimestamp("Fristbeginn").toLocalDateTime();
-            LocalDateTime reservierDatum = result.getTimestamp("Reservierdatum").toLocalDateTime();
-            boolean isAbgegeben = result.getString("Abgegeben").equals("Y");
-
-            Ausleiher a = new Ausleiher(personenID);
-            a.setFristBeginn(fristBeginn);
-            a.setReservierdatum(reservierDatum);
-            a.setAbgegeben(isAbgegeben);
+            Ausleiher a = new Ausleiher(result.getString("PersonenID"));
+            a.setReservierdatum(result.getTimestamp("Reservierdatum").toLocalDateTime());
+            a.setFristBeginn(result.getTimestamp("Fristbeginn").toLocalDateTime());
+            a.setAbgegeben(result.getString("Abgegeben").equals("Y"));
 
             ausleiherList.add(a);
         }

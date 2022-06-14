@@ -7,11 +7,14 @@ import server.users.Mitglied;
 Bastian Reichert
 */
 public class AngebotAnfrage {
+    public String anfrageID;
+
     public Mitglied nutzer;
     public Dienstleistungsangebot angebot;
     public int stunden;
 
-    public AngebotAnfrage (Mitglied nutzer, Dienstleistungsangebot angebot, int stunden) {
+    public AngebotAnfrage (String anfrageID, Mitglied nutzer, Dienstleistungsangebot angebot, int stunden) {
+        this.anfrageID = anfrageID;
         this.nutzer = nutzer;
         this.stunden = stunden;
         this.angebot = angebot;

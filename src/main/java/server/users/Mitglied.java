@@ -1,5 +1,6 @@
 package server.users;
 
+import server.Mahnungsverwaltung;
 import server.dienstleistungsmodul.Anfragenliste;
 import shared.communication.IMitglied;
 
@@ -12,45 +13,49 @@ public class Mitglied extends Gast implements IMitglied {
     private boolean ist_gesperrt;
     private LocalDateTime mitglied_seit;
     private int reservierungen;
+    private Mahnungsverwaltung mahnungen;
 
     public Mitglied(String personenID, String nachname, String vorname, String email, String password, String anschrift,
-                    String mitgliedsnr, String telefonnummer, boolean spender/*, Mahnungsverwaltung mahnungen, Profilseite profilseite */,
-                    LocalDateTime mitglied_seit){
+                    String mitgliedsnr, String telefonnummer, boolean spender, Mahnungsverwaltung mahnungen/*, Profilseite profilseite */,
+                    LocalDateTime mitglied_seit) {
 
         super(personenID, nachname, vorname, email, password, anschrift, mitgliedsnr, telefonnummer, spender);
         this.stundenkonto = 0;
         this.ist_gesperrt = false;
         this.mitglied_seit = mitglied_seit;
-        this.anfragenliste = new server.dienstleistungsmodul.Anfragenliste(personenID);
+        this.anfragenliste = (new server.dienstleistungsmodul.Anfragenliste()).ofUser_ID(personenID);
         this.anfragenliste.nutzer = this;
         this.reservierungen = 0;
+        this.mahnungen = mahnungen;
     }
 
     // Weiterer Konstruktor, falls man die Rolle von einem Gast ändert, da dann das Passwort schon gehasht ist
     public Mitglied(String personenID, String nachname, String vorname, String email, int password, String anschrift,
-                    String mitgliedsnr, String telefonnummer, boolean spender/*, Mahnungsverwaltung mahnungen, Profilseite profilseite */,
-                    LocalDateTime mitglied_seit){
+                    String mitgliedsnr, String telefonnummer, boolean spender, Mahnungsverwaltung mahnungen/*, Profilseite profilseite */,
+                    LocalDateTime mitglied_seit) {
 
         super(personenID, nachname, vorname, email, password, anschrift, mitgliedsnr, telefonnummer, spender);
         this.stundenkonto = 0;
         this.ist_gesperrt = false;
         this.mitglied_seit = mitglied_seit;
-        this.anfragenliste = new server.dienstleistungsmodul.Anfragenliste(personenID);
+        this.anfragenliste = new server.dienstleistungsmodul.Anfragenliste().ofUser_ID(personenID);
         this.anfragenliste.nutzer = this;
         this.reservierungen = 0;
+        this.mahnungen = mahnungen;
     }
 
     public Mitglied(String personenID, String nachname, String vorname, String email, int password, String anschrift,
-                    String mitgliedsnr, String telefonnummer, boolean spender/*, Mahnungsverwaltung mahnungen, Profilseite profilseite */,
-                    LocalDateTime mitglied_seit, boolean ist_gesperrt){
+                    String mitgliedsnr, String telefonnummer, boolean spender, Mahnungsverwaltung mahnungen/*, Profilseite profilseite */,
+                    LocalDateTime mitglied_seit, boolean ist_gesperrt) {
 
         super(personenID, nachname, vorname, email, password, anschrift, mitgliedsnr, telefonnummer, spender);
         this.stundenkonto = 0;
         this.ist_gesperrt = ist_gesperrt;
         this.mitglied_seit = mitglied_seit;
-        this.anfragenliste = new server.dienstleistungsmodul.Anfragenliste(personenID);
+        this.anfragenliste = new server.dienstleistungsmodul.Anfragenliste().ofUser_ID(personenID);
         this.anfragenliste.nutzer = this;
         this.reservierungen = 0;
+        this.mahnungen = mahnungen;
     }
 
     public void reservierungenErhöhen() {

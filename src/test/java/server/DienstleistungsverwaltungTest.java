@@ -1,10 +1,15 @@
 package server;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.dienstleistungsmodul.Dienstleistungsgesuch;
 import server.dienstleistungsmodul.Dienstleistungsverwaltung;
+import server.geraetemodul.Geraeteverwaltung;
+import server.users.Personendaten;
+import server.users.Rollenverwaltung;
 
+import java.rmi.NoSuchObjectException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -12,20 +17,41 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DienstleistungsverwaltungTest {
 
+    private LocalDateTime ab = LocalDateTime.now();
+    private LocalDateTime bis = LocalDateTime.now().plusDays(15);
+
     private ArrayList<Dienstleistungsgesuch> gesuche;
+    private static final Dienstleistungsverwaltung dv = new Dienstleistungsverwaltung();
+    private static final Rollenverwaltung rv = VereinssoftwareServer.rollenverwaltung;
+
+    private static final Rollenverwaltung rvv = VereinssoftwareServer.rollenverwaltung;
 
 
-
+    @BeforeAll
+    static void mitglieder() {
+        rv.mitgliedHinzufuegen("Mustermann","Max","bsp@gmx.de","12345","anschrift","mitgliedsnr","1234567890",true, new Mahnungsverwaltung(), LocalDateTime.now());
+        rv.mitgliedHinzufuegen("Schmidt","Peter","schmidt@gmx.de","54321","anschrift","mitgliedsnr2","987654321",true, new Mahnungsverwaltung(), LocalDateTime.now());
+    }
 
     @BeforeEach
-    void init(){
-        gesuche = new ArrayList<>();
+    void setUp() throws Exception {
+        rv.fetch("1").datenVerwalten(Personendaten.RESERVIERUNGEN, String.valueOf(0));
+        rv.fetch("2").datenVerwalten(Personendaten.RESERVIERUNGEN, String.valueOf(0));
+        //dv.reset();
+        dv.angebotErstellen("rasieren","Haar rasieren","Handwerk",ab,bis,"ImageURL","dg00001");
+        dv.angebotErstellen("babysitten","babysitten","Housewife",ab,bis,"ImageURL","dg00002");
+
+        dv.gesuchErstellen("Nachhilfe","NAchhilfe geben","Studium","ImageURl","gondula"); //warum ersteller name und nicht sein id
+        dv.gesuchErstellen("putzen","Zimmer putzen","Housekeeping","ImageURl","Drakola");
+    }
+
+    static void reset() {
+        //dv.reset();
+        rv.reset();
     }
 
     @Test
     void gesuchErstellenTest() {
-        // check if the id correct
-        // check if gesuch is erstellt
 
         Dienstleistungsverwaltung dv = new Dienstleistungsverwaltung();
         String gesuchID ;
@@ -48,17 +74,15 @@ class DienstleistungsverwaltungTest {
 
     @Test
     void angebotErstellen() {
-        // check if the id correct
-        // check if angebot is made
+
 
         Dienstleistungsverwaltung dv = new Dienstleistungsverwaltung();
 
 
-        LocalDateTime ab = LocalDateTime.now();
-        LocalDateTime bis = LocalDateTime.now().plusDays(15);
+
         String angebotID ;
         try {
-            //angebotID = dv.angebotErstellen( "titel",  "beschreibung",  "kategorie",  ab ,  bis ,  "personen_ID");
+            angebotID = dv.angebotErstellen("titel","beschreibung","kategorie",ab,bis,"imageUrl","00001");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
