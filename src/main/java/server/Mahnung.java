@@ -23,4 +23,8 @@ public class Mahnung {
     public String getMahnungsID() {
         return mahnungsID;
     }
+
+    public String getMitgliedsID() {
+        return mitgliedsID;
+    }
 }

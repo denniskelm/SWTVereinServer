@@ -5,11 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.dienstleistungsmodul.Dienstleistungsgesuch;
 import server.dienstleistungsmodul.Dienstleistungsverwaltung;
-import server.geraetemodul.Geraeteverwaltung;
 import server.users.Personendaten;
 import server.users.Rollenverwaltung;
 
-import java.rmi.NoSuchObjectException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -29,8 +27,8 @@ class DienstleistungsverwaltungTest {
 
     @BeforeAll
     static void mitglieder() {
-        rv.mitgliedHinzufuegen("Mustermann","Max","bsp@gmx.de","12345","anschrift","mitgliedsnr","1234567890",true, new Mahnungsverwaltung(), LocalDateTime.now());
-        rv.mitgliedHinzufuegen("Schmidt","Peter","schmidt@gmx.de","54321","anschrift","mitgliedsnr2","987654321",true, new Mahnungsverwaltung(), LocalDateTime.now());
+        rv.mitgliedHinzufuegen("Mustermann","Max","bsp@gmx.de","12345","anschrift","mitgliedsnr","1234567890",true, LocalDateTime.now());
+        rv.mitgliedHinzufuegen("Schmidt","Peter","schmidt@gmx.de","54321","anschrift","mitgliedsnr2","987654321",true, LocalDateTime.now());
     }
 
     @BeforeEach

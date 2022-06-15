@@ -1,6 +1,5 @@
 package server;
 
-import server.dienstleistungsmodul.Anfragenliste;
 import server.dienstleistungsmodul.Dienstleistungsverwaltung;
 import server.geraetemodul.Geraeteverwaltung;
 import server.users.Rollenverwaltung;
@@ -20,7 +19,6 @@ import java.rmi.server.UnicastRemoteObject;
 public class VereinssoftwareServer {
     public static Geraeteverwaltung geraeteverwaltung;
     public static Dienstleistungsverwaltung dienstleistungsverwaltung;
-    public static Mahnungsverwaltung mahnungsverwaltung;
 
     //public static Anfragenliste anfragenliste;
     public static Rollenverwaltung rollenverwaltung = new Rollenverwaltung();
@@ -28,7 +26,6 @@ public class VereinssoftwareServer {
     public static void main(String[] args) {
         geraeteverwaltung = new Geraeteverwaltung();
         dienstleistungsverwaltung = new Dienstleistungsverwaltung();
-        mahnungsverwaltung = new Mahnungsverwaltung();
         rollenverwaltung = new Rollenverwaltung();
         //anfragenliste = new Anfragenliste();
 
@@ -40,7 +37,7 @@ public class VereinssoftwareServer {
             //Objekte ins Interface exportieren - jedes Objekt
             IGeraeteverwaltung gVerwaltungInterface = (IGeraeteverwaltung) UnicastRemoteObject.exportObject(geraeteverwaltung, 0);
             IDienstleistungsverwaltung dVerwaltungInterface = (IDienstleistungsverwaltung) UnicastRemoteObject.exportObject(dienstleistungsverwaltung, 0);
-            IMahnungsverwaltung mVerwaltungInterface = (IMahnungsverwaltung) UnicastRemoteObject.exportObject(mahnungsverwaltung, 0);
+           // IMahnungsverwaltung mVerwaltungInterface = (IMahnungsverwaltung) UnicastRemoteObject.exportObject(mahnungsverwaltung, 0);
             IRollenverwaltung rVerwaltungInterface = (IRollenverwaltung) UnicastRemoteObject.exportObject(rollenverwaltung, 0);
             //IAnfragenliste rAnfragelisteInterface = (IAnfragenliste) UnicastRemoteObject.exportObject(anfragenliste, 0);
 
@@ -50,7 +47,7 @@ public class VereinssoftwareServer {
             //Interfaces mit Namen auf Server registrieren, damit der Client sie finden kann - jedes Objekt
             registry.bind("Geraeteverwaltung", gVerwaltungInterface);
             registry.bind("Dienstleistungsverwaltung", dVerwaltungInterface);
-            registry.bind("Mahnungsverwaltung", mVerwaltungInterface);
+           // registry.bind("Mahnungsverwaltung", mVerwaltungInterface);
             registry.bind("Rollenverwaltung", rVerwaltungInterface);
             //registry.bind("Anfragenliste", rAnfragelisteInterface);
 

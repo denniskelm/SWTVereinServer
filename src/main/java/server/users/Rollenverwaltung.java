@@ -7,7 +7,7 @@ Jonny Schlutter
 Ole Björn Adelmann
 */
 
-import server.Mahnungsverwaltung;
+import server.Mahnung;
 import server.db.DienstleistungsDB;
 import server.db.RollenDB;
 import shared.communication.*;
@@ -23,7 +23,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
      private static ArrayList<Mitglied> mitglieder;
      private static ArrayList<Mitarbeiter> mitarbeiter;
      private static ArrayList<Vorsitz> vorsitze;
-     private static ArrayList<Mahnungsverwaltung> mahnungen;
+     private static ArrayList<Mahnung> mahnungen;
      private int IdCounter;
      private final RollenDB rDB;
 
@@ -61,7 +61,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
      }
      
      public void mitgliedHinzufuegen(String nachname, String vorname, String email, String password, String anschrift,
-                                     String mitgliedsnr, String telefonnummer, boolean spender, Mahnungsverwaltung mahnungen/*, Profilseite profilseite */,
+                                     String mitgliedsnr, String telefonnummer, boolean spender/*, Profilseite profilseite */,
                                      LocalDateTime mitglied_seit) {
          if (mitglieder.size() >= 50000) throw new ArrayIndexOutOfBoundsException();
 
@@ -69,7 +69,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
          IdCounter++;
          String personenID = Long.toString(IdCounter);
 
-         Mitglied m = new Mitglied(personenID, nachname, vorname, email, password, anschrift, mitgliedsnr, telefonnummer, spender, mahnungen, mitglied_seit);
+         Mitglied m = new Mitglied(personenID, nachname, vorname, email, password, anschrift, mitgliedsnr, telefonnummer, spender, mitglied_seit);
          mitglieder.add(m);
 
          rDB.MitgliedHinzufuegen(m);
@@ -111,10 +111,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
     public ArrayList<Vorsitz> getVorsitze() {
         return vorsitze;
-    }
-
-    public ArrayList<Mahnungsverwaltung> getMahnungen() {
-        return mahnungen;
     }
 
     public long getIdCounter() {
@@ -192,7 +188,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
                         gast.getMitgliedsNr(),
                         gast.getTelefonNr(),
                         gast.getSpenderStatus(),
-                        new Mahnungsverwaltung(),
                         mitglied_seit);
 
                 mitglieder.add((Mitglied) g);
@@ -208,8 +203,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
                         gast.getMitgliedsNr(),
                         gast.getTelefonNr(),
                         gast.getSpenderStatus(),
-                        mitglied_seit,
-                        new Mahnungsverwaltung());
+                        mitglied_seit);
 
                 mitarbeiter.add((Mitarbeiter) g);
                 break;
@@ -224,8 +218,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
                         gast.getMitgliedsNr(),
                         gast.getTelefonNr(),
                         gast.getSpenderStatus(),
-                        mitglied_seit,
-                        new Mahnungsverwaltung());
+                        mitglied_seit);
 
                 vorsitze.add((Vorsitz) g);
                 break;
@@ -365,6 +358,73 @@ public class Rollenverwaltung implements IRollenverwaltung {
         rDB.reset();
         IdCounter = 0;
         System.out.println("Rollenverwaltung zurueckgesetzt.");
+    }
+
+
+    public Mahnung fetchMahnung(String mahnungsID) throws NoSuchObjectException{
+         for(Mahnung m : mahnungen){
+             if(m.getMahnungsID().equals(mahnungsID))
+                 return m;
+         }
+         throw new NoSuchObjectException("Mahnung mit solcher ID nicht gefunden.");
+    }
+
+
+    public void mahnungErstellen(String mitgliedsID, String grund, LocalDateTime verfallsdatum) throws NoSuchObjectException {
+        String mahnungsID ="m" + mahnungen.size()+1;
+        Mahnung m = new Mahnung(mahnungsID, mitgliedsID, grund, verfallsdatum);
+        mahnungen.add(m);
+        Mitglied nutzer = fetch(mitgliedsID);
+
+        if(anzahlMahnungenVonNutzer(mitgliedsID) >= 3){
+            nutzer.setIst_gesperrt(true);
+
+        }
+
+    }
+
+    public void mahnungLoeschen(String mahnungsID){
+        try {
+            Mahnung m = fetchMahnung(mahnungsID);
+            mahnungen.remove(m);
+            Mitglied nutzer = fetch(m.getMitgliedsID());
+
+            if(anzahlMahnungenVonNutzer(m.getMitgliedsID()) < 3){
+                nutzer.setIst_gesperrt(false);
+            }
+            String anfrage = "delete from mahnung where MahnungsID = " + m.getMahnungsID();
+        } catch (NoSuchObjectException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public int anzahlMahnungenVonNutzer(String mitgliedsID) {
+        int anzahlMahnungen = 0;
+
+        for (Mahnung m : mahnungen) {
+            if (m.getMitgliedsID().equals(mitgliedsID))
+                anzahlMahnungen++;
+        }
+        return anzahlMahnungen;
+    }
+
+
+    public Object[] mahnungenVomNutzer(String mitgliedsID) throws NoSuchObjectException {
+         Mitglied nutzer = fetch(mitgliedsID);
+         Mahnung[] nutzerMahnungen = new Mahnung[anzahlMahnungenVonNutzer(mitgliedsID)];
+         int k = 0;
+
+         for(int i = 0; i < anzahlMahnungenVonNutzer(mitgliedsID); i++){
+             while(k < mahnungen.size()){
+                 if(mahnungen.get(k).getMitgliedsID().equals(mitgliedsID)){
+                     nutzerMahnungen[i] = mahnungen.get(k);
+                     break;
+                 } else
+                     k++;
+             }
+         }
+         return nutzerMahnungen;
     }
 
 }

@@ -1,7 +1,5 @@
 package shared.communication;
 
-import server.Mahnung;
-import server.Mahnungsverwaltung;
 import server.users.*;
 
 import java.rmi.Remote;

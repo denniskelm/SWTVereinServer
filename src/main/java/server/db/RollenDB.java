@@ -12,7 +12,6 @@ Raphael Kleebaum
 */
 
 import server.Mahnung;
-import server.Mahnungsverwaltung;
 import server.VereinssoftwareServer;
 import server.users.*;
 
@@ -86,7 +85,6 @@ public class RollenDB extends Database {
         String[] dbs = {"vorstand", "mitarbeiter", "mitglied", "gast"};
         String dbFound = null;
         LocalDateTime mitglied_seit;
-        Mahnungsverwaltung mahnungsverwaltung = null;
         Gast g;
 
         try {
@@ -100,8 +98,7 @@ public class RollenDB extends Database {
                 mitgliedSeit.next();
 
                 mitglied_seit = mitgliedSeit.getTimestamp(1).toLocalDateTime();
-                mahnungsverwaltung = getMahnungsVerwaltungOfUser(personenID);
-
+                
             } catch (NoSuchObjectException e) {
                 g = rv.fetchGaeste(personenID);
                 dbFound = "gast";
@@ -131,9 +128,9 @@ public class RollenDB extends Database {
             switch (dbFound) {
                 // TODO richtige Mahnungsverwaltung für Mitarbeiter & Vorsitz finden
                 case "gast" -> g = new Gast(personenID, g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(), g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus());
-                case "mitglied" -> g = new Mitglied(personenID, g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(), g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(), mahnungsverwaltung, mitglied_seit);
-                case "mitarbeiter" -> g = new Mitarbeiter(personenID, g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(), g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(), mitglied_seit, mahnungsverwaltung);
-                case "vorstand" -> g = new Vorsitz(personenID, g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(), g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(), mitglied_seit, mahnungsverwaltung);
+                case "mitglied" -> g = new Mitglied(personenID, g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(), g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(), mitglied_seit);
+                case "mitarbeiter" -> g = new Mitarbeiter(personenID, g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(), g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(), mitglied_seit);
+                case "vorstand" -> g = new Vorsitz(personenID, g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(), g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(), mitglied_seit);
             }
 
             if (g.getClass() == rolle.getKlasse())
@@ -287,7 +284,6 @@ public class RollenDB extends Database {
         ArrayList<Mitglied> mitglieder;
         Mitglied m;
         LocalDateTime mitglied_seit;
-        Mahnungsverwaltung mahnungsverwaltung;
 
         mitglieder = new ArrayList<>();
 
@@ -306,11 +302,10 @@ public class RollenDB extends Database {
 
             for (Gast g : mitgliederAlsGaeste) {
                 mitglied_seit = getMitgliedSeit(g.getPersonenID());
-                mahnungsverwaltung = getMahnungsVerwaltungOfUser(g.getPersonenID());
 
                 m = new Mitglied(g.getPersonenID(), g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(),
                         g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(),
-                        mahnungsverwaltung, mitglied_seit);
+                        mitglied_seit);
 
                 mitglieder.add(m);
             }
@@ -328,7 +323,6 @@ public class RollenDB extends Database {
         ArrayList<Mitarbeiter> mitarbeiter;
         Mitarbeiter m;
         LocalDateTime mitglied_seit;
-        Mahnungsverwaltung mahnungsverwaltung;
 
         mitarbeiter = new ArrayList<>();
 
@@ -347,11 +341,10 @@ public class RollenDB extends Database {
 
             for (Gast g : mitarbeiterAlsGaeste) {
                 mitglied_seit = rv.fetch(g.getPersonenID()).getMitgliedSeit();
-                mahnungsverwaltung = getMahnungsVerwaltungOfUser(g.getPersonenID());
 
                 m = new Mitarbeiter(g.getPersonenID(), g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(),
                         g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(),
-                        mitglied_seit, mahnungsverwaltung);
+                        mitglied_seit);
 
                 mitarbeiter.add(m);
             }
@@ -369,7 +362,6 @@ public class RollenDB extends Database {
         ArrayList<Vorsitz> vorsitze;
         Vorsitz v;
         LocalDateTime mitglied_seit;
-        Mahnungsverwaltung mahnungsverwaltung;
 
         vorsitze = new ArrayList<>();
 
@@ -387,11 +379,10 @@ public class RollenDB extends Database {
 
             for (Gast g : vorstaendeAlsGaeste) {
                 mitglied_seit = rv.fetch(g.getPersonenID()).getMitgliedSeit();
-                mahnungsverwaltung = getMahnungsVerwaltungOfUser(g.getPersonenID());
 
                 v = new Vorsitz(g.getPersonenID(), g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(),
                         g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(),
-                        mitglied_seit, mahnungsverwaltung);
+                        mitglied_seit);
 
                 vorsitze.add(v);
             }
@@ -448,10 +439,10 @@ public class RollenDB extends Database {
     }
 
     // TODO aus Mahnungsverwaltung holen
-    private Mahnungsverwaltung getMahnungsVerwaltungOfUser(String personenID) throws SQLException {
-        Mahnungsverwaltung mv;
+    /*private Mahnungsliste getMahnungsVerwaltungOfUser(String personenID) throws SQLException {
+        Mahnungsliste mv;
 
-        mv = new Mahnungsverwaltung();
+        mv = new Mahnungsliste();
 
         PreparedStatement prep = conn.prepareStatement("SELECT * FROM mahnung WHERE MitgliedID = ?");
         prep.setString(1, personenID);
@@ -470,7 +461,7 @@ public class RollenDB extends Database {
         }
 
         return mv;
-    }
+    } */
 
     private LocalDateTime getMitgliedSeit(String personenID) throws SQLException {
         PreparedStatement getMitgliedSeit = conn.prepareStatement("SELECT Mitglied_seit FROM mitglied WHERE PersonenID = ?");
