@@ -1,9 +1,12 @@
 package shared.communication;
 
+import server.Mahnung;
 import server.users.*;
 
+import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /*
@@ -38,5 +41,10 @@ public interface IRollenverwaltung extends Remote {
     long getIdCounter() throws RemoteException;
     public String getMitgliedsNamen(String MitgliedsID) throws RemoteException, Exception;
     public String getMitgliedsMail(String MitgliedsID) throws RemoteException, Exception;
+    public Mahnung fetchMahnung(String mahnungsID) throws NoSuchObjectException, RemoteException;
+    public void mahnungErstellen(String mitgliedsID, String grund, LocalDateTime verfallsdatum) throws NoSuchObjectException, RemoteException;
+    public void mahnungLoeschen(String mahnungsID) throws RemoteException;
+    public int anzahlMahnungenVonNutzer(String mitgliedsID) throws RemoteException;
+    public Object[] mahnungenVomNutzer(String mitgliedsID) throws NoSuchObjectException, RemoteException;
 
 }
