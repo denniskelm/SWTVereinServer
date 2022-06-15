@@ -52,11 +52,6 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         return gesuche;
     }
 
-
-
-
-// todo reset methode um testen einfach zu machen
-
     public void reset() {
         angebote = new ArrayList<>();
         gesuche = new ArrayList<>();

@@ -30,8 +30,8 @@ public class VereinssoftwareServer {
         //anfragenliste = new Anfragenliste();
 
         //Klassen zur Kommunikation mit dem Server vorbereiten
-        //System.setProperty("java.rmi.server.hostname", "meta.informatik.uni-rostock.de");
-        System.setProperty("java.rmi.server.hostname", "127.0.0.1");
+        System.setProperty("java.rmi.server.hostname", "meta.informatik.uni-rostock.de");
+        //System.setProperty("java.rmi.server.hostname", "127.0.0.1");
 
         try {
             //Objekte ins Interface exportieren - jedes Objekt
