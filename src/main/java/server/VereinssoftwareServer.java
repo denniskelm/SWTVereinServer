@@ -42,7 +42,7 @@ public class VereinssoftwareServer {
             //IAnfragenliste rAnfragelisteInterface = (IAnfragenliste) UnicastRemoteObject.exportObject(anfragenliste, 0);
 
             //Einmalig - Objekte im Registry registrieren, damit RMI vom Client aus ausgeführt werden kann
-            Registry registry = LocateRegistry.createRegistry(1234);
+            Registry registry = LocateRegistry.createRegistry(5678);
 
             //Interfaces mit Namen auf Server registrieren, damit der Client sie finden kann - jedes Objekt
             registry.bind("Geraeteverwaltung", gVerwaltungInterface);

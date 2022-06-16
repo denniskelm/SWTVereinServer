@@ -29,7 +29,7 @@ public class AnfragenDB extends Database {
         ArrayList<GesuchAnfrage> gesuchAnfragen = new ArrayList<>();
 
         try {
-            PreparedStatement statement = conn.prepareStatement("SELECT DienstleistungsID FROM dienstleistungsgesuchanfragen");
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM dienstleistungsgesuchanfragen");
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -128,7 +128,7 @@ public class AnfragenDB extends Database {
         ArrayList<AngebotAnfrage> angebotAnfragen = new ArrayList<>();
 
         try {
-            PreparedStatement statement = conn.prepareStatement("SELECT DienstleistungsID FROM dienstleistungsgesuchanfragen");
+            PreparedStatement statement = conn.prepareStatement("SELECT * FROM dienstleistungsgesuchanfragen");
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -144,7 +144,7 @@ public class AnfragenDB extends Database {
                 if(!angebot.getPersonenID().equals(personenId))
                     continue;
 
-                //GesuchAnfrage-Objekt erstellen
+                //AngebotAnfrage-Objekt erstellen
                 AngebotAnfrage anfrage = new AngebotAnfrage(
                         dienstleistungsId,
                         VereinssoftwareServer.rollenverwaltung.fetch(personenId),
