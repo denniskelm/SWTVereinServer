@@ -4,14 +4,17 @@ package server.dienstleistungsmodul;
 Bastian Reichert
 */
 import server.VereinssoftwareServer;
+import server.db.AnfragenDB;
+import server.db.DienstleistungsDB;
 import server.users.Mitglied;
 import shared.communication.IAnfragenliste;
 
 import java.rmi.NoSuchObjectException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Anfragenliste implements IAnfragenliste {
-    private String user_ID;
+    public String user_ID;
 
     public Mitglied nutzer;
     private ArrayList<GesuchAnfrage> gliste;
@@ -19,6 +22,7 @@ public class Anfragenliste implements IAnfragenliste {
 
     private ArrayList<String> aaidliste;
     private ArrayList<String> gaidliste;
+    private final AnfragenDB aDB;
 
     public void createIdListen(){
         this.aaidliste = new ArrayList<String>();
@@ -49,10 +53,26 @@ public class Anfragenliste implements IAnfragenliste {
         createIdListen();
     }
 
-    public Anfragenliste(/*String user_ID*/) {
+    public Anfragenliste(Mitglied nutzer){
+        //String user_ID = mitglied.getPersonenID();
+
+        try {
+            aDB = new AnfragenDB();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         //this.user_ID = user_ID;
-        this.gliste = new ArrayList<GesuchAnfrage>();
-        this.aliste = new ArrayList<AngebotAnfrage>();
+        //this.user_ID = user_ID;
+        //try {
+            this.nutzer = nutzer;
+        //} catch (NoSuchObjectException e) {
+        //    throw new RuntimeException(e);
+       // }
+        user_ID= nutzer.getPersonenID();
+        this.gliste = aDB.getGesuchanfragenForId(user_ID);
+        this.aliste = aDB.getAngebotanfragenForId(user_ID);
+        //this.gliste = new ArrayList<GesuchAnfrage>();
+        //this.aliste = new ArrayList<AngebotAnfrage>();
 
         createIdListen();
     }
@@ -115,11 +135,6 @@ public class Anfragenliste implements IAnfragenliste {
         return liste;
     }
 
-    //TODO @Bastian Exception für fehlende ofUserID Angabe (Zeile this+2) - RMI darf keine Parameter bekommen im Konstruktor
-    public Anfragenliste ofUser_ID(String user_ID){
-        this.user_ID = user_ID;
-        return this;
-    }
 
     public void addaAnfrage(String anfragenderID, String angebotID, int stunden) throws NoSuchObjectException {
         Dienstleistungsangebot angebot= VereinssoftwareServer.dienstleistungsverwaltung.fetchAngebot(angebotID);
@@ -128,6 +143,7 @@ public class Anfragenliste implements IAnfragenliste {
         this.gaidliste.remove(0);
         AngebotAnfrage a =new AngebotAnfrage(anfrageID, anfragender, angebot, stunden);
         this.aliste.add(a);
+        aDB.addaAnfrage(a);
     }
 
     public void addgAnfrage(String anfragenderID, String gesuchID, int stunden) throws NoSuchObjectException {
@@ -137,12 +153,14 @@ public class Anfragenliste implements IAnfragenliste {
         this.aaidliste.remove(0);
         GesuchAnfrage g = new GesuchAnfrage(anfrageID, nutzer, gesuch, stunden);
         this.gliste.add(g);
+        aDB.addgAnfrage(g);
     }
     public void removeAAnfrage(String id) throws NoSuchObjectException{
         AngebotAnfrage a= null;
         a = afetch(id);
         this.aaidliste.add(a.anfrageID);
         this.aliste.remove(a);
+        aDB.removeaAnfrage(a);
     }
 
     public void removeGAnfrage(String id) throws NoSuchObjectException{
@@ -150,6 +168,7 @@ public class Anfragenliste implements IAnfragenliste {
         g = gfetch(id);
         this.gaidliste.add(g.anfrageID);
         this.gliste.remove(g);
+        aDB.removegAnfrage(g);
     }
 
     public void gAnfrageAnnehmen(String id) throws Exception{
@@ -160,6 +179,7 @@ public class Anfragenliste implements IAnfragenliste {
         this.nutzer.veraendereStundenkonto(g.stunden);
         g.nutzer.veraendereStundenkonto(-g.stunden);
         VereinssoftwareServer.dienstleistungsverwaltung.gidliste.add(g.gesuch.getGesuch_ID());
+        aDB.removegAnfrage(g);
     }
 
     public void aAnfrageAnnehmen(String id) throws Exception{
@@ -170,5 +190,8 @@ public class Anfragenliste implements IAnfragenliste {
         this.nutzer.veraendereStundenkonto(a.stunden);
         a.nutzer.veraendereStundenkonto(-a.stunden);
         VereinssoftwareServer.dienstleistungsverwaltung.aidliste.add(a.angebot.getAngebots_ID());
+        aDB.removeaAnfrage(a);
     }
+
+
 }
