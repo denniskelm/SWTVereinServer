@@ -171,15 +171,15 @@ public class AnfragenDB extends Database {
         try {
             //Statement erstellen
             PreparedStatement statement = conn.prepareStatement(
-                    "INSERT INTO dienstleistungsangebotanfragen" +
-                            "('DienstleistungsID', 'PersonenID', 'Stunden')" +
+                    "INSERT INTO dienstleistungsangebotanfragen " +
+                            "(DienstleistungsID, PersonenID, Stunden) " +
                             "VALUES (?, ?, ?)"
             );
 
             //Variablen einsetzen
             statement.setString(1, a.angebot.getAngebots_ID());
             statement.setString(2, a.nutzer.getPersonenID());
-            statement.setInt(3, a.stunden);
+            statement.setString(3, Integer.toString(a.stunden));
 
             //Ausführen und schließen
             statement.executeUpdate();
@@ -193,8 +193,8 @@ public class AnfragenDB extends Database {
         try {
             //Statement erstellen
             PreparedStatement statement = conn.prepareStatement(
-                    "INSERT INTO dienstleistungsgesuchanfragen" +
-                            "('DienstleistungsID', 'PersonenID', 'Stunden')" +
+                    "INSERT INTO dienstleistungsgesuchanfragen " +
+                            "(DienstleistungsID, PersonenID, Stunden) " +
                             "VALUES (?, ?, ?)"
             );
 
