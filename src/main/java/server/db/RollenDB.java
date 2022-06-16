@@ -145,7 +145,7 @@ public class RollenDB extends Database {
 
     }
 
-    public void rolleAendernSwitch(Gast gast, Rolle rolle, LocalDateTime mitglied_seit) throws SQLException {
+    private void rolleAendernSwitch(Gast gast, Rolle rolle, LocalDateTime mitglied_seit) throws SQLException {
 
         if (rolle == GAST) {
             gastHinzufuegen(gast);
@@ -333,13 +333,12 @@ public class RollenDB extends Database {
 
             ArrayList<String> vorstandIDs = new ArrayList<>();
 
-            while (result.next()) {
+            while (result.next())
                 vorstandIDs.add(result.getString(1));
-            }
 
-            ArrayList<Gast> mitarbeiterAlsGaeste = getGaesteWithIDs(vorstandIDs);
+            ArrayList<Gast> vorstaendeAlsGaeste = getGaesteWithIDs(vorstandIDs);
 
-            for (Gast g : mitarbeiterAlsGaeste) {
+            for (Gast g : vorstaendeAlsGaeste) {
                 mitglied_seit = rv.fetch(g.getPersonenID()).getMitgliedSeit();
 
                 m = new Mitarbeiter(g.getPersonenID(), g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(),
@@ -394,6 +393,58 @@ public class RollenDB extends Database {
         }
 
         return vorsitze;
+    }
+
+    public ArrayList<Mahnung> getMahnungenListe() {
+        ArrayList<Mahnung> mahnungen = new ArrayList<>();
+
+        try {
+            PreparedStatement prep = conn.prepareStatement("SELECT * FROM mahnung");
+            ResultSet result = prep.executeQuery();
+
+            while (result.next()) {
+                Mahnung m = new Mahnung(result.getString("MahnungID"),
+                        result.getString("MitlgiedID"),
+                        result.getString("Grund"),
+                        result.getTimestamp("Verfallsdatum").toLocalDateTime());
+
+                mahnungen.add(m);
+            }
+
+            return mahnungen;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void mahnungErstellen(Mahnung mahnung) {
+
+        try {
+            PreparedStatement prep = conn.prepareStatement("INSERT INTO mahnung VALUES(?, ?, ?, ?)");
+            prep.setString(1, mahnung.getMahnungsID());
+            prep.setString(2, mahnung.getGrund());
+            prep.setTimestamp(3, Timestamp.valueOf(mahnung.getVerfallsdatum()));
+            prep.setString(4, mahnung.getMitgliedsID());
+
+            prep.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void mahnungLoeschen(String mahnungsID) {
+
+        try {
+            PreparedStatement prep = conn.prepareStatement("DELETE FROM mahnung WHERE MahnungID = ?");
+            prep.setString(1, mahnungsID);
+
+            prep.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     // für Mitarbeiter- und Vorstandstabellen

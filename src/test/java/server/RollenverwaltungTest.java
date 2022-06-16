@@ -15,28 +15,47 @@ Ole Adelmann
 class RollenverwaltungTest {
 
     public static Rollenverwaltung rv = new Rollenverwaltung();
+    public static int anzahlNutzer = rv.getGaeste().size() + rv.getMitglieder().size() + rv.getMitarbeiter().size() + rv.getVorsitze().size();
+
 
     @BeforeAll
-    static void mitglieder() {
-        rv.gastHinzufuegen("Mustermann", "Max", "web.de@de.de", "hallo", "Am See 3", "123", "87772627", false);
-        rv.mitgliedHinzufuegen("Musterfrau", "Maxi", "we.de@de.de", "hallo1", "Am See 32", "1234", "87772627", false, LocalDateTime.parse("2016-11-09T11:44:44.797"));
+    static void init() {
+        rv = new Rollenverwaltung();
+        System.out.println(anzahlNutzer);
 
+        if (!rv.getGaeste().isEmpty())
+            anzahlNutzer--;
+        if (!rv.getMitglieder().isEmpty())
+            anzahlNutzer--;
+        if (!rv.getMitarbeiter().isEmpty())
+            anzahlNutzer--;
+        if (!rv.getVorsitze().isEmpty())
+            anzahlNutzer--;
+
+        System.out.println(anzahlNutzer);
+
+        rv.gastHinzufuegen("Mustermann", "Max", "web.de@de.de", "hallo", "Am See 3", "123", "87772627", false);
+        anzahlNutzer++;
+        rv.mitgliedHinzufuegen("Musterfrau", "Maxi", "we.de@de.de", "hallo1", "Am See 32", "1234", "87772627", false, LocalDateTime.parse("2016-11-09T11:44:44.797"));
+        anzahlNutzer++;
     }
 
-    @AfterAll
+    // TODO Die 4 erstellen Testnutzer wieder löschen
+    /*@AfterAll
     static void reset() {
         rv.reset();
-    }
+    }*/
 
     @Test
     public void gastHinzufuegen() throws NoSuchObjectException {
 
         rv.gastHinzufuegen("Adelmann", "Ole", "O.a@.de", "1234", "Haus am See 1", "6772571836", "11238", true);
+        anzahlNutzer++;
 
-        assertEquals("Adelmann", ((Gast) rv.fetchGaeste("3")).getNachname());
+        assertEquals("Adelmann", (rv.fetchGaeste(String.valueOf(anzahlNutzer))).getNachname());
 
         Assertions.assertThrows(NoSuchObjectException.class, () -> {
-            rv.fetch("200");
+            rv.fetch("50001");
         });
     }
 
@@ -44,92 +63,97 @@ class RollenverwaltungTest {
     public void MitgliedHinzufuegen() throws NoSuchObjectException {
 
         rv.mitgliedHinzufuegen("Mustermann", "Max", "we3.de@de.de", "hallo", "Am See 3", "12345", "87772627", false, LocalDateTime.parse("2016-11-09T11:44:44.797"));
-        assertEquals("Mustermann", rv.fetch("4").getNachname());
+        anzahlNutzer++;
+        assertEquals("Mustermann", rv.fetch(String.valueOf(anzahlNutzer)).getNachname());
 
         Assertions.assertThrows(NoSuchObjectException.class, () -> {
-            rv.fetch("2000");
+            rv.fetch("50001");
         });
     }
 
     @Test
     public void fetch() throws NoSuchObjectException {
 
-        assertEquals("Musterfrau", rv.fetch("2").getNachname());
+        assertEquals("Musterfrau", rv.fetch(String.valueOf(anzahlNutzer - 2)).getNachname());
 
         Assertions.assertThrows(NoSuchObjectException.class, () -> {
-            rv.fetch("300");
+            rv.fetch("50001");
         });
     }
 
     @Test
     public void RolleAendern() throws Exception {
+        boolean exist;
 
         // Rolle von Gast zu Mitglied ändern
-        rv.rolleAendern("4", Rolle.MITARBEITER);
+        rv.rolleAendern(String.valueOf(anzahlNutzer), Rolle.MITARBEITER);
         Object[] mitglieder = rv.mitgliedListeAnzeigen();
-        boolean exist = false;
+        exist = false;
 
 
-        for (int i = 0; i < mitglieder.length; i++) {
-            if (((Mitglied) mitglieder[i]).getPersonenID().equals("4")) {
+        for (Object mitglied : mitglieder) {
+            if (((Mitglied) mitglied).getPersonenID().equals(String.valueOf(anzahlNutzer))) {
                 exist = true;
+                break;
             }
         }
         assertTrue(exist);
 
         // Rolle von Mitglied zum Mitarbeiter aendern
-        rv.rolleAendern("2", Rolle.MITARBEITER);
+        rv.rolleAendern(String.valueOf(anzahlNutzer - 2), Rolle.MITARBEITER);
         Object[] mitarbeiter = rv.mitarbeiterListeAnzeigen();
-        boolean exist1 = false;
+        exist = false;
 
-        for(int k = 0; mitarbeiter.length > k; k++){
-            if(((Mitarbeiter) mitarbeiter[k]).getPersonenID().equals("2")){
-                exist1 = true;
+        for (Object m : mitarbeiter) {
+            if (((Mitarbeiter) m).getPersonenID().equals(String.valueOf(anzahlNutzer - 2))) {
+                exist = true;
+                break;
             }
         }
-        assertTrue(exist1);
+        assertTrue(exist);
 
         // Rolle von Mitarbeiter zum Vorstand aendern
-        rv.rolleAendern("4", Rolle.VORSITZ);
+        rv.rolleAendern(String.valueOf(anzahlNutzer), Rolle.VORSITZ);
         Object[] vorsitze = rv.vorsitzListeAnzeigen();
-        boolean exist2 = false;
+        exist = false;
 
-        for(int j = 0; vorsitze.length > j; j++){
-            if(((Vorsitz) vorsitze[j]).getPersonenID().equals("4")){
-                exist2 = true;
+        for (Object vorsitz : vorsitze) {
+            if (((Vorsitz) vorsitz).getPersonenID().equals(String.valueOf(anzahlNutzer))) {
+                exist = true;
+                break;
             }
         }
-        assertTrue(exist2);
+        assertTrue(exist);
 
         // Throws RuntimeException
         Assertions.assertThrows(RuntimeException.class, () -> {
-           rv.rolleAendern("300", Rolle.GAST);
+            rv.rolleAendern("50001", Rolle.GAST);
         });
 
         //Fehlerfall Nutzer hat diese Rolle schon
-        Throwable exception = assertThrows(Exception.class, () -> rv.rolleAendern("1", Rolle.GAST));
+        Throwable exception = assertThrows(Exception.class, () -> rv.rolleAendern(String.valueOf(anzahlNutzer - 3), Rolle.GAST));
         assertEquals("java.lang.Exception: Der Nutzer hat diese Rolle bereits.", exception.getMessage());
 
     }
 
-        @Test
-        public void nutzereintragAendern () throws NoSuchObjectException {
+    @Test
+    public void nutzereintragAendern () throws NoSuchObjectException {
 
-            rv.nutzereintragAendern("2", Personendaten.ANSCHRIFT, "Am See 2");
-            assertEquals("Am See 2", rv.fetch("2").getAnschrift());
-        }
-
-        @Test
-        public void login () throws Exception {
-
-            // Richtige Anmeldedaten
-            Object[] eingeloggt;
-            eingeloggt = rv.login("we.de@de.de", "hallo1");
-            assertNotNull(eingeloggt);
-
-            // Falsche Anmeldedaten
-            Throwable exception = assertThrows(Exception.class, () -> rv.login("1", "2"));
-            assertEquals("E-Mail oder Passwort falsch!", exception.getMessage());
-        }
-
+        rv.nutzereintragAendern(String.valueOf(anzahlNutzer - 2), Personendaten.ANSCHRIFT, "Am See 2");
+        assertEquals("Am See 2", rv.fetch(String.valueOf(anzahlNutzer - 2)).getAnschrift());
     }
+
+    @Test
+    public void login () throws Exception {
+
+        // Richtige Anmeldedaten
+        Object[] eingeloggt;
+        eingeloggt = rv.login("we.de@de.de", "hallo1");
+        assertNotNull(eingeloggt);
+
+        // Falsche Anmeldedaten
+        Throwable exception = assertThrows(Exception.class, () -> rv.login("1", "2"));
+        assertEquals("E-Mail oder Passwort falsch!", exception.getMessage());
+    }
+
+}

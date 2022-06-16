@@ -36,6 +36,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
              mitglieder = rDB.getMitglieder();
              mitarbeiter = rDB.getMitarbeiter();
              vorsitze = rDB.getVorsitze();
+             mahnungen = rDB.getMahnungenListe();
              IdCounter = rDB.getIdCounter();
          } catch (SQLException e) {
              System.err.println("Verbindung zu Datenbank konnte nicht hergestellt werden!");
@@ -340,7 +341,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
             }
         }
 
-        throw new Exception("E-Mail oder Passwort falsch! 5");
+        throw new Exception("E-Mail oder Passwort falsch!");
 
     }
 
@@ -400,11 +401,12 @@ public class Rollenverwaltung implements IRollenverwaltung {
         String mahnungsID ="m" + mahnungen.size()+1;
         Mahnung m = new Mahnung(mahnungsID, mitgliedsID, grund, verfallsdatum);
         mahnungen.add(m);
+        rDB.mahnungErstellen(m);
         Mitglied nutzer = fetch(mitgliedsID);
 
         if(anzahlMahnungenVonNutzer(mitgliedsID) >= 3){
             nutzer.setIst_gesperrt(true);
-
+            rDB.nutzerEintragAendern(mitgliedsID, Personendaten.IST_GESPERRT, "Y");
         }
 
     }
@@ -413,12 +415,14 @@ public class Rollenverwaltung implements IRollenverwaltung {
         try {
             Mahnung m = fetchMahnung(mahnungsID);
             mahnungen.remove(m);
+            rDB.mahnungLoeschen(mahnungsID);
             Mitglied nutzer = fetch(m.getMitgliedsID());
 
             if(anzahlMahnungenVonNutzer(m.getMitgliedsID()) < 3){
                 nutzer.setIst_gesperrt(false);
+                rDB.nutzerEintragAendern(m.getMitgliedsID(), Personendaten.IST_GESPERRT, "N");
             }
-            String anfrage = "delete from mahnung where MahnungsID = " + m.getMahnungsID();
+
         } catch (NoSuchObjectException e) {
             e.printStackTrace();
         }

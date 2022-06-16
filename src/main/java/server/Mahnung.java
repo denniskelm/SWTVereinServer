@@ -27,4 +27,12 @@ public class Mahnung {
     public String getMitgliedsID() {
         return mitgliedsID;
     }
+
+    public String getGrund() {
+        return grund;
+    }
+
+    public LocalDateTime getVerfallsdatum() {
+        return verfallsdatum;
+    }
 }
