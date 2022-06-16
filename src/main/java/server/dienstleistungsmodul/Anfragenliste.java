@@ -53,6 +53,7 @@ public class Anfragenliste implements IAnfragenliste {
         //this.user_ID = user_ID;
         this.gliste = new ArrayList<GesuchAnfrage>();
         this.aliste = new ArrayList<AngebotAnfrage>();
+
         createIdListen();
     }
 

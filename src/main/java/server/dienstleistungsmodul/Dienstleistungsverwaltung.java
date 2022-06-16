@@ -136,10 +136,10 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     }
 
 
-    public void createIdListen(){
+    public void createIdListen(){  //TODO überpüfen, ob diese schon in der von der db geholten angebot/gesuch-menge sind
         int anzahl=0;
         while (anzahl<500) {
-            if (anzahl < 9)  // todo : nach dem testen ist die Rueckgabe nicht wie gewunscht???
+            if (anzahl < 9)
                 gidliste.add("dg0000" + (anzahl + 1)); // klammern hinzugefügt damit test richtig
             else if (anzahl < 99)
                 gidliste.add("dg000" + (anzahl + 1));
@@ -155,7 +155,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         //Liste mit verfuegbaren IDs für Angebote fuellen
         anzahl=0;
         while (anzahl<500) {
-            if (anzahl < 9)  // todo : nach dem testen ist die Rueckgabe nicht wie gewunscht???
+            if (anzahl < 9)
                 aidliste.add("da0000" + (anzahl + 1)); // klammern hinzugefügt damit test richtig
             else if (anzahl < 99)
                 aidliste.add("da000" + (anzahl + 1));
