@@ -193,8 +193,8 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     public String angebotErstellen(String titel, String beschreibung, String kategorie, LocalDateTime ab, LocalDateTime bis ,String imageUrl, String personen_ID) throws Exception {
         String angebot_ID;
-        angebot_ID=this.gidliste.get(0);
-        this.gidliste.remove(0);
+        angebot_ID=this.aidliste.get(0);
+        this.aidliste.remove(0);
 
         Dienstleistungsangebot a = new Dienstleistungsangebot(angebot_ID, titel, beschreibung, kategorie, ab, bis,imageUrl, personen_ID);
         angebote.add(a);

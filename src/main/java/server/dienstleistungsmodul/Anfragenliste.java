@@ -69,8 +69,8 @@ public class Anfragenliste implements IAnfragenliste {
         //    throw new RuntimeException(e);
        // }
         user_ID= nutzer.getPersonenID();
-        this.gliste = aDB.getGesuchanfragenForId(user_ID);
-        this.aliste = aDB.getAngebotanfragenForId(user_ID);
+        this.gliste = aDB.getGesuchanfragenForId(nutzer);
+        this.aliste = aDB.getAngebotanfragenForId(nutzer);
         //this.gliste = new ArrayList<GesuchAnfrage>();
         //this.aliste = new ArrayList<AngebotAnfrage>();
 
@@ -99,10 +99,18 @@ public class Anfragenliste implements IAnfragenliste {
         //Dienstleistungsverwaltung d= VereinssoftwareServer.dienstleistungsverwaltung;
         //Dienstleistungsgesuch g = d.fetchGesuch(gesuchID);
         GesuchAnfrage g = gfetch(id);
-        Object[] info = new Object[3];
+        Object[] info = new Object[8];
         info[0] = g.nutzer.getPersonenID();
         info[1] = g.gesuch.getGesuch_ID();
         info[2] = g.stunden;
+        Dienstleistungsverwaltung dv = VereinssoftwareServer.dienstleistungsverwaltung;
+        Object[] daInfo = dv.getGesucheInformationen(g.gesuch.getGesuch_ID());
+
+        info[3] = daInfo[0]; //Titel
+        info[4] = daInfo[1]; //Beschreibung
+        info[5] = daInfo[2]; //Kategorie
+        info[6] = daInfo[5]; //bild
+        info[7] = g.anfrageID; //anfrageID
         return info;
     }
 
@@ -126,7 +134,7 @@ public class Anfragenliste implements IAnfragenliste {
     }
 
     public Object[][] omniGesuchsAnfrageDaten() throws NoSuchObjectException {
-        Object[][] liste = new Object[50][3];
+        Object[][] liste = new Object[50][8];
 
         for(int i = 0; i < gliste.size(); i++) {
             liste[i] = getGAnfragenInfo(gliste.get(i).anfrageID);
@@ -139,8 +147,8 @@ public class Anfragenliste implements IAnfragenliste {
     public void addaAnfrage(String anfragenderID, String angebotID, int stunden) throws NoSuchObjectException {
         Dienstleistungsangebot angebot= VereinssoftwareServer.dienstleistungsverwaltung.fetchAngebot(angebotID);
         Mitglied anfragender=VereinssoftwareServer.rollenverwaltung.fetch(anfragenderID);
-        String anfrageID=this.gaidliste.get(0);
-        this.gaidliste.remove(0);
+        String anfrageID=this.aaidliste.get(0);
+        this.aaidliste.remove(0);
         AngebotAnfrage a =new AngebotAnfrage(anfrageID, anfragender, angebot, stunden);
         this.aliste.add(a);
         aDB.addaAnfrage(a);
@@ -149,8 +157,8 @@ public class Anfragenliste implements IAnfragenliste {
     public void addgAnfrage(String anfragenderID, String gesuchID, int stunden) throws NoSuchObjectException {
         Dienstleistungsgesuch gesuch= VereinssoftwareServer.dienstleistungsverwaltung.fetchGesuch(gesuchID);
         Mitglied anfragender=VereinssoftwareServer.rollenverwaltung.fetch(anfragenderID);
-        String anfrageID=this.aaidliste.get(0);
-        this.aaidliste.remove(0);
+        String anfrageID=this.gaidliste.get(0);
+        this.gaidliste.remove(0);
         GesuchAnfrage g = new GesuchAnfrage(anfrageID, nutzer, gesuch, stunden);
         this.gliste.add(g);
         aDB.addgAnfrage(g);

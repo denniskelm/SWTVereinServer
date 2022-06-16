@@ -25,7 +25,7 @@ public class AnfragenDB extends Database {
     /**
      * Liest alle Gesuchanfragen an die Person, welche die angegebene PersonenID besitzt
      */
-    public ArrayList<GesuchAnfrage> getGesuchanfragenForId(String personenId) {
+    public ArrayList<GesuchAnfrage> getGesuchanfragenForId(Mitglied person) {
         ArrayList<GesuchAnfrage> gesuchAnfragen = new ArrayList<>();
 
         try {
@@ -42,13 +42,14 @@ public class AnfragenDB extends Database {
                 Dienstleistungsgesuch gesuch = getGesuchFromId(dienstleistungsId);
 
                 //Sicherstellen, dass das Gesuch von der Person mit der Anfragenliste ist
-                if(!gesuch.getSuchender().equals(personenId))
+                if(gesuch == null || !gesuch.getSuchender().equals(person.getPersonenID()))
                     continue;
 
                 //GesuchAnfrage-Objekt erstellen
                 GesuchAnfrage anfrage = new GesuchAnfrage(
                         dienstleistungsId,
-                        VereinssoftwareServer.rollenverwaltung.fetch(personenId),
+                        person,
+                        //VereinssoftwareServer.rollenverwaltung.fetch(personenId),
                         VereinssoftwareServer.dienstleistungsverwaltung.fetchGesuch(dienstleistungsId),
                         stunden
                 );
@@ -124,7 +125,7 @@ public class AnfragenDB extends Database {
         }
     }
 
-    public ArrayList<AngebotAnfrage> getAngebotanfragenForId(String personenId){
+    public ArrayList<AngebotAnfrage> getAngebotanfragenForId(Mitglied person){
         ArrayList<AngebotAnfrage> angebotAnfragen = new ArrayList<>();
 
         try {
@@ -141,13 +142,14 @@ public class AnfragenDB extends Database {
                 Dienstleistungsangebot angebot = getAngebotFromId(dienstleistungsId);
 
                 //Sicherstellen, dass das Gesuch von der Person mit der Anfragenliste ist
-                if(!angebot.getPersonenID().equals(personenId))
+                if(angebot == null || !angebot.getPersonenID().equals(person.getPersonenID()))
                     continue;
 
                 //AngebotAnfrage-Objekt erstellen
                 AngebotAnfrage anfrage = new AngebotAnfrage(
                         dienstleistungsId,
-                        VereinssoftwareServer.rollenverwaltung.fetch(personenId),
+                        person,
+                        //VereinssoftwareServer.rollenverwaltung.fetch(personenId),
                         VereinssoftwareServer.dienstleistungsverwaltung.fetchAngebot(dienstleistungsId),
                         stunden
                 );
