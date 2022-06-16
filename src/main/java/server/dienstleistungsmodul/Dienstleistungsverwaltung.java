@@ -285,8 +285,10 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     // Gibt das zugehörige Angebot zu der gegebenen AngebotsID
     public Dienstleistungsangebot fetchAngebot(String angebotID) throws NoSuchObjectException {
+        System.out.println("fetchAngebot startet hier mit ID " + angebotID);
 
         for (Dienstleistungsangebot da : angebote) {
+            System.out.println("Angebot: " + da.getAngebots_ID() + " angeschaut");
             if (da.getAngebots_ID().equals(angebotID))
                 return da;
         }

@@ -116,15 +116,26 @@ public class Anfragenliste implements IAnfragenliste {
 
     public Object[] getAAnfragenInfo(String id) throws NoSuchObjectException {
         AngebotAnfrage a = afetch(id);
-        Object[] info = new Object[3];
+        Object[] info = new Object[10];
+
+        Dienstleistungsverwaltung dv = VereinssoftwareServer.dienstleistungsverwaltung;
+        Object[] daInfo = dv.getAngeboteInformationen(a.angebot.getAngebots_ID());
+
         info[0] = a.nutzer.getPersonenID();
         info[1] = a.angebot.getAngebots_ID();
         info[2] = a.stunden;
+        info[3] = daInfo[0]; //Titel
+        info[4] = daInfo[1]; //Beschreibung
+        info[5] = daInfo[2]; //Kategorie
+        info[6] = daInfo[3]; //ab
+        info[7] = daInfo[4]; //bis
+        info[8] = daInfo[7]; //bild
+        info[9] = a.anfrageID; //anfrageID
         return info;
     }
 
     public Object[][] omniAngebotsAnfrageDaten() throws NoSuchObjectException {
-        Object[][] liste = new Object[50][3];//TODO index out of range
+        Object[][] liste = new Object[50][10];//TODO index out of range
 
         for(int i = 0; i < aliste.size(); i++) {
             liste[i] = getAAnfragenInfo(aliste.get(i).anfrageID);

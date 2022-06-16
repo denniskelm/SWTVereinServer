@@ -1,5 +1,7 @@
 package server;
 
+import server.dienstleistungsmodul.AnfragenVerwaltung;
+import server.dienstleistungsmodul.Anfragenliste;
 import server.dienstleistungsmodul.Dienstleistungsverwaltung;
 import server.geraetemodul.Geraeteverwaltung;
 import server.users.Rollenverwaltung;
@@ -20,14 +22,15 @@ public class VereinssoftwareServer {
     public static Geraeteverwaltung geraeteverwaltung;
     public static Dienstleistungsverwaltung dienstleistungsverwaltung;
 
-    //public static Anfragenliste anfragenliste;
+    public static AnfragenVerwaltung anfragenVerwaltung;
     public static Rollenverwaltung rollenverwaltung;
 
     public static void main(String[] args) {
         geraeteverwaltung = new Geraeteverwaltung();
         dienstleistungsverwaltung = new Dienstleistungsverwaltung();
         rollenverwaltung = new Rollenverwaltung();
-        //anfragenliste = new Anfragenliste();
+        anfragenVerwaltung = new AnfragenVerwaltung();
+
 
         //Klassen zur Kommunikation mit dem Server vorbereiten
         System.setProperty("java.rmi.server.hostname", "meta.informatik.uni-rostock.de");
@@ -39,7 +42,7 @@ public class VereinssoftwareServer {
             IDienstleistungsverwaltung dVerwaltungInterface = (IDienstleistungsverwaltung) UnicastRemoteObject.exportObject(dienstleistungsverwaltung, 0);
            // IMahnungsverwaltung mVerwaltungInterface = (IMahnungsverwaltung) UnicastRemoteObject.exportObject(mahnungsverwaltung, 0);
             IRollenverwaltung rVerwaltungInterface = (IRollenverwaltung) UnicastRemoteObject.exportObject(rollenverwaltung, 0);
-            //IAnfragenliste rAnfragelisteInterface = (IAnfragenliste) UnicastRemoteObject.exportObject(anfragenliste, 0);
+            IAnfragenVerwaltung rAnfragenVerwaltungInterface = (IAnfragenVerwaltung) UnicastRemoteObject.exportObject(anfragenVerwaltung, 0);
 
             //Einmalig - Objekte im Registry registrieren, damit RMI vom Client aus ausgeführt werden kann
             Registry registry = LocateRegistry.createRegistry(5678);
@@ -49,7 +52,7 @@ public class VereinssoftwareServer {
             registry.bind("Dienstleistungsverwaltung", dVerwaltungInterface);
            // registry.bind("Mahnungsverwaltung", mVerwaltungInterface);
             registry.bind("Rollenverwaltung", rVerwaltungInterface);
-            //registry.bind("Anfragenliste", rAnfragelisteInterface);
+            registry.bind("AnfragenVerwaltung", rAnfragenVerwaltungInterface);
 
             System.out.println("Server erfolgreich gestartet!");
         } catch (RemoteException e) {
