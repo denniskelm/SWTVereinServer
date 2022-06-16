@@ -21,7 +21,7 @@ public class VereinssoftwareServer {
     public static Dienstleistungsverwaltung dienstleistungsverwaltung;
 
     //public static Anfragenliste anfragenliste;
-    public static Rollenverwaltung rollenverwaltung = new Rollenverwaltung();
+    public static Rollenverwaltung rollenverwaltung;
 
     public static void main(String[] args) {
         geraeteverwaltung = new Geraeteverwaltung();
