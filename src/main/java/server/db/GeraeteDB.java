@@ -13,6 +13,7 @@ Raphael Kleebaum
 //TODO Dennis Kelm
 */
 
+import java.rmi.NoSuchObjectException;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -192,9 +193,21 @@ public class GeraeteDB extends Database {
 
     public void geraeteDatenVerwalten(String geraeteID, Geraetedaten attr, Object wert) {
         String value = String.valueOf(wert);
+        String spalte;
 
         try {
-            PreparedStatement prep = conn.prepareStatement(String.format("UPDATE geraet SET %s = ? WHERE GeraeteID = ?", attr.toString()));
+            spalte = switch (attr) {
+                case LEIHFRIST -> "Leihfrist";
+                case NAME -> "Name";
+                case ABHOLORT -> "Abholort";
+                case SPENDERNAME -> "Spendername";
+                case BESCHREIBUNG -> "Beschreibung";
+                case KATEGORIE -> "Kategorie";
+                case BILD -> "Bild";
+                default -> throw new NoSuchObjectException("Wert " + attr.toString() + " nicht gefunden");
+            };
+
+            PreparedStatement prep = conn.prepareStatement(String.format("UPDATE geraet SET %s = ? WHERE GeraeteID = ?", spalte));
 
             if (attr == Geraetedaten.LEIHFRIST)
                 prep.setInt(1, Integer.parseInt(value));
@@ -207,6 +220,8 @@ public class GeraeteDB extends Database {
             prep.close();
 
         } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchObjectException e) {
             throw new RuntimeException(e);
         }
 

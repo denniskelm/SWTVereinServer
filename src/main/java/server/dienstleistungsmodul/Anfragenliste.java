@@ -9,6 +9,7 @@ import server.db.DienstleistungsDB;
 import server.users.Mitglied;
 import shared.communication.IAnfragenliste;
 
+import javax.naming.NoPermissionException;
 import java.rmi.NoSuchObjectException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -45,10 +46,33 @@ public class Anfragenliste implements IAnfragenliste {
                 gaidliste.add("ga000" + (anzahl + 1));
             anzahl++;
         }
+        for (AngebotAnfrage aa: aliste) {
+            for (String element : aaidliste) {
+                if (aa.anfrageID.equals(element)) {
+                    aaidliste.remove(element);
+                    break;
+                }
+            }
+        }
+        for (GesuchAnfrage ga: gliste) {
+            for (String element : gaidliste) {
+                if (ga.anfrageID.equals(element)) {
+                    gaidliste.remove(element);
+                    break;
+                }
+            }
+        }
     }
 
-    public void reset(){
+    public void reset() throws NoSuchObjectException{
+        while (gliste.size()>0) {
+            removeGAnfrage(gliste.get(0).anfrageID);
+        }
+        while (aliste.size()>0) {
+            removeAAnfrage(aliste.get(0).anfrageID);
+        }
         this.gliste = new ArrayList<GesuchAnfrage>();
+
         this.aliste = new ArrayList<AngebotAnfrage>();
         createIdListen();
     }
@@ -135,7 +159,7 @@ public class Anfragenliste implements IAnfragenliste {
     }
 
     public Object[][] omniAngebotsAnfrageDaten() throws NoSuchObjectException {
-        Object[][] liste = new Object[50][10];//TODO index out of range
+        Object[][] liste = new Object[aliste.size()][10];//TODO index out of range
 
         for(int i = 0; i < aliste.size(); i++) {
             liste[i] = getAAnfragenInfo(aliste.get(i).anfrageID);
@@ -145,7 +169,7 @@ public class Anfragenliste implements IAnfragenliste {
     }
 
     public Object[][] omniGesuchsAnfrageDaten() throws NoSuchObjectException {
-        Object[][] liste = new Object[50][8];
+        Object[][] liste = new Object[gliste.size()][8];
 
         for(int i = 0; i < gliste.size(); i++) {
             liste[i] = getGAnfragenInfo(gliste.get(i).anfrageID);
@@ -161,18 +185,23 @@ public class Anfragenliste implements IAnfragenliste {
         String anfrageID=this.aaidliste.get(0);
         this.aaidliste.remove(0);
         AngebotAnfrage a =new AngebotAnfrage(anfrageID, anfragender, angebot, stunden);
-        this.aliste.add(a);
-        aDB.addaAnfrage(a);
+        if (aliste.size() <= 50) {
+            this.aliste.add(a);
+            aDB.addaAnfrage(a);
+        }else throw new ArrayIndexOutOfBoundsException("Mitglied hat bereits 50 Anfragen");
     }
 
-    public void addgAnfrage(String anfragenderID, String gesuchID, int stunden) throws NoSuchObjectException {
+    public void addgAnfrage(String anfragenderID, String gesuchID, int stunden) throws NoSuchObjectException{
         Dienstleistungsgesuch gesuch= VereinssoftwareServer.dienstleistungsverwaltung.fetchGesuch(gesuchID);
         Mitglied anfragender=VereinssoftwareServer.rollenverwaltung.fetch(anfragenderID);
         String anfrageID=this.gaidliste.get(0);
         this.gaidliste.remove(0);
         GesuchAnfrage g = new GesuchAnfrage(anfrageID, nutzer, gesuch, stunden);
-        this.gliste.add(g);
-        aDB.addgAnfrage(g);
+        if (gliste.size() <= 50){
+            this.gliste.add(g);
+            aDB.addgAnfrage(g);
+        }
+        else throw new ArrayIndexOutOfBoundsException("Mitglied hat bereits 50 Anfragen");
     }
     public void removeAAnfrage(String id) throws NoSuchObjectException{
         AngebotAnfrage a= null;
@@ -193,23 +222,35 @@ public class Anfragenliste implements IAnfragenliste {
     public void gAnfrageAnnehmen(String id) throws Exception{
         GesuchAnfrage g= null;
         g = gfetch(id);
+
+        if (g.nutzer.isGesperrt()) throw new NoPermissionException("Mitglied ist gesperrt.");
+
         this.gaidliste.add(g.anfrageID);
         this.gliste.remove(g);
+        aDB.removegAnfrage(g);
+
+        VereinssoftwareServer.dienstleistungsverwaltung.gesuchLoeschen(g.gesuch.getGesuch_ID());
         this.nutzer.veraendereStundenkonto(g.stunden);
         g.nutzer.veraendereStundenkonto(-g.stunden);
-        VereinssoftwareServer.dienstleistungsverwaltung.gidliste.add(g.gesuch.getGesuch_ID());
-        aDB.removegAnfrage(g);
+        //VereinssoftwareServer.dienstleistungsverwaltung.gidliste.add(g.gesuch.getGesuch_ID());
+
     }
 
     public void aAnfrageAnnehmen(String id) throws Exception{
         AngebotAnfrage a= null;
         a = afetch(id);
+
+        if (a.nutzer.isGesperrt()) throw new NoPermissionException("Mitglied ist gesperrt.");
+
         this.aaidliste.add(a.anfrageID);
-        this.gliste.remove(a);
+        this.aliste.remove(a);
+        aDB.removeaAnfrage(a);
+
+        VereinssoftwareServer.dienstleistungsverwaltung.angebotLoeschen(a.angebot.getAngebots_ID());
+        //VereinssoftwareServer.dienstleistungsverwaltung.aidliste.add(a.angebot.getAngebots_ID());
+
         this.nutzer.veraendereStundenkonto(a.stunden);
         a.nutzer.veraendereStundenkonto(-a.stunden);
-        VereinssoftwareServer.dienstleistungsverwaltung.aidliste.add(a.angebot.getAngebots_ID());
-        aDB.removeaAnfrage(a);
     }
 
 

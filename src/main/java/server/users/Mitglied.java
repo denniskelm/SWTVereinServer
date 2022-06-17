@@ -56,6 +56,8 @@ public class Mitglied extends Gast implements IMitglied {
         this.reservierungen = 0;
     }
 
+    public int getStundenkonto(){ return this.stundenkonto;}
+
     public void reservierungenErhöhen() {
         reservierungen++;
     }

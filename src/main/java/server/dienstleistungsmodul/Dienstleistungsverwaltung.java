@@ -8,6 +8,7 @@ import server.dienstleistungsmodul.*;
 import server.users.Mitglied;
 import shared.communication.IDienstleistungsverwaltung;
 
+import javax.naming.NoPermissionException;
 import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -138,7 +139,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     public void createIdListen(){  //TODO überpüfen, ob diese schon in der von der db geholten angebot/gesuch-menge sind
         int anzahl=0;
-        while (anzahl<500) {
+        while (anzahl<5000) {
             if (anzahl < 9)
                 gidliste.add("dg0000" + (anzahl + 1)); // klammern hinzugefügt damit test richtig
             else if (anzahl < 99)
@@ -154,7 +155,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
         //Liste mit verfuegbaren IDs für Angebote fuellen
         anzahl=0;
-        while (anzahl<500) {
+        while (anzahl<5000) {
             if (anzahl < 9)
                 aidliste.add("da0000" + (anzahl + 1)); // klammern hinzugefügt damit test richtig
             else if (anzahl < 99)
@@ -167,6 +168,22 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
                 aidliste.add("da" + (anzahl + 1));
             anzahl++;
         }
+        for (Dienstleistungsangebot da : angebote) {
+            for (String element : aidliste){
+                if (da.getAngebots_ID().equals(element)) {
+                    aidliste.remove(element);
+                    break;
+                }
+            }
+        }
+        for (Dienstleistungsgesuch dg : gesuche) {
+            for (String element : gidliste) {
+                if (dg.getGesuch_ID().equals(element)) {
+                    gidliste.remove(element);
+                    break;
+                }
+            }
+        }
     }
 
     public ArrayList<Dienstleistungsangebot> getAngebote() {
@@ -178,6 +195,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     }
 
     public String gesuchErstellen(String titel, String beschreibung, String kategorie, String imageUrl, String ersteller) throws Exception {
+        if (gesuche.size()>=50000)throw new ArrayIndexOutOfBoundsException("Es gibt bereits 50000 Gesuche.");
         String gesuch_ID;
         gesuch_ID=this.gidliste.get(0);
         this.gidliste.remove(0);
@@ -192,6 +210,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     }
 
     public String angebotErstellen(String titel, String beschreibung, String kategorie, LocalDateTime ab, LocalDateTime bis ,String imageUrl, String personen_ID) throws Exception {
+        if (angebote.size()>=50000)throw new ArrayIndexOutOfBoundsException("Es gibt bereits 50000 Angebote.");
         String angebot_ID;
         angebot_ID=this.aidliste.get(0);
         this.aidliste.remove(0);
@@ -207,26 +226,29 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         return angebot_ID;
     }
 
-    public void gesuchLoeschen(String gesuch_ID) {
+    public boolean gesuchLoeschen(String gesuch_ID) {
+
         try{
             gesuche.remove(fetchGesuch(gesuch_ID));
         }
         catch (NoSuchObjectException e){
             throw new RuntimeException();
         }
-
+        gidliste.add(gesuch_ID);
         dlDB.gesuchLoeschen(gesuch_ID);
+        return true;
     }
 
-    public void angebotLoeschen(String angebots_ID) {
+    public boolean angebotLoeschen(String angebots_ID) {
         try{
             gesuche.remove(fetchAngebot(angebots_ID));
         }
         catch (NoSuchObjectException e){
             throw new RuntimeException();
         }
-
+        aidliste.add(angebots_ID);
         dlDB.angebotLoeschen(angebots_ID);
+        return true;
     }
 
     public void gesuchAendern(String gesuchsID, Dienstleistungsgesuchdaten attr, Object wert) {
@@ -276,6 +298,8 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         //Dienstleistungsgesuch gesuch = fetchGesuch(gesuchID);
 
         Mitglied ersteller=r.fetch(erstellerID);
+
+        if (ersteller.isGesperrt()) throw new NoPermissionException("Mitglied ist gesperrt.");
         //Mitglied nutzer=r.fetch(nutzerID);
         Anfragenliste l= ersteller.getAnfragenliste();
         l.addgAnfrage(nutzerID, gesuchID ,stunden);
@@ -309,7 +333,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     // Für die Gui
     public Object[][] omniAngebotDaten() throws NoSuchObjectException {
-        Object[][] aliste = new Object[50000][8];
+        Object[][] aliste = new Object[angebote.size()][8];
 
         for(int i = 0; i < angebote.size(); i++) {
             aliste[i] = getAngeboteInformationen(angebote.get(i).getAngebots_ID());
@@ -320,7 +344,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     // Für die Gui
     public Object[][] omniGesuchDaten() throws NoSuchObjectException{
-        Object[][] gliste = new Object[50000][6];
+        Object[][] gliste = new Object[gesuche.size()][6];
 
         for (int i = 0; i < gesuche.size(); i++)
             gliste[i] = getGesucheInformationen(gesuche.get(i).getGesuch_ID());
@@ -334,6 +358,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
 
         Mitglied ersteller=r.fetch(erstellerID);
+        if (ersteller.isGesperrt()) throw new NoPermissionException("Mitglied ist gesperrt.");
         //Mitglied nutzer=r.fetch(nutzerID);
         Anfragenliste l= ersteller.getAnfragenliste();
         l.addaAnfrage(nutzerID, angebotID, stunden);//nutzer ist der, welcher die Anfrage stellt
