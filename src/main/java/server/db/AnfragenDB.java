@@ -175,10 +175,12 @@ public class AnfragenDB extends Database {
                             "VALUES (?, ?, ?)"
             );
 
+            // INSERT INTO dienstleistungsangebotanfragen (DienstleistungsID, PersonenID, Stunden) VALUES ('da00001', '27', 5)
+
             //Variablen einsetzen
             statement.setString(1, a.angebot.getAngebots_ID());
             statement.setString(2, a.nutzer.getPersonenID());
-            statement.setString(3, Integer.toString(a.stunden));
+            statement.setInt(3, a.stunden);
 
             //Ausführen und schließen
             statement.executeUpdate();

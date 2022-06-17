@@ -151,12 +151,6 @@ public class DienstleistungsDB extends Database {
             delAnfragen.executeUpdate();
             delAnfragen.close();
 
-            //aus DB dienstleistungsgesucherstellt loeschen
-            PreparedStatement delErstellt = conn.prepareStatement("DELETE FROM dienstleistungsgesucherstellt WHERE DienstleistungsID = ? LIMIT 1");
-            delErstellt.setString(1, gesuchID);
-            delErstellt.executeUpdate();
-            delErstellt.close();
-
             //aus DB dienstleistung loeschen
             PreparedStatement delDienstleistung = conn.prepareStatement("DELETE FROM dienstleistung WHERE DienstleistungsID = ? LIMIT 1");
             delDienstleistung.setString(1, gesuchID);
@@ -174,12 +168,6 @@ public class DienstleistungsDB extends Database {
             delAnfragen.setString(1, angebotsID);
             delAnfragen.executeUpdate();
             delAnfragen.close();
-
-            //aus DB dienstleistungsgesucherstellt loeschen
-            PreparedStatement delErstellt = conn.prepareStatement("DELETE FROM dienstleistungsangeboterstellt WHERE DienstleistungsID = ? LIMIT 1");
-            delErstellt.setString(1, angebotsID);
-            delErstellt.executeUpdate();
-            delErstellt.close();
 
             //aus DB dienstleistung loeschen
             PreparedStatement delDienstleistung = conn.prepareStatement("DELETE FROM dienstleistung WHERE DienstleistungsID = ? LIMIT 1");
