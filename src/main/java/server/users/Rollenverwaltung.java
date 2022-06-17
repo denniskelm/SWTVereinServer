@@ -376,6 +376,15 @@ public class Rollenverwaltung implements IRollenverwaltung {
         return mitglied.getEmail();
     }
 
+    public int getStundenzahl(String mitgliedsID){
+
+        try {
+            return fetch(mitgliedsID).getStundenkonto();
+        } catch (NoSuchObjectException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     //setzt die gesamte Rollenverwaltung zurück
     public void reset() {
         gaeste = new ArrayList<>();
@@ -440,21 +449,39 @@ public class Rollenverwaltung implements IRollenverwaltung {
     }
 
 
-    public Object[] mahnungenVomNutzer(String mitgliedsID) throws NoSuchObjectException {
-         Mitglied nutzer = fetch(mitgliedsID);
-         Mahnung[] nutzerMahnungen = new Mahnung[anzahlMahnungenVonNutzer(mitgliedsID)];
+    public Object[][] mahnungenVomNutzer(String mitgliedsID) {
+         Object[][] nutzerMahnungen = new Mahnung[anzahlMahnungenVonNutzer(mitgliedsID)][4];
          int k = 0;
 
          for(int i = 0; i < anzahlMahnungenVonNutzer(mitgliedsID); i++){
              while(k < mahnungen.size()){
                  if(mahnungen.get(k).getMitgliedsID().equals(mitgliedsID)){
-                     nutzerMahnungen[i] = mahnungen.get(k);
+                     nutzerMahnungen[i] = mahnungAnzeigen(mahnungen.get(k).getMahnungsID());
                      break;
                  } else
                      k++;
              }
          }
          return nutzerMahnungen;
+    }
+
+    public Object[] mahnungAnzeigen(String mahnungsID){
+        try {
+            Mahnung mahnung = fetchMahnung(mahnungsID);
+
+            Object[] array = new Object[4];
+
+            array[0] = mahnung.getMahnungsID();
+            array[1] = mahnung.getMitgliedsID();
+            array[2] = mahnung.getGrund();
+            array[3] = mahnung.getVerfallsdatum();
+
+            return array;
+
+        } catch (NoSuchObjectException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }
