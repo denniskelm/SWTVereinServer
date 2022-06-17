@@ -294,6 +294,8 @@ public class Rollenverwaltung implements IRollenverwaltung {
                     result[0] = m.getPersonenID();
                     result[1] = Rolle.GAST;
 
+                    System.out.println("Antwort der Anmeldung: " + result[0] + " | " + result[1]);
+
                     return result;
                 }
                 else
