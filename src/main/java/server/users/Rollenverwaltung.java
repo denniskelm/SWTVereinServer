@@ -126,11 +126,90 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
     public Object[] gastListeAnzeigen() { return gaeste.toArray(); }
 
+    public Object[] gastDaten(String mitgliedsID) {
+        try {
+            Gast gast = fetchGaeste(mitgliedsID);
+            Object[] gastDaten = new Object[8];
+
+            gastDaten[0] = gast.getPersonenID();
+            gastDaten[1] = gast.getVorname();
+            gastDaten[2] = gast.getNachname();
+            gastDaten[3] = gast.getEmail();
+            gastDaten[4] = gast.getAnschrift();
+            gastDaten[5] = gast.getMitgliedsNr();
+            gastDaten[6] = gast.getTelefonNr();
+            gastDaten[7] = gast.getSpenderStatus();
+
+            return gastDaten;
+
+        } catch (NoSuchObjectException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Object[][] gaesteDaten() {
+        Object[][] gaesteDaten = new Object[gaeste.size()][11];
+        for(int i =0; i < gaeste.size(); i++){
+            gaesteDaten[i] = mitgliedDaten(gaeste.get(i).getPersonenID());
+        }
+        return gaesteDaten;
+    }
+
     public Object[] mitgliedListeAnzeigen() { return mitglieder.toArray(); }
+
+    public Object[] mitgliedDaten(String mitgliedsID){
+        try {
+            Mitglied mitglied = fetch(mitgliedsID);
+            Object[] mitgliedDaten = new Object[11];
+
+            mitgliedDaten[0] = mitglied.getPersonenID();
+            mitgliedDaten[1] = mitglied.getVorname();
+            mitgliedDaten[2] = mitglied.getNachname();
+            mitgliedDaten[3] = mitglied.getEmail();
+            mitgliedDaten[4] = mitglied.getAnschrift();
+            mitgliedDaten[5] = mitglied.getMitgliedsNr();
+            mitgliedDaten[6] = mitglied.getTelefonNr();
+            mitgliedDaten[7] = mitglied.getSpenderStatus();
+            mitgliedDaten[8] = mitglied.getStundenkonto();
+            mitgliedDaten[9] = mitglied.isGesperrt();
+            mitgliedDaten[10] = mitglied.getMitgliedSeit();
+
+            return mitgliedDaten;
+
+        } catch (NoSuchObjectException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+    public Object[][] mitgliederDaten() {
+         Object[][] mitgliederDaten = new Object[mitglieder.size()][11];
+         for(int i =0; i < mitglieder.size(); i++){
+             mitgliederDaten[i] = mitgliedDaten(mitglieder.get(i).getPersonenID());
+         }
+         return mitgliederDaten;
+    }
 
     public Object[] mitarbeiterListeAnzeigen() { return mitarbeiter.toArray(); }
 
+    public Object[][] mitarbeiterDaten() {
+        Object[][] mitarbeiterDaten = new Object[mitarbeiter.size()][11];
+        for(int i =0; i < mitarbeiter.size(); i++){
+            mitarbeiterDaten[i] = mitgliedDaten(mitarbeiter.get(i).getPersonenID());
+        }
+        return mitarbeiterDaten;
+     }
+
     public Object[] vorsitzListeAnzeigen() { return vorsitze.toArray(); }
+
+    public Object[][] vorsitzDaten() {
+        Object[][] vorsitzeDaten = new Object[vorsitze.size()][11];
+        for(int i =0; i < vorsitze.size(); i++){
+            vorsitzeDaten[i] = mitgliedDaten(mitglieder.get(i).getPersonenID());
+        }
+        return vorsitzeDaten;
+    }
 
     public void rolleAendern(String mitgliedsID, Rolle rolle) throws Exception {
         Mitglied mitgliedInAlterRolle;
