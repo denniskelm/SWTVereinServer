@@ -138,7 +138,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     public void createIdListen(){  //TODO überpüfen, ob diese schon in der von der db geholten angebot/gesuch-menge sind
         int anzahl=0;
-        while (anzahl<500) {
+        while (anzahl<5000) {
             if (anzahl < 9)
                 gidliste.add("dg0000" + (anzahl + 1)); // klammern hinzugefügt damit test richtig
             else if (anzahl < 99)
@@ -154,7 +154,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
         //Liste mit verfuegbaren IDs für Angebote fuellen
         anzahl=0;
-        while (anzahl<500) {
+        while (anzahl<5000) {
             if (anzahl < 9)
                 aidliste.add("da0000" + (anzahl + 1)); // klammern hinzugefügt damit test richtig
             else if (anzahl < 99)
@@ -166,6 +166,22 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
             else if (anzahl < 50000)
                 aidliste.add("da" + (anzahl + 1));
             anzahl++;
+        }
+        for (Dienstleistungsangebot da : angebote) {
+            for (String element : aidliste){
+                if (da.getAngebots_ID().equals(element)) {
+                    aidliste.remove(element);
+                    break;
+                }
+            }
+        }
+        for (Dienstleistungsgesuch dg : gesuche) {
+            for (String element : aidliste) {
+                if (dg.getGesuch_ID().equals(element)) {
+                    aidliste.remove(element);
+                    break;
+                }
+            }
         }
     }
 
@@ -309,7 +325,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     // Für die Gui
     public Object[][] omniAngebotDaten() throws NoSuchObjectException {
-        Object[][] aliste = new Object[50000][8];
+        Object[][] aliste = new Object[angebote.size()][8];
 
         for(int i = 0; i < angebote.size(); i++) {
             aliste[i] = getAngeboteInformationen(angebote.get(i).getAngebots_ID());
@@ -320,7 +336,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     // Für die Gui
     public Object[][] omniGesuchDaten() throws NoSuchObjectException{
-        Object[][] gliste = new Object[50000][6];
+        Object[][] gliste = new Object[gesuche.size()][6];
 
         for (int i = 0; i < gesuche.size(); i++)
             gliste[i] = getGesucheInformationen(gesuche.get(i).getGesuch_ID());

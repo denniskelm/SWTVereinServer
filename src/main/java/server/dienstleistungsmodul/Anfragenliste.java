@@ -45,6 +45,22 @@ public class Anfragenliste implements IAnfragenliste {
                 gaidliste.add("ga000" + (anzahl + 1));
             anzahl++;
         }
+        for (AngebotAnfrage aa: aliste) {
+            for (String element : aaidliste) {
+                if (aa.anfrageID.equals(element)) {
+                    aaidliste.remove(element);
+                    break;
+                }
+            }
+        }
+        for (GesuchAnfrage ga: gliste) {
+            for (String element : gaidliste) {
+                if (ga.anfrageID.equals(element)) {
+                    gaidliste.remove(element);
+                    break;
+                }
+            }
+        }
     }
 
     public void reset(){
@@ -135,7 +151,7 @@ public class Anfragenliste implements IAnfragenliste {
     }
 
     public Object[][] omniAngebotsAnfrageDaten() throws NoSuchObjectException {
-        Object[][] liste = new Object[50][10];//TODO index out of range
+        Object[][] liste = new Object[aliste.size()][10];//TODO index out of range
 
         for(int i = 0; i < aliste.size(); i++) {
             liste[i] = getAAnfragenInfo(aliste.get(i).anfrageID);
@@ -145,7 +161,7 @@ public class Anfragenliste implements IAnfragenliste {
     }
 
     public Object[][] omniGesuchsAnfrageDaten() throws NoSuchObjectException {
-        Object[][] liste = new Object[50][8];
+        Object[][] liste = new Object[gliste.size()][8];
 
         for(int i = 0; i < gliste.size(); i++) {
             liste[i] = getGAnfragenInfo(gliste.get(i).anfrageID);
@@ -161,18 +177,23 @@ public class Anfragenliste implements IAnfragenliste {
         String anfrageID=this.aaidliste.get(0);
         this.aaidliste.remove(0);
         AngebotAnfrage a =new AngebotAnfrage(anfrageID, anfragender, angebot, stunden);
-        this.aliste.add(a);
-        aDB.addaAnfrage(a);
+        if (aliste.size() <= 50) {
+            this.aliste.add(a);
+            aDB.addaAnfrage(a);
+        }else {System.out.println("Mehr als 50 Anfragen erreicht");}
     }
 
-    public void addgAnfrage(String anfragenderID, String gesuchID, int stunden) throws NoSuchObjectException {
+    public void addgAnfrage(String anfragenderID, String gesuchID, int stunden) throws NoSuchObjectException{
         Dienstleistungsgesuch gesuch= VereinssoftwareServer.dienstleistungsverwaltung.fetchGesuch(gesuchID);
         Mitglied anfragender=VereinssoftwareServer.rollenverwaltung.fetch(anfragenderID);
         String anfrageID=this.gaidliste.get(0);
         this.gaidliste.remove(0);
         GesuchAnfrage g = new GesuchAnfrage(anfrageID, nutzer, gesuch, stunden);
-        this.gliste.add(g);
-        aDB.addgAnfrage(g);
+        if (gliste.size() <= 50){
+            this.gliste.add(g);
+            aDB.addgAnfrage(g);
+        }
+        else {System.out.println("Mehr als 50 Anfragen erreicht");}
     }
     public void removeAAnfrage(String id) throws NoSuchObjectException{
         AngebotAnfrage a= null;
