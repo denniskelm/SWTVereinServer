@@ -11,7 +11,7 @@ Raphael Kleebaum
 //TODO Dennis Kelm
 */
 
-import server.Mahnung;
+import server.geraetemodul.Mahnung;
 import server.VereinssoftwareServer;
 import server.users.*;
 

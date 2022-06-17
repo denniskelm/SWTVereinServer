@@ -7,8 +7,7 @@ Jonny Schlutter
 Ole Björn Adelmann
 */
 
-import server.Mahnung;
-import server.db.DienstleistungsDB;
+import server.geraetemodul.Mahnung;
 import server.db.RollenDB;
 import shared.communication.*;
 

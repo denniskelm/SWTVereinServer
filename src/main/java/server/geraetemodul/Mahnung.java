@@ -1,6 +1,4 @@
-package server;
-
-import server.users.Mitglied;
+package server.geraetemodul;
 
 import java.time.LocalDateTime;
 
