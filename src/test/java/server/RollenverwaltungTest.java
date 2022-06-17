@@ -20,9 +20,6 @@ class RollenverwaltungTest {
 
     @BeforeAll
     static void init() {
-        rv = new Rollenverwaltung();
-        System.out.println(anzahlNutzer);
-
         if (!rv.getGaeste().isEmpty())
             anzahlNutzer--;
         if (!rv.getMitglieder().isEmpty())
@@ -32,19 +29,18 @@ class RollenverwaltungTest {
         if (!rv.getVorsitze().isEmpty())
             anzahlNutzer--;
 
-        System.out.println(anzahlNutzer);
-
         rv.gastHinzufuegen("Mustermann", "Max", "web.de@de.de", "hallo", "Am See 3", "123", "87772627", false);
         anzahlNutzer++;
         rv.mitgliedHinzufuegen("Musterfrau", "Maxi", "we.de@de.de", "hallo1", "Am See 32", "1234", "87772627", false, LocalDateTime.parse("2016-11-09T11:44:44.797"));
         anzahlNutzer++;
     }
-
-    // TODO Die 4 erstellen Testnutzer wieder löschen
-    /*@AfterAll
+    @AfterAll
     static void reset() {
-        rv.reset();
-    }*/
+        rv.nutzerEntfernen(String.valueOf(anzahlNutzer));
+        rv.nutzerEntfernen(String.valueOf(anzahlNutzer - 1));
+        rv.nutzerEntfernen(String.valueOf(anzahlNutzer - 2));
+        rv.nutzerEntfernen(String.valueOf(anzahlNutzer - 3));
+    }
 
     @Test
     public void gastHinzufuegen() throws NoSuchObjectException {

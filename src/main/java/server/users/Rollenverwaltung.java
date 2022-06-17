@@ -345,6 +345,40 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
     }
 
+    public void nutzerEntfernen(String personenID) {
+
+        rDB.nutzerEntfernen(personenID);
+
+         for (int i = 0; i < vorsitze.size(); i++) {
+             if (vorsitze.get(i).getPersonenID().equals(personenID)) {
+                 vorsitze.remove(i);
+                 return;
+             }
+         }
+
+        for (int i = 0; i < mitarbeiter.size(); i++) {
+            if (mitarbeiter.get(i).getPersonenID().equals(personenID)) {
+                mitarbeiter.remove(i);
+                return;
+            }
+        }
+
+        for (int i = 0; i < mitglieder.size(); i++) {
+            if (mitglieder.get(i).getPersonenID().equals(personenID)) {
+                mitglieder.remove(i);
+                return;
+            }
+        }
+
+        for (int i = 0; i < gaeste.size(); i++) {
+            if (gaeste.get(i).getPersonenID().equals(personenID)) {
+                gaeste.remove(i);
+                return;
+            }
+        }
+
+    }
+
     public ArrayList<Gast> getGaeste() {
         return gaeste;
     }
