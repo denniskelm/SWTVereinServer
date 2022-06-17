@@ -49,8 +49,7 @@ public class AnfragenDB extends Database {
                 GesuchAnfrage anfrage = new GesuchAnfrage(
                         dienstleistungsId,
                         person,
-                        //VereinssoftwareServer.rollenverwaltung.fetch(personenId),
-                        VereinssoftwareServer.dienstleistungsverwaltung.fetchGesuch(dienstleistungsId),
+                        fetchGesuch(dienstleistungsId),
                         stunden
                 );
 
@@ -63,8 +62,6 @@ public class AnfragenDB extends Database {
             //Liste zurueckgeben
             return gesuchAnfragen;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchObjectException e) {
             throw new RuntimeException(e);
         }
     }
@@ -246,4 +243,26 @@ public class AnfragenDB extends Database {
             throw new RuntimeException(e);
         }
     }
+
+    private Dienstleistungsgesuch fetchGesuch(String dienstleistungsId) {
+
+        try {
+            PreparedStatement prep = conn.prepareStatement("SELECT * FROM dienstleistung WHERE DienstleistungsID = ?");
+            prep.setString(1, dienstleistungsId);
+
+            ResultSet result = prep.executeQuery();
+            result.next();
+
+            return new Dienstleistungsgesuch(dienstleistungsId,
+                                             result.getString("Titel"),
+                                             result.getString("Beschreibung"),
+                                             result.getString("Kategorie"),
+                                             result.getString("ImageUrl"),
+                                             result.getString("PersonenID"));
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

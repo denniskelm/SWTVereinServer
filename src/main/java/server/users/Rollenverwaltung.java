@@ -52,8 +52,15 @@ public class Rollenverwaltung implements IRollenverwaltung {
          if (gaeste.size() >= 50000) throw new ArrayIndexOutOfBoundsException();
 
          //naechste ID generieren
+         String personenID;
          IdCounter++;
-         String personenID = Long.toString(IdCounter);
+         if (IdCounter < 10) personenID = "p0000" + (IdCounter);
+         else if (IdCounter < 100) personenID = "p000" + (IdCounter);
+         else if (IdCounter < 1000) personenID = "p00" + (IdCounter);
+         else if (IdCounter < 10000) personenID = "p0" + (IdCounter);
+         else personenID = "p" + (IdCounter);
+
+         //personenID = String.valueOf(IdCounter);
 
          Gast gast = new Gast(personenID, nachname, vorname, email, password, anschrift, mitgliedsnr, telefonnummer, spender);
          gaeste.add(gast);
