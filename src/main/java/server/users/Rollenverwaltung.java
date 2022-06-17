@@ -7,6 +7,7 @@ Jonny Schlutter
 Ole Björn Adelmann
 */
 
+import server.VereinssoftwareServer;
 import server.geraetemodul.Mahnung;
 import server.db.RollenDB;
 import shared.communication.*;
@@ -282,6 +283,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
         }
     }
 
+    //TODO Sperrung
     public Object[] login(String email, String password) throws Exception {
         Object[] result = new Object[2];
 
@@ -449,6 +451,9 @@ public class Rollenverwaltung implements IRollenverwaltung {
         if(anzahlMahnungenVonNutzer(mitgliedsID) >= 3){
             nutzer.setIst_gesperrt(true);
             rDB.nutzerEintragAendern(mitgliedsID, Personendaten.IST_GESPERRT, "Y");
+
+            Mitglied mit=VereinssoftwareServer.rollenverwaltung.fetch(mitgliedsID);
+            mit.getAnfragenliste().reset();
         }
 
     }

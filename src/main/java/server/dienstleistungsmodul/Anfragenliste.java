@@ -9,6 +9,7 @@ import server.db.DienstleistungsDB;
 import server.users.Mitglied;
 import shared.communication.IAnfragenliste;
 
+import javax.naming.NoPermissionException;
 import java.rmi.NoSuchObjectException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -63,8 +64,15 @@ public class Anfragenliste implements IAnfragenliste {
         }
     }
 
-    public void reset(){
+    public void reset() throws NoSuchObjectException{
+        while (gliste.size()>0) {
+            removeGAnfrage(gliste.get(0).anfrageID);
+        }
+        while (aliste.size()>0) {
+            removeAAnfrage(aliste.get(0).anfrageID);
+        }
         this.gliste = new ArrayList<GesuchAnfrage>();
+
         this.aliste = new ArrayList<AngebotAnfrage>();
         createIdListen();
     }
@@ -180,7 +188,7 @@ public class Anfragenliste implements IAnfragenliste {
         if (aliste.size() <= 50) {
             this.aliste.add(a);
             aDB.addaAnfrage(a);
-        }else {System.out.println("Mehr als 50 Anfragen erreicht");}
+        }else throw new ArrayIndexOutOfBoundsException("Mitglied hat bereits 50 Anfragen");
     }
 
     public void addgAnfrage(String anfragenderID, String gesuchID, int stunden) throws NoSuchObjectException{
@@ -193,7 +201,7 @@ public class Anfragenliste implements IAnfragenliste {
             this.gliste.add(g);
             aDB.addgAnfrage(g);
         }
-        else {System.out.println("Mehr als 50 Anfragen erreicht");}
+        else throw new ArrayIndexOutOfBoundsException("Mitglied hat bereits 50 Anfragen");
     }
     public void removeAAnfrage(String id) throws NoSuchObjectException{
         AngebotAnfrage a= null;
@@ -214,6 +222,9 @@ public class Anfragenliste implements IAnfragenliste {
     public void gAnfrageAnnehmen(String id) throws Exception{
         GesuchAnfrage g= null;
         g = gfetch(id);
+
+        if (g.nutzer.isGesperrt()) throw new NoPermissionException("Mitglied ist gesperrt.");
+
         this.gaidliste.add(g.anfrageID);
         this.gliste.remove(g);
         this.nutzer.veraendereStundenkonto(g.stunden);
@@ -225,6 +236,9 @@ public class Anfragenliste implements IAnfragenliste {
     public void aAnfrageAnnehmen(String id) throws Exception{
         AngebotAnfrage a= null;
         a = afetch(id);
+
+        if (a.nutzer.isGesperrt()) throw new NoPermissionException("Mitglied ist gesperrt.");
+
         this.aaidliste.add(a.anfrageID);
         this.gliste.remove(a);
         this.nutzer.veraendereStundenkonto(a.stunden);

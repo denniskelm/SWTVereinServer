@@ -8,6 +8,7 @@ import server.dienstleistungsmodul.*;
 import server.users.Mitglied;
 import shared.communication.IDienstleistungsverwaltung;
 
+import javax.naming.NoPermissionException;
 import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -176,9 +177,9 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
             }
         }
         for (Dienstleistungsgesuch dg : gesuche) {
-            for (String element : aidliste) {
+            for (String element : gidliste) {
                 if (dg.getGesuch_ID().equals(element)) {
-                    aidliste.remove(element);
+                    gidliste.remove(element);
                     break;
                 }
             }
@@ -194,6 +195,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     }
 
     public String gesuchErstellen(String titel, String beschreibung, String kategorie, String imageUrl, String ersteller) throws Exception {
+        if (gesuche.size()>=50000)throw new ArrayIndexOutOfBoundsException("Es gibt bereits 50000 Gesuche.");
         String gesuch_ID;
         gesuch_ID=this.gidliste.get(0);
         this.gidliste.remove(0);
@@ -208,6 +210,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     }
 
     public String angebotErstellen(String titel, String beschreibung, String kategorie, LocalDateTime ab, LocalDateTime bis ,String imageUrl, String personen_ID) throws Exception {
+        if (angebote.size()>=50000)throw new ArrayIndexOutOfBoundsException("Es gibt bereits 50000 Angebote.");
         String angebot_ID;
         angebot_ID=this.aidliste.get(0);
         this.aidliste.remove(0);
@@ -292,6 +295,8 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         //Dienstleistungsgesuch gesuch = fetchGesuch(gesuchID);
 
         Mitglied ersteller=r.fetch(erstellerID);
+
+        if (ersteller.isGesperrt()) throw new NoPermissionException("Mitglied ist gesperrt.");
         //Mitglied nutzer=r.fetch(nutzerID);
         Anfragenliste l= ersteller.getAnfragenliste();
         l.addgAnfrage(nutzerID, gesuchID ,stunden);
@@ -350,6 +355,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
 
         Mitglied ersteller=r.fetch(erstellerID);
+        if (ersteller.isGesperrt()) throw new NoPermissionException("Mitglied ist gesperrt.");
         //Mitglied nutzer=r.fetch(nutzerID);
         Anfragenliste l= ersteller.getAnfragenliste();
         l.addaAnfrage(nutzerID, angebotID, stunden);//nutzer ist der, welcher die Anfrage stellt
