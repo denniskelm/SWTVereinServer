@@ -263,7 +263,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
             gesuche.remove(fetchGesuch(gesuch_ID));
         }
         catch (NoSuchObjectException e){
-            throw new RuntimeException();
+            return false;
         }
         gidliste.add(gesuch_ID);
         dlDB.gesuchLoeschen(gesuch_ID);
@@ -272,10 +272,10 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     public boolean angebotLoeschen(String angebots_ID) {
         try{
-            gesuche.remove(fetchAngebot(angebots_ID));
+            angebote.remove(fetchAngebot(angebots_ID));
         }
         catch (NoSuchObjectException e){
-            throw new RuntimeException();
+            return false;
         }
         aidliste.add(angebots_ID);
         dlDB.angebotLoeschen(angebots_ID);

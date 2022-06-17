@@ -186,8 +186,8 @@ public class Anfragenliste implements IAnfragenliste {
         this.aaidliste.remove(0);
         AngebotAnfrage a =new AngebotAnfrage(anfrageID, anfragender, angebot, stunden);
         if (aliste.size() <= 50) {
-            this.aliste.add(a);
             aDB.addaAnfrage(a);
+            this.aliste.add(a);
         }else throw new ArrayIndexOutOfBoundsException("Mitglied hat bereits 50 Anfragen");
     }
 
@@ -198,8 +198,8 @@ public class Anfragenliste implements IAnfragenliste {
         this.gaidliste.remove(0);
         GesuchAnfrage g = new GesuchAnfrage(anfrageID, nutzer, gesuch, stunden);
         if (gliste.size() <= 50){
-            this.gliste.add(g);
             aDB.addgAnfrage(g);
+            this.gliste.add(g);
         }
         else throw new ArrayIndexOutOfBoundsException("Mitglied hat bereits 50 Anfragen");
     }
@@ -229,7 +229,7 @@ public class Anfragenliste implements IAnfragenliste {
         this.gliste.remove(g);
         aDB.removegAnfrage(g);
 
-        VereinssoftwareServer.dienstleistungsverwaltung.gesuchLoeschen(g.gesuch.getGesuch_ID());
+        if (!VereinssoftwareServer.dienstleistungsverwaltung.gesuchLoeschen(g.gesuch.getGesuch_ID()))return;
         this.nutzer.veraendereStundenkonto(g.stunden);
         g.nutzer.veraendereStundenkonto(-g.stunden);
         //VereinssoftwareServer.dienstleistungsverwaltung.gidliste.add(g.gesuch.getGesuch_ID());
@@ -242,11 +242,12 @@ public class Anfragenliste implements IAnfragenliste {
 
         if (a.nutzer.isGesperrt()) throw new NoPermissionException("Mitglied ist gesperrt.");
 
+
         this.aaidliste.add(a.anfrageID);
         this.aliste.remove(a);
         aDB.removeaAnfrage(a);
 
-        VereinssoftwareServer.dienstleistungsverwaltung.angebotLoeschen(a.angebot.getAngebots_ID());
+        if (!VereinssoftwareServer.dienstleistungsverwaltung.angebotLoeschen(a.angebot.getAngebots_ID()))return;
         //VereinssoftwareServer.dienstleistungsverwaltung.aidliste.add(a.angebot.getAngebots_ID());
 
         this.nutzer.veraendereStundenkonto(a.stunden);
