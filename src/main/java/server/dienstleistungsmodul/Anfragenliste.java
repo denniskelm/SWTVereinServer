@@ -227,10 +227,13 @@ public class Anfragenliste implements IAnfragenliste {
 
         this.gaidliste.add(g.anfrageID);
         this.gliste.remove(g);
+        aDB.removegAnfrage(g);
+
+        VereinssoftwareServer.dienstleistungsverwaltung.gesuchLoeschen(g.gesuch.getGesuch_ID());
         this.nutzer.veraendereStundenkonto(g.stunden);
         g.nutzer.veraendereStundenkonto(-g.stunden);
-        VereinssoftwareServer.dienstleistungsverwaltung.gidliste.add(g.gesuch.getGesuch_ID());
-        aDB.removegAnfrage(g);
+        //VereinssoftwareServer.dienstleistungsverwaltung.gidliste.add(g.gesuch.getGesuch_ID());
+
     }
 
     public void aAnfrageAnnehmen(String id) throws Exception{
@@ -241,10 +244,13 @@ public class Anfragenliste implements IAnfragenliste {
 
         this.aaidliste.add(a.anfrageID);
         this.aliste.remove(a);
+        aDB.removeaAnfrage(a);
+
+        VereinssoftwareServer.dienstleistungsverwaltung.angebotLoeschen(a.angebot.getAngebots_ID());
+        //VereinssoftwareServer.dienstleistungsverwaltung.aidliste.add(a.angebot.getAngebots_ID());
+
         this.nutzer.veraendereStundenkonto(a.stunden);
         a.nutzer.veraendereStundenkonto(-a.stunden);
-        VereinssoftwareServer.dienstleistungsverwaltung.aidliste.add(a.angebot.getAngebots_ID());
-        aDB.removeaAnfrage(a);
     }
 
 

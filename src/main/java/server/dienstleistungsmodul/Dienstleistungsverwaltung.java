@@ -226,26 +226,29 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         return angebot_ID;
     }
 
-    public void gesuchLoeschen(String gesuch_ID) {
+    public boolean gesuchLoeschen(String gesuch_ID) {
+
         try{
             gesuche.remove(fetchGesuch(gesuch_ID));
         }
         catch (NoSuchObjectException e){
             throw new RuntimeException();
         }
-
+        gidliste.add(gesuch_ID);
         dlDB.gesuchLoeschen(gesuch_ID);
+        return true;
     }
 
-    public void angebotLoeschen(String angebots_ID) {
+    public boolean angebotLoeschen(String angebots_ID) {
         try{
             gesuche.remove(fetchAngebot(angebots_ID));
         }
         catch (NoSuchObjectException e){
             throw new RuntimeException();
         }
-
+        aidliste.add(angebots_ID);
         dlDB.angebotLoeschen(angebots_ID);
+        return true;
     }
 
     public void gesuchAendern(String gesuchsID, Dienstleistungsgesuchdaten attr, Object wert) {
