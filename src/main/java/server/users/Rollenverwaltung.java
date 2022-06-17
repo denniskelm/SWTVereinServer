@@ -44,6 +44,9 @@ public class Rollenverwaltung implements IRollenverwaltung {
              vorsitze = rDB.getVorsitze();
              mahnungen = rDB.getMahnungenListe();
              IdCounter = rDB.getIdCounter();
+
+             listenBereinigen();
+
          } catch (SQLException e) {
              System.err.println("Verbindung zu Datenbank konnte nicht hergestellt werden!");
              throw new RuntimeException(e);
@@ -174,7 +177,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
             throw new RuntimeException(e);
         }
 
-
     }
 
     public Object[][] mitgliederDaten() {
@@ -242,6 +244,9 @@ public class Rollenverwaltung implements IRollenverwaltung {
     // Methode löscht die Person in der alten Rolle und erstellt eine Instanz der neuen Rolle der Person
     private void rolleAendernSwitch(Gast gast, Rolle rolle, LocalDateTime mitglied_seit) {
         Gast g;
+
+        nutzerAusAlterListeEntfernen(gast);
+
         switch (rolle) {
             case GAST:
                 g = new Gast(gast.getPersonenID(),
@@ -301,8 +306,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
                 vorsitze.add((Vorsitz) g);
                 break;
         }
-
-        nutzerAusAlterListeEntfernen(gast);
     }
 
     public void nutzereintragAendern(String mitgliedsID, Personendaten attr, String wert) throws NoSuchObjectException {
@@ -594,6 +597,66 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
         } catch (NoSuchObjectException e) {
             throw new RuntimeException(e);
+        }
+
+    }
+
+    // Entfernt Gäste aus gaeste, wenn Sie Mitlgieder sind etc.
+    private void listenBereinigen() {
+
+        for (Vorsitz v : vorsitze) {
+
+            for (int i = 0; i < mitarbeiter.size(); i++) {
+                if (mitarbeiter.get(i).getPersonenID().equals(v.getPersonenID())) {
+                    mitarbeiter.remove(i);
+                    break;
+                }
+            }
+
+            for (int i = 0; i < mitglieder.size(); i++) {
+                if (mitglieder.get(i).getPersonenID().equals(v.getPersonenID())) {
+                    mitglieder.remove(i);
+                    break;
+                }
+            }
+
+            for (int i = 0; i < gaeste.size(); i++) {
+                if (gaeste.get(i).getPersonenID().equals(v.getPersonenID())) {
+                    gaeste.remove(i);
+                    break;
+                }
+            }
+
+        }
+
+        for (Mitarbeiter m : mitarbeiter) {
+
+            for (int i = 0; i < mitglieder.size(); i++) {
+                if (mitglieder.get(i).getPersonenID().equals(m.getPersonenID())) {
+                    mitglieder.remove(i);
+                    break;
+                }
+            }
+
+            for (int i = 0; i < gaeste.size(); i++) {
+                if (gaeste.get(i).getPersonenID().equals(m.getPersonenID())) {
+                    gaeste.remove(i);
+                    break;
+                }
+            }
+
+        }
+
+        for (Mitglied m : mitglieder) {
+
+            for (int i = 0; i < gaeste.size(); i++) {
+                if (gaeste.get(i).getPersonenID().equals(m.getPersonenID())) {
+                    System.out.println("gfdgdf");
+                    gaeste.remove(i);
+                    break;
+                }
+            }
+
         }
 
     }
