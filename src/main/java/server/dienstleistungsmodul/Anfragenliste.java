@@ -240,7 +240,7 @@ public class Anfragenliste implements IAnfragenliste {
         if (a.nutzer.isGesperrt()) throw new NoPermissionException("Mitglied ist gesperrt.");
 
         this.aaidliste.add(a.anfrageID);
-        this.gliste.remove(a);
+        this.aliste.remove(a);
         this.nutzer.veraendereStundenkonto(a.stunden);
         a.nutzer.veraendereStundenkonto(-a.stunden);
         VereinssoftwareServer.dienstleistungsverwaltung.aidliste.add(a.angebot.getAngebots_ID());
