@@ -136,10 +136,10 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     }
 
 
-    public void createIdListen(){
+    public void createIdListen(){  //TODO überpüfen, ob diese schon in der von der db geholten angebot/gesuch-menge sind
         int anzahl=0;
         while (anzahl<500) {
-            if (anzahl < 9)  // todo : nach dem testen ist die Rueckgabe nicht wie gewunscht???
+            if (anzahl < 9)
                 gidliste.add("dg0000" + (anzahl + 1)); // klammern hinzugefügt damit test richtig
             else if (anzahl < 99)
                 gidliste.add("dg000" + (anzahl + 1));
@@ -155,7 +155,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         //Liste mit verfuegbaren IDs für Angebote fuellen
         anzahl=0;
         while (anzahl<500) {
-            if (anzahl < 9)  // todo : nach dem testen ist die Rueckgabe nicht wie gewunscht???
+            if (anzahl < 9)
                 aidliste.add("da0000" + (anzahl + 1)); // klammern hinzugefügt damit test richtig
             else if (anzahl < 99)
                 aidliste.add("da000" + (anzahl + 1));
@@ -193,8 +193,8 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     public String angebotErstellen(String titel, String beschreibung, String kategorie, LocalDateTime ab, LocalDateTime bis ,String imageUrl, String personen_ID) throws Exception {
         String angebot_ID;
-        angebot_ID=this.gidliste.get(0);
-        this.gidliste.remove(0);
+        angebot_ID=this.aidliste.get(0);
+        this.aidliste.remove(0);
 
         Dienstleistungsangebot a = new Dienstleistungsangebot(angebot_ID, titel, beschreibung, kategorie, ab, bis,imageUrl, personen_ID);
         angebote.add(a);
@@ -285,8 +285,10 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     // Gibt das zugehörige Angebot zu der gegebenen AngebotsID
     public Dienstleistungsangebot fetchAngebot(String angebotID) throws NoSuchObjectException {
+        System.out.println("fetchAngebot startet hier mit ID " + angebotID);
 
         for (Dienstleistungsangebot da : angebote) {
+            System.out.println("Angebot: " + da.getAngebots_ID() + " angeschaut");
             if (da.getAngebots_ID().equals(angebotID))
                 return da;
         }

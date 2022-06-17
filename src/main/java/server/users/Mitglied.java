@@ -21,8 +21,9 @@ public class Mitglied extends Gast implements IMitglied {
         this.stundenkonto = 0;
         this.ist_gesperrt = false;
         this.mitglied_seit = mitglied_seit;
-        this.anfragenliste = (new server.dienstleistungsmodul.Anfragenliste()).ofUser_ID(personenID);
+        this.anfragenliste = (new server.dienstleistungsmodul.Anfragenliste(this));
         this.anfragenliste.nutzer = this;
+        this.anfragenliste.user_ID = this.personenID;
         this.reservierungen = 0;
     }
 
@@ -35,8 +36,9 @@ public class Mitglied extends Gast implements IMitglied {
         this.stundenkonto = 0;
         this.ist_gesperrt = false;
         this.mitglied_seit = mitglied_seit;
-        this.anfragenliste = new server.dienstleistungsmodul.Anfragenliste().ofUser_ID(personenID);
+        this.anfragenliste = new server.dienstleistungsmodul.Anfragenliste(this);
         this.anfragenliste.nutzer = this;
+        this.anfragenliste.user_ID = this.personenID;
         this.reservierungen = 0;
     }
 
@@ -48,8 +50,9 @@ public class Mitglied extends Gast implements IMitglied {
         this.stundenkonto = 0;
         this.ist_gesperrt = ist_gesperrt;
         this.mitglied_seit = mitglied_seit;
-        this.anfragenliste = new server.dienstleistungsmodul.Anfragenliste().ofUser_ID(personenID);
+        this.anfragenliste = new server.dienstleistungsmodul.Anfragenliste(this);
         this.anfragenliste.nutzer = this;
+        this.anfragenliste.user_ID = this.personenID;
         this.reservierungen = 0;
     }
 

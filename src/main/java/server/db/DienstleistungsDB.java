@@ -88,7 +88,7 @@ public class DienstleistungsDB extends Database {
 
     public void reset(){
         try {
-            resetTabelle("dienstleistung"); //TODO ids in Datenbank?
+            resetTabelle("dienstleistung");
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
