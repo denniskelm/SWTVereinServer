@@ -287,12 +287,29 @@ public class Rollenverwaltung implements IRollenverwaltung {
     public Object[] login(String email, String password) throws Exception {
         Object[] result = new Object[2];
 
-        for (Gast m : gaeste) {
+        System.out.println("Es meldet sich an: " + email + password);
+
+        for (Mitglied m : vorsitze) {
+            if (m.getEmail().equals(email)) {
+                if (m.getPassword() == password.hashCode()) {
+                    result[0] = m.getPersonenID();
+                    result[1] = Rolle.VORSITZ;
+
+                    System.out.println("Antwort der Anmeldung: " + result[0] + " | " + result[1]);
+
+                    return result;
+                }
+                else
+                    throw new Exception("E-Mail oder Passwort falsch!");
+            }
+        }
+
+        for (Mitglied m : mitarbeiter) {
             if (m.getEmail().equals(email)) {
                 if (m.getPassword() == password.hashCode()) {
                     result = new Object[2];
                     result[0] = m.getPersonenID();
-                    result[1] = Rolle.GAST;
+                    result[1] = Rolle.MITARBEITER;
 
                     System.out.println("Antwort der Anmeldung: " + result[0] + " | " + result[1]);
 
@@ -310,6 +327,8 @@ public class Rollenverwaltung implements IRollenverwaltung {
                     result[0] = m.getPersonenID();
                     result[1] = Rolle.MITGLIED;
 
+                    System.out.println("Antwort der Anmeldung: " + result[0] + " | " + result[1]);
+
                     return result;
                 }
                 else
@@ -317,25 +336,14 @@ public class Rollenverwaltung implements IRollenverwaltung {
             }
         }
 
-        for (Mitglied m : mitarbeiter) {
+        for (Gast m : gaeste) {
             if (m.getEmail().equals(email)) {
                 if (m.getPassword() == password.hashCode()) {
                     result = new Object[2];
                     result[0] = m.getPersonenID();
-                    result[1] = Rolle.MITARBEITER;
+                    result[1] = Rolle.GAST;
 
-                    return result;
-                }
-                else
-                    throw new Exception("E-Mail oder Passwort falsch!");
-            }
-        }
-
-        for (Mitglied m : vorsitze) {
-            if (m.getEmail().equals(email)) {
-                if (m.getPassword() == password.hashCode()) {
-                    result[0] = m.getPersonenID();
-                    result[1] = Rolle.VORSITZ;
+                    System.out.println("Antwort der Anmeldung: " + result[0] + " | " + result[1]);
 
                     return result;
                 }

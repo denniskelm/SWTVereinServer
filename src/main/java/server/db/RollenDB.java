@@ -278,19 +278,20 @@ public class RollenDB extends Database {
         mitarbeiter = new ArrayList<>();
 
         try {
-            // Mitarbeiter erstellen
+            // Mitglieder erstellen
             PreparedStatement getMitarbeiter = conn.prepareStatement("SELECT PersonenID FROM mitarbeiter");
             ResultSet result = getMitarbeiter.executeQuery();
 
-            ArrayList<String> vorstandIDs = new ArrayList<>();
+            ArrayList<String> mitgliederIDs = new ArrayList<>();
 
-            while (result.next())
-                vorstandIDs.add(result.getString(1));
+            while (result.next()) {
+                mitgliederIDs.add(result.getString(1));
+            }
 
-            ArrayList<Gast> vorstaendeAlsGaeste = getGaesteWithIDs(vorstandIDs);
+            ArrayList<Gast> mitarbeiterAlsGaeste = getGaesteWithIDs(mitgliederIDs);
 
-            for (Gast g : vorstaendeAlsGaeste) {
-                mitglied_seit = rv.fetch(g.getPersonenID()).getMitgliedSeit();
+            for (Gast g : mitarbeiterAlsGaeste) {
+                mitglied_seit = getMitgliedSeit(g.getPersonenID());
 
                 m = new Mitarbeiter(g.getPersonenID(), g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(),
                         g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(),
@@ -301,7 +302,7 @@ public class RollenDB extends Database {
 
             getMitarbeiter.close();
 
-        } catch (SQLException | NoSuchObjectException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
@@ -316,19 +317,20 @@ public class RollenDB extends Database {
         vorsitze = new ArrayList<>();
 
         try {
-            // Vorsitze erstellen
+            // Mitglieder erstellen
             PreparedStatement getVorsitze = conn.prepareStatement("SELECT PersonenID FROM vorstand");
             ResultSet result = getVorsitze.executeQuery();
 
-            ArrayList<String> vorstandIDs = new ArrayList<>();
+            ArrayList<String> mitgliederIDs = new ArrayList<>();
 
-            while (result.next())
-                vorstandIDs.add(result.getString(1));
+            while (result.next()) {
+                mitgliederIDs.add(result.getString(1));
+            }
 
-            ArrayList<Gast> vorstaendeAlsGaeste = getGaesteWithIDs(vorstandIDs);
+            ArrayList<Gast> mitarbeiterAlsGaeste = getGaesteWithIDs(mitgliederIDs);
 
-            for (Gast g : vorstaendeAlsGaeste) {
-                mitglied_seit = rv.fetch(g.getPersonenID()).getMitgliedSeit();
+            for (Gast g : mitarbeiterAlsGaeste) {
+                mitglied_seit = getMitgliedSeit(g.getPersonenID());
 
                 v = new Vorsitz(g.getPersonenID(), g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(),
                         g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(),
@@ -339,7 +341,7 @@ public class RollenDB extends Database {
 
             getVorsitze.close();
 
-        } catch (SQLException | NoSuchObjectException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
