@@ -145,22 +145,23 @@ public class DienstleistungsDB extends Database {
 
     public void gesuchLoeschen(String gesuchID) {
         try {
-            PreparedStatement statement = conn.prepareStatement("DELETE FROM ? WHERE DienstleistungsID = ? LIMIT 1");
-            statement.setString(2, gesuchID);
-
             //aus DB dienstleistungsgesuchanfragen loeschen
-            statement.setString(1, "dienstleistungsgesuchanfragen");
-            statement.executeUpdate();
+            PreparedStatement delAnfragen = conn.prepareStatement("DELETE FROM dienstleistungsgesuchanfragen WHERE DienstleistungsID = ? LIMIT 1");
+            delAnfragen.setString(1, gesuchID);
+            delAnfragen.executeUpdate();
+            delAnfragen.close();
 
             //aus DB dienstleistungsgesucherstellt loeschen
-            statement.setString(1, "dienstleistungsgesucherstellt");
-            statement.executeUpdate();
+            PreparedStatement delErstellt = conn.prepareStatement("DELETE FROM dienstleistungsgesucherstellt WHERE DienstleistungsID = ? LIMIT 1");
+            delErstellt.setString(1, gesuchID);
+            delErstellt.executeUpdate();
+            delErstellt.close();
 
             //aus DB dienstleistung loeschen
-            statement.setString(1, "dienstleistung");
-            statement.executeUpdate();
-
-            statement.close();
+            PreparedStatement delDienstleistung = conn.prepareStatement("DELETE FROM dienstleistung WHERE DienstleistungsID = ? LIMIT 1");
+            delDienstleistung.setString(1, gesuchID);
+            delDienstleistung.executeUpdate();
+            delDienstleistung.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -168,43 +169,46 @@ public class DienstleistungsDB extends Database {
 
     public void angebotLoeschen(String angebotsID) {
         try {
-            PreparedStatement statement = conn.prepareStatement("DELETE FROM ? WHERE DienstleistungsID = ? LIMIT 1");
-            statement.setString(2, angebotsID);
+            //aus DB dienstleistungsgesuchanfragen loeschen
+            PreparedStatement delAnfragen = conn.prepareStatement("DELETE FROM dienstleistungsangebotanfragen WHERE DienstleistungsID = ? LIMIT 1");
+            delAnfragen.setString(1, angebotsID);
+            delAnfragen.executeUpdate();
+            delAnfragen.close();
 
-            //aus DB dienstleistungsangebotanfragen loeschen
-            statement.setString(1, "dienstleistungsangebotanfragen");
-            statement.executeUpdate();
-
-            //aus DB dienstleistungsangeboterstellt loeschen
-            statement.setString(1, "dienstleistungsangeboterstellt");
-            statement.executeUpdate();
+            //aus DB dienstleistungsgesucherstellt loeschen
+            PreparedStatement delErstellt = conn.prepareStatement("DELETE FROM dienstleistungsangeboterstellt WHERE DienstleistungsID = ? LIMIT 1");
+            delErstellt.setString(1, angebotsID);
+            delErstellt.executeUpdate();
+            delErstellt.close();
 
             //aus DB dienstleistung loeschen
-            statement.setString(1, "dienstleistung");
-            statement.executeUpdate();
-
-            statement.close();
+            PreparedStatement delDienstleistung = conn.prepareStatement("DELETE FROM dienstleistung WHERE DienstleistungsID = ? LIMIT 1");
+            delDienstleistung.setString(1, angebotsID);
+            delDienstleistung.executeUpdate();
+            delDienstleistung.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void gesuchAendern(String gesuchsID, Dienstleistungsgesuchdaten attr, Object wert) {
-        try {
-            PreparedStatement statement = conn.prepareStatement("UPDATE dienstleistung SET ? = ? WHERE DienstleistungsID = ? LIMIT 1");
+        String spalte = "";
 
+        try {
             switch (attr) {
-                case GESUCH_ID -> statement.setString(1, "DienstleistungsID");
-                case TITEL -> statement.setString(1, "Titel");
-                case BESCHREIBUNG -> statement.setString(1, "Beschreibung");
-                case KATEGORIE -> statement.setString(1, "Kategorie");
-                case SUCHENDER_ID -> statement.setString(1, "PersonenID");
-                case URL -> statement.setString(1, "ImageUrl");
+                case GESUCH_ID -> spalte = "DienstleistungsID";
+                case TITEL -> spalte = "Titel";
+                case BESCHREIBUNG -> spalte = "Beschreibung";
+                case KATEGORIE -> spalte = "Kategorie";
+                case SUCHENDER_ID -> spalte = "PersonenID";
+                case URL -> spalte = "ImageUrl";
                 default -> throw new NoSuchObjectException("Wert " + attr + " nicht gefunden!");
             }
 
-            statement.setString(2, wert.toString());
-            statement.setString(3, gesuchsID);
+            PreparedStatement statement = conn.prepareStatement("UPDATE dienstleistung SET %s = ? WHERE DienstleistungsID = ? LIMIT 1".formatted(spalte));
+
+            statement.setString(1, wert.toString());
+            statement.setString(2, gesuchsID);
 
             statement.executeUpdate();
         } catch (SQLException | NoSuchObjectException e) {
@@ -213,48 +217,27 @@ public class DienstleistungsDB extends Database {
     }
 
     public void angebotAendern(String angebotsID, Dienstleistungsangebotdaten attr, Object wert) {
-        String wertAsString = wert.toString();
-        Timestamp wertAsTime = Timestamp.valueOf(wertAsString);
+        String spalte;
 
         try {
-            PreparedStatement statement = conn.prepareStatement("UPDATE dienstleistung SET ? = ? WHERE DienstleistungsID = ?");
+            spalte = switch (attr) {
+                case ANGEBOTS_ID -> "DienstleistungsID";
+                case TITEL -> "Titel";
+                case BESCHREIBUNG -> "Beschreibung";
+                case KATEGORIE -> "Kategorie";
+                case AB -> "Ab";
+                case BIS -> "Bis";
+                case PERSONEN_ID -> "PersonenID";
+                case URL -> "ImageUrl";
+                default -> throw new NoSuchObjectException("Wert " + attr + " nicht gefunden!");
+            };
 
-            switch (attr) {
-                case ANGEBOTS_ID:
-                    statement.setString(1, "DienstleistungsID");
-                    statement.setString(2, wertAsString);
-                    break;
-                case TITEL:
-                    statement.setString(1, "Titel");
-                    statement.setString(2, wertAsString);
-                    break;
-                case BESCHREIBUNG:
-                    statement.setString(1, "Beschreibung");
-                    statement.setString(2, wertAsString);
-                    break;
-                case KATEGORIE:
-                    statement.setString(1, "Kategorie");
-                    statement.setString(2, wertAsString);
-                    break;
-                case AB:
-                    statement.setString(1, "Ab");
-                    statement.setString(2, wertAsTime.toString());
-                    break;
-                case BIS:
-                    statement.setString(1, "Bis");
-                    statement.setString(2, wertAsTime.toString());
-                    break;
-                case PERSONEN_ID:
-                    statement.setString(1, "PersonenID");
-                    statement.setString(2, wertAsString);
-                    break;
-                case URL:
-                    statement.setString(1, "ImageUrl");
-                    statement.setString(2, wertAsString);
-                    break;
-                default:
-                    throw new NoSuchObjectException("Wert " + attr + " nicht gefunden!");
-            }
+            PreparedStatement statement = conn.prepareStatement("UPDATE dienstleistung SET %s = ? WHERE DienstleistungsID = ?".formatted(spalte));
+
+            statement.setString(1, wert.toString());
+            statement.setString(2, angebotsID);
+
+            statement.executeUpdate();
         } catch (SQLException | NoSuchObjectException e) {
             throw new RuntimeException(e);
         }
