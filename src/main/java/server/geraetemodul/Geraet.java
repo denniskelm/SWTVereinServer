@@ -158,6 +158,19 @@ public class Geraet implements IGeraet {
         return result;
     }
 
+    public Object[][] getHistorieListeAlsArray() {
+        Object[][] result = new Object[reservierungsliste.size()][4];
+
+        for (int i = 0; i < historie.size(); i++) {
+            result[i][0] = historie.get(i).getMitgliedsID();
+            result[i][1] = historie.get(i).getReservierdatum();
+            result[i][2] = historie.get(i).getFristBeginn();
+            result[i][3] = historie.get(i).isAbgegeben();
+        }
+
+        return result;
+    }
+
 
     public ArrayList<Ausleiher> getHistorie() {
         return historie;

@@ -245,9 +245,8 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         info[5] = g.getLeihfrist();
         info[6] = g.getLeihstatus().toString();
         info[7] = g.getGeraetAbholort();
-        info[8] = g.getHistorie();
+        info[8] = g.getHistorieListeAlsArray();
         info[9] = g.getReservierungsListeAlsArray();
-        System.out.println(g.getReservierungsliste().size());
         info[10] = g.getBild();
 
 
