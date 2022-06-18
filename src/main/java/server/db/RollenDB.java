@@ -77,35 +77,64 @@ public class RollenDB extends Database {
     public void rolleAendern(String personenID, Rolle rolle) {
         String dbFound = null;
         LocalDateTime mitglied_seit;
-        Gast g;
+        Gast g = null;
 
         try {
-            try {
-                g = rv.fetch(personenID);
 
-                PreparedStatement getMitgliedSeit = conn.prepareStatement("SELECT Mitglied_seit FROM mitglied WHERE PersonenID = ?");
-                getMitgliedSeit.setString(1, personenID);
+            PreparedStatement prep = conn.prepareStatement("SELECT * FROM gast WHERE PersonenID = ?");
+            prep.setString(1, personenID);
+            ResultSet mitgliedDaten = prep.executeQuery();
 
-                ResultSet mitgliedSeit = getMitgliedSeit.executeQuery();
-                mitgliedSeit.next();
+            mitgliedDaten.next();
 
-                mitglied_seit = mitgliedSeit.getTimestamp(1).toLocalDateTime();
-                
-            } catch (NoSuchObjectException e) {
-                g = rv.fetchGaeste(personenID);
-                dbFound = "gast";
-                mitglied_seit = LocalDateTime.now();
-            }
+            PreparedStatement getMitgliedSeit = conn.prepareStatement("SELECT Mitglied_seit FROM mitglied WHERE PersonenID = ?");
+            getMitgliedSeit.setString(1, personenID);
+
+            ResultSet mitgliedSeit = getMitgliedSeit.executeQuery();
+            mitgliedSeit.next();
+
+            mitglied_seit = mitgliedSeit.getTimestamp(1).toLocalDateTime();
 
             // herausfinden welchen Rang er hat
-            if (dbFound == null)
-                dbFound = getRolle(personenID);
+            dbFound = getRolle(personenID);
 
             switch (dbFound) {
-                case "gast" -> g = new Gast(personenID, g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(), g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus());
-                case "mitglied" -> g = new Mitglied(personenID, g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(), g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(), mitglied_seit);
-                case "mitarbeiter" -> g = new Mitarbeiter(personenID, g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(), g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(), mitglied_seit);
-                case "vorstand" -> g = new Vorsitz(personenID, g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(), g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(), mitglied_seit);
+                case "gast" -> g = new Gast(personenID,
+                                        mitgliedDaten.getString("Nachname"),
+                                        mitgliedDaten.getString("Vorname"),
+                                        mitgliedDaten.getString("E-Mail"),
+                                        mitgliedDaten.getInt("Passwort"),
+                                        mitgliedDaten.getString("Anschrift"),
+                                        mitgliedDaten.getString("MitlgiedsNr"),
+                                        mitgliedDaten.getString("Telefonnummer"),
+                                        mitgliedDaten.getString("ist_spender").equals("Y"));
+                case "mitglied" -> g = new Mitglied(personenID, mitgliedDaten.getString("Nachname"),
+                        mitgliedDaten.getString("Vorname"),
+                        mitgliedDaten.getString("E-Mail"),
+                        mitgliedDaten.getInt("Passwort"),
+                        mitgliedDaten.getString("Anschrift"),
+                        mitgliedDaten.getString("MitlgiedsNr"),
+                        mitgliedDaten.getString("Telefonnummer"),
+                        mitgliedDaten.getString("ist_spender").equals("Y"),
+                        mitglied_seit);
+                case "mitarbeiter" -> g = new Mitarbeiter(personenID, mitgliedDaten.getString("Nachname"),
+                        mitgliedDaten.getString("Vorname"),
+                        mitgliedDaten.getString("E-Mail"),
+                        mitgliedDaten.getInt("Passwort"),
+                        mitgliedDaten.getString("Anschrift"),
+                        mitgliedDaten.getString("MitlgiedsNr"),
+                        mitgliedDaten.getString("Telefonnummer"),
+                        mitgliedDaten.getString("ist_spender").equals("Y"),
+                        mitglied_seit);
+                case "vorstand" -> g = new Vorsitz(personenID, mitgliedDaten.getString("Nachname"),
+                        mitgliedDaten.getString("Vorname"),
+                        mitgliedDaten.getString("E-Mail"),
+                        mitgliedDaten.getInt("Passwort"),
+                        mitgliedDaten.getString("Anschrift"),
+                        mitgliedDaten.getString("MitlgiedsNr"),
+                        mitgliedDaten.getString("Telefonnummer"),
+                        mitgliedDaten.getString("ist_spender").equals("Y"),
+                        mitglied_seit);
             }
 
             if (g.getClass() == rolle.getKlasse())
