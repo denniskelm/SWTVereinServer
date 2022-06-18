@@ -410,11 +410,14 @@ public class RollenDB extends Database {
             return;
         }
 
+        String istGesperrt = "N";
+
+        if (!(gast instanceof Gast))
+            istGesperrt = ((Mitglied) gast).isGesperrt() ? "Y" : "N";
+
         // Wird für alles hierunter gebraucht
         if (gast.getClass() == GAST.getKlasse())
-            zuDBHinzufuegen(gast.getPersonenID(), mitglied_seit, "N", "mitglied");
-
-        // TODO wo wird das Stundenkonto gespeichert?
+            zuDBHinzufuegen(gast.getPersonenID(), mitglied_seit, istGesperrt, "mitglied");
 
         if (rolle == MITGLIED) {
             if (gast.getClass() == MITARBEITER.getKlasse())
