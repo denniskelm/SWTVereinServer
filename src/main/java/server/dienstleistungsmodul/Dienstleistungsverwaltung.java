@@ -155,7 +155,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     }
 
 
-    public void createIdListen(){  //TODO überpüfen, ob diese schon in der von der db geholten angebot/gesuch-menge sind
+    public void createIdListen(){
         int anzahl=0;
         while (anzahl<5000) {
             if (anzahl < 9)

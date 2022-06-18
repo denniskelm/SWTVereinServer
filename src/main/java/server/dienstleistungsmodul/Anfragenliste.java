@@ -29,7 +29,7 @@ public class Anfragenliste implements IAnfragenliste {
         this.gaidliste = new ArrayList<String>();
         int anzahl=0;
         while (anzahl<50) {
-            if (anzahl < 9)  // todo : nach dem testen ist die Rueckgabe nicht wie gewunscht???
+            if (anzahl < 9)
                 aaidliste.add("aa0000" + (anzahl + 1)); // klammern hinzugefügt damit test richtig
             else if (anzahl < 99)
                 aaidliste.add("aa000" + (anzahl + 1));
@@ -39,7 +39,7 @@ public class Anfragenliste implements IAnfragenliste {
         //Liste mit verfuegbaren IDs für Angebote fuellen
         anzahl=0;
         while (anzahl<50) {
-            if (anzahl < 9)  // todo : nach dem testen ist die Rueckgabe nicht wie gewunscht???
+            if (anzahl < 9)
                 gaidliste.add("ga0000" + (anzahl + 1)); // klammern hinzugefügt damit test richtig
             else if (anzahl < 99)
                 gaidliste.add("ga000" + (anzahl + 1));
@@ -158,7 +158,7 @@ public class Anfragenliste implements IAnfragenliste {
     }
 
     public Object[][] omniAngebotsAnfrageDaten() throws NoSuchObjectException {
-        Object[][] liste = new Object[aliste.size()][10];//TODO index out of range
+        Object[][] liste = new Object[aliste.size()][10];
 
         for(int i = 0; i < aliste.size(); i++) {
             liste[i] = getAAnfragenInfo(aliste.get(i).anfrageID);
