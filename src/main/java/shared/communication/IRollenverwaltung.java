@@ -60,6 +60,6 @@ public interface IRollenverwaltung extends Remote {
     public Rolle fetchRolle(String mitgliedsID) throws RemoteException;
     public void nutzerAusAlterListeEntfernen(String mitgliedsID, Rolle rolle) throws RemoteException;
     public boolean istSpender(String mitgliedsID) throws RemoteException;
-
+    void nutzerEntfernen(String personenID) throws RemoteException;
 
 }

@@ -303,16 +303,19 @@ public class RollenDB extends Database {
 
         try {
             // Mitglieder erstellen
-            PreparedStatement getMitglieder = conn.prepareStatement("SELECT PersonenID FROM mitglied");
+            PreparedStatement getMitglieder = conn.prepareStatement("SELECT * FROM mitglied");
             ResultSet result = getMitglieder.executeQuery();
 
             ArrayList<String> mitgliederIDs = new ArrayList<>();
 
             while (result.next()) {
-                mitgliederIDs.add(result.getString(1));
+                mitgliederIDs.add(result.getString("PersonenID"));
             }
 
             ArrayList<Gast> mitgliederAlsGaeste = getGaesteWithIDs(mitgliederIDs);
+            PreparedStatement prep = conn.prepareStatement("SELECT * FROM mitglied");
+            ResultSet result2 = prep.executeQuery();
+            result2.next();
 
             for (Gast g : mitgliederAlsGaeste) {
                 mitglied_seit = getMitgliedSeit(g.getPersonenID());
@@ -320,6 +323,9 @@ public class RollenDB extends Database {
                 m = new Mitglied(g.getPersonenID(), g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(),
                         g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(),
                         mitglied_seit);
+
+                m.setIst_gesperrt(result2.getString("ist_gesperrt").equals("Y"));
+                result2.next();
 
                 mitglieder.add(m);
             }
@@ -351,6 +357,11 @@ public class RollenDB extends Database {
                 mitgliederIDs.add(result.getString(1));
             }
 
+            ArrayList<Gast> mitgliederAlsGaeste = getGaesteWithIDs(mitgliederIDs);
+            PreparedStatement prep = conn.prepareStatement("SELECT * FROM mitglied");
+            ResultSet result2 = prep.executeQuery();
+            result2.next();
+
             ArrayList<Gast> mitarbeiterAlsGaeste = getGaesteWithIDs(mitgliederIDs);
 
             for (Gast g : mitarbeiterAlsGaeste) {
@@ -359,6 +370,9 @@ public class RollenDB extends Database {
                 m = new Mitarbeiter(g.getPersonenID(), g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(),
                         g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(),
                         mitglied_seit);
+
+                m.setIst_gesperrt(result2.getString("ist_gesperrt").equals("Y"));
+                result2.next();
 
                 mitarbeiter.add(m);
             }
@@ -390,6 +404,11 @@ public class RollenDB extends Database {
                 mitgliederIDs.add(result.getString(1));
             }
 
+            PreparedStatement prep = conn.prepareStatement("SELECT * FROM mitglied");
+            ResultSet result2 = prep.executeQuery();
+
+            result2.next();
+
             ArrayList<Gast> mitarbeiterAlsGaeste = getGaesteWithIDs(mitgliederIDs);
 
             for (Gast g : mitarbeiterAlsGaeste) {
@@ -398,6 +417,9 @@ public class RollenDB extends Database {
                 v = new Vorsitz(g.getPersonenID(), g.getNachname(), g.getVorname(), g.getEmail(), g.getPassword(),
                         g.getAnschrift(), g.getMitgliedsNr(), g.getTelefonNr(), g.getSpenderStatus(),
                         mitglied_seit);
+
+                v.setIst_gesperrt(result2.getString("ist_gesperrt").equals("Y"));
+                result2.next();
 
                 vorsitze.add(v);
             }

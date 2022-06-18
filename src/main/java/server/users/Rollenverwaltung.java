@@ -413,7 +413,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
                     result[0] = m.getPersonenID();
                     result[1] = Rolle.MITARBEITER;
 
-                    if(m.isGesperrt())throw new Exception("Du bist gesperrt!!!");
+                    if(m.isGesperrt())throw new Exception("Du bist gesperrt!");
                     return result;
                 }
                 else
@@ -428,7 +428,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
                     result[0] = m.getPersonenID();
                     result[1] = Rolle.MITGLIED;
 
-                    if(m.isGesperrt())throw new Exception("Du bist gesperrt!!!");
+                    if(m.isGesperrt())throw new Exception("Du bist gesperrt!");
                     return result;
                 }
                 else
@@ -443,7 +443,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
                     result[0] = m.getPersonenID();
                     result[1] = Rolle.GAST;
 
-                    //if(m.isGesperrt())throw new Exception("Du bist gesperrt!!!");
+                    //if(m.isGesperrt())throw new Exception("Du bist gesperrt!");
                     return result;
                 }
                 else
