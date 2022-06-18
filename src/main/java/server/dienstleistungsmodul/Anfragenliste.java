@@ -227,15 +227,13 @@ public class Anfragenliste implements IAnfragenliste {
 
         if (g.nutzer.isGesperrt()) throw new NoPermissionException("Mitglied ist gesperrt.");
 
-        this.gaidliste.add(g.anfrageID);
-        this.gliste.remove(g);
-
-
-
-        aDB.removegAnfrage(g);
+        //this.gaidliste.add(g.anfrageID);
+        //this.gliste.remove(g);
+        //aDB.removegAnfrage(g);
 
         for (GesuchAnfrage ga : gliste) {
-            if (ga.gesuch==g.gesuch) {
+            if (ga.gesuch.equals(g.gesuch)) {
+                this.gaidliste.add(ga.anfrageID);
                 this.gliste.remove(ga);
                 aDB.removegAnfrage(ga);
             }
@@ -255,12 +253,13 @@ public class Anfragenliste implements IAnfragenliste {
         if (a.nutzer.isGesperrt()) throw new NoPermissionException("Mitglied ist gesperrt.");
 
 
-        this.aaidliste.add(a.anfrageID);
-        this.aliste.remove(a);
-        aDB.removeaAnfrage(a);
+        //this.aaidliste.add(a.anfrageID);
+        //this.aliste.remove(a);
+        //aDB.removeaAnfrage(a);
 
         for (AngebotAnfrage aa : aliste) {
-                if (aa.angebot == a.angebot){
+                if (aa.angebot.equals(a.angebot)){
+                    this.aaidliste.add(aa.anfrageID);
                     this.aliste.remove(aa);
                     aDB.removeaAnfrage(aa);
             }
