@@ -183,6 +183,8 @@ public class Anfragenliste implements IAnfragenliste {
     public void addaAnfrage(String anfragenderID, String angebotID, int stunden) throws NoSuchObjectException {
         Dienstleistungsangebot angebot= VereinssoftwareServer.dienstleistungsverwaltung.fetchAngebot(angebotID);
         Mitglied anfragender=VereinssoftwareServer.rollenverwaltung.fetch(anfragenderID);
+        if(anfragender.isGesperrt())throw new NoSuchObjectException("Du bist gesperrt!!!");
+        if(VereinssoftwareServer.rollenverwaltung.fetch(angebot.getPersonenID()).isGesperrt())throw new NoSuchObjectException("Anbieter ist gesperrt!!!");
         String anfrageID=this.aaidliste.get(0);
         this.aaidliste.remove(0);
         AngebotAnfrage a =new AngebotAnfrage(anfrageID, anfragender, angebot, stunden);
@@ -195,6 +197,8 @@ public class Anfragenliste implements IAnfragenliste {
     public void addgAnfrage(String anfragenderID, String gesuchID, int stunden) throws NoSuchObjectException{
         Dienstleistungsgesuch gesuch= VereinssoftwareServer.dienstleistungsverwaltung.fetchGesuch(gesuchID);
         Mitglied anfragender=VereinssoftwareServer.rollenverwaltung.fetch(anfragenderID);
+        if(anfragender.isGesperrt())throw new NoSuchObjectException("Du bist gesperrt!!!");
+        if(VereinssoftwareServer.rollenverwaltung.fetch(gesuch.getSuchender()).isGesperrt())throw new NoSuchObjectException("Suchender ist gesperrt!!!");
         String anfrageID=this.gaidliste.get(0);
         this.gaidliste.remove(0);
         GesuchAnfrage g = new GesuchAnfrage(anfrageID, anfragender, gesuch, stunden);
