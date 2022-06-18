@@ -14,7 +14,7 @@ Raphael Kleebaum
 Gabriel Kleebaum
 */
 
-// Interface, um RMI für Klasse Rollenverwaltung zu ermöglichen
+// Interface, um RMI fuer Klasse Rollenverwaltung zu ermöglichen
 public interface IRollenverwaltung extends Remote {
 
 
@@ -43,6 +43,5 @@ public interface IRollenverwaltung extends Remote {
     Object[] gastDaten(String mitgliedsID) throws RemoteException;
     boolean existiertEMail(String email) throws RemoteException;
     public String mahnungsIdErstellen() throws RemoteException;
-
 
 }

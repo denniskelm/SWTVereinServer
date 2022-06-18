@@ -5,14 +5,11 @@ package shared.communication;
 Bastian Reichert
 */
 
-//import server.dienstleistungsmodul.AngebotAnfragedaten;
-//import server.dienstleistungsmodul.GesuchAnfragedaten;
-
 import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-// Interface, um RMI für Klasse Dienstleistungsverwaltung zu ermöglichen
+// Interface, um RMI fuer Klasse Anfrageliste zu ermoeglichen
 public interface IAnfragenliste extends Remote {
     Object[][] omniAngebotsAnfrageDaten() throws Exception;
 
@@ -28,3 +25,4 @@ public interface IAnfragenliste extends Remote {
 
 
 }
+
