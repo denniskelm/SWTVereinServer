@@ -195,6 +195,10 @@ public class RollenDB extends Database {
                 prep.setInt(1, Integer.parseInt(wert));
             else if (attr.equals(Personendaten.MITGLIED_SEIT))
                 prep.setTimestamp(1, Timestamp.valueOf(attr.toString()));
+            else if (attr.equals(Personendaten.IST_GESPERRT))
+                prep.setString(1, (wert.equalsIgnoreCase("true") ? "Y" : "N"));
+            else if (attr.equals(Personendaten.SPENDER))
+                prep.setString(1, (wert.equalsIgnoreCase("true") ? "Y" : "N"));
             else
                 prep.setString(1, wert);
 

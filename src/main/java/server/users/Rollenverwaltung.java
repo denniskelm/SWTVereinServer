@@ -391,7 +391,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
     public Object[] login(String email, String password) throws Exception {
         Object[] result = new Object[2];
 
-        System.out.println("Es meldet sich an: " + email + password);
+        System.out.println("Es meldet sich an: " + email);
 
         for (Mitglied m : vorsitze) {
             if (m.getEmail().equals(email)) {
