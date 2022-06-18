@@ -19,6 +19,7 @@ import server.db.RollenDB;
 import shared.communication.*;
 
 import java.rmi.NoSuchObjectException;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -147,6 +148,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
             }
         }
     }
+
 
     public long getIdCounter() {
         return IdCounter;
@@ -277,8 +279,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
     private void rolleAendernSwitch(Gast gast, Rolle rolle, LocalDateTime mitglied_seit) {
         Gast g;
 
-        nutzerAusAlterListeEntfernen(gast);
-
         switch (rolle) {
             case GAST:
                 g = new Gast(gast.getPersonenID(),
@@ -338,6 +338,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
                 vorsitze.add((Vorsitz) g);
                 break;
         }
+        nutzerAusAlterListeEntfernen(gast.getPersonenID(), fetchRolle(gast.getPersonenID()));
     }
 
     public void nutzereintragAendern(String mitgliedsID, Personendaten attr, String wert) throws NoSuchObjectException {
@@ -351,35 +352,35 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
     }
 
-    private void nutzerAusAlterListeEntfernen(Gast mitglied) {
+    public void nutzerAusAlterListeEntfernen(String mitgliedsID, Rolle rolle) {
          //überprüft ob der Nutzer der Rolle Gast angehört und löscht dann diesen
-        if (mitglied instanceof Gast) {
+        if (rolle == Rolle.GAST) {
             for (int i = 0; i < gaeste.size(); i++) {
-                if (gaeste.get(i).getPersonenID().equals(mitglied.getPersonenID())) {
+                if (gaeste.get(i).getPersonenID().equals(mitgliedsID)) {
                     gaeste.remove(i);
                     break;
                 }
             }
             //überprüft ob der Nutzer der Rolle Mitglied angehört und löscht dann diesen
-        } else if (mitglied instanceof Mitglied) {
+        } else if (rolle == Rolle.MITGLIED) {
             for (int i = 0; i < mitglieder.size(); i++) {
-                if (mitglieder.get(i).getPersonenID().equals(mitglied.getPersonenID())) {
+                if (mitglieder.get(i).getPersonenID().equals(mitgliedsID)) {
                     mitglieder.remove(i);
                     break;
                 }
             }
             //überprüft ob der Nutzer der Rolle Mitarbeiter angehört und löscht dann diesen
-        } else if (mitglied instanceof Mitarbeiter) {
+        } else if (rolle == Rolle.MITARBEITER) {
             for (int i = 0; i < mitarbeiter.size(); i++) {
-                if (mitarbeiter.get(i).getPersonenID().equals(mitglied.getPersonenID())) {
+                if (mitarbeiter.get(i).getPersonenID().equals(mitgliedsID)) {
                     mitarbeiter.remove(i);
                     break;
                 }
             }
             //überprüft ob der Nutzer der Rolle Vorsitz angehört und löscht dann diesen
-        } else if (mitglied instanceof Vorsitz) {
+        } else if (rolle == Rolle.VORSITZ) {
             for (int i = 0; i < vorsitze.size(); i++) {
-                if (vorsitze.get(i).getPersonenID().equals(mitglied.getPersonenID())) {
+                if (vorsitze.get(i).getPersonenID().equals(mitgliedsID)) {
                     vorsitze.remove(i);
                     break;
                 }
@@ -387,7 +388,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
         }
     }
 
-    //TODO Sperrung
     public Object[] login(String email, String password) throws Exception {
         Object[] result = new Object[2];
 
