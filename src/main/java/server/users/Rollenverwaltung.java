@@ -120,6 +120,28 @@ public class Rollenverwaltung implements IRollenverwaltung {
         throw new NoSuchObjectException("Person mit ID: " + personenID + " nicht vorhanden.");
     }
 
+    public Rolle fetchRolle(String mitgliedsID){
+        try {
+            Gast gast = fetchGaeste(mitgliedsID);
+            return Rolle.GAST;
+        } catch (NoSuchObjectException e) {
+            try {
+                Mitglied mitglied = fetch(mitgliedsID);
+
+                if(mitglied instanceof Mitglied)
+                    return Rolle.MITGLIED;
+
+                else if(mitglied instanceof Mitarbeiter)
+                    return Rolle.MITARBEITER;
+
+                else
+                    return Rolle.VORSITZ;
+            } catch (NoSuchObjectException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
     public long getIdCounter() {
         return IdCounter;
     }

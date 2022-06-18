@@ -56,6 +56,8 @@ public interface IRollenverwaltung extends Remote {
     public Object[][] gaesteDaten() throws RemoteException;
     public Object[] gastDaten(String mitgliedsID) throws RemoteException;
     public String mahnungsIdErstellen() throws RemoteException;
+    public Rolle fetchRolle(String mitgliedsID) throws RemoteException;
+
 
 
 }
