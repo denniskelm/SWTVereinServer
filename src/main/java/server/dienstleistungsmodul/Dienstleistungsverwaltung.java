@@ -247,7 +247,9 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     public boolean gesuchLoeschen(String gesuch_ID) {
 
         try{
-            gesuche.remove(fetchGesuch(gesuch_ID));
+            Dienstleistungsgesuch g=fetchGesuch(gesuch_ID);
+            VereinssoftwareServer.rollenverwaltung.fetch(g.getSuchender()).getAnfragenliste().removeAlleGAnfragen(g);
+            gesuche.remove(g);
         }
         catch (NoSuchObjectException e){
             return false;
@@ -259,6 +261,8 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     public boolean angebotLoeschen(String angebots_ID) {
         try{
+            Dienstleistungsangebot a=fetchAngebot(angebots_ID);
+            VereinssoftwareServer.rollenverwaltung.fetch(a.getPersonenID()).getAnfragenliste().removeAlleAAnfragen(a);
             angebote.remove(fetchAngebot(angebots_ID));
         }
         catch (NoSuchObjectException e){
