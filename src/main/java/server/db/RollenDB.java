@@ -107,7 +107,7 @@ public class RollenDB extends Database {
                                         mitgliedDaten.getString("E-Mail"),
                                         mitgliedDaten.getInt("Passwort"),
                                         mitgliedDaten.getString("Anschrift"),
-                                        mitgliedDaten.getString("MitlgiedsNr"),
+                                        mitgliedDaten.getString("MitgliedsNr"),
                                         mitgliedDaten.getString("Telefonnummer"),
                                         mitgliedDaten.getString("ist_spender").equals("Y"));
                 case "mitglied" -> g = new Mitglied(personenID, mitgliedDaten.getString("Nachname"),
@@ -115,7 +115,7 @@ public class RollenDB extends Database {
                         mitgliedDaten.getString("E-Mail"),
                         mitgliedDaten.getInt("Passwort"),
                         mitgliedDaten.getString("Anschrift"),
-                        mitgliedDaten.getString("MitlgiedsNr"),
+                        mitgliedDaten.getString("MitgliedsNr"),
                         mitgliedDaten.getString("Telefonnummer"),
                         mitgliedDaten.getString("ist_spender").equals("Y"),
                         mitglied_seit);
@@ -124,7 +124,7 @@ public class RollenDB extends Database {
                         mitgliedDaten.getString("E-Mail"),
                         mitgliedDaten.getInt("Passwort"),
                         mitgliedDaten.getString("Anschrift"),
-                        mitgliedDaten.getString("MitlgiedsNr"),
+                        mitgliedDaten.getString("MitgliedsNr"),
                         mitgliedDaten.getString("Telefonnummer"),
                         mitgliedDaten.getString("ist_spender").equals("Y"),
                         mitglied_seit);
@@ -412,7 +412,7 @@ public class RollenDB extends Database {
 
             while (result.next()) {
                 Mahnung m = new Mahnung(result.getString("MahnungID"),
-                        result.getString("MitlgiedID"),
+                        result.getString("MitgliedID"),
                         result.getString("Grund"),
                         result.getTimestamp("Verfallsdatum").toLocalDateTime());
 

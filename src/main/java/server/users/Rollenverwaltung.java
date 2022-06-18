@@ -570,7 +570,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
     }
 
     public String mahnungsIdErstellen() {
-         if(mahnungen.get(mahnungen.size() + 1) == null && mahnungen.size() + 1 < 50000)
+         if(mahnungen.size() + 1 < 50000)
              return getString(mahnungen.size() + 1);
          else {
              for(int i = 0; i < mahnungen.size(); i++){
@@ -659,7 +659,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
     }
 
-    // Entfernt Gäste aus gaeste, wenn Sie Mitlgieder sind etc.
+    // Entfernt Gäste aus gaeste, wenn Sie Mitglieder sind etc.
     private void listenBereinigen() {
 
         for (Vorsitz v : vorsitze) {
