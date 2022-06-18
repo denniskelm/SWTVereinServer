@@ -230,13 +230,15 @@ public class Anfragenliste implements IAnfragenliste {
         //this.gaidliste.add(g.anfrageID);
         //this.gliste.remove(g);
         //aDB.removegAnfrage(g);
-
-        for (GesuchAnfrage ga : gliste) {
+        int i =0;
+        while (i<gliste.size()) {
+            GesuchAnfrage ga=gliste.get(i);
+            System.out.println(ga.anfrageID + " mit: " + ga.gesuch.getGesuch_ID());
             if (ga.gesuch.equals(g.gesuch)) {
                 this.gaidliste.add(ga.anfrageID);
                 this.gliste.remove(ga);
                 aDB.removegAnfrage(ga);
-            }
+            }else i++;
         }
 
         if (!VereinssoftwareServer.dienstleistungsverwaltung.gesuchLoeschen(g.gesuch.getGesuch_ID()))return;
@@ -257,12 +259,14 @@ public class Anfragenliste implements IAnfragenliste {
         //this.aliste.remove(a);
         //aDB.removeaAnfrage(a);
 
-        for (AngebotAnfrage aa : aliste) {
+        int i =0;
+        while (i<aliste.size()) {
+            AngebotAnfrage aa=aliste.get(i);
                 if (aa.angebot.equals(a.angebot)){
                     this.aaidliste.add(aa.anfrageID);
                     this.aliste.remove(aa);
                     aDB.removeaAnfrage(aa);
-            }
+            }else i++;
         }
 
         if (!VereinssoftwareServer.dienstleistungsverwaltung.angebotLoeschen(a.angebot.getAngebots_ID()))return;
