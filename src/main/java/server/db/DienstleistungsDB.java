@@ -10,9 +10,8 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-/*
-@author
-Gabriel Kleebaum
+/**
+ * @author Gabriel Kleebaum
  */
 
 //Diese Klasse verbindet die Dienstleistungsverwaltung mit der Datenbank
@@ -25,10 +24,7 @@ public class DienstleistungsDB extends Database {
         conn = super.getConnection();
     }
 
-
-
-
-        public ArrayList<Dienstleistungsangebot> getAngeboteArrayList() {
+    public ArrayList<Dienstleistungsangebot> getAngeboteArrayList() {
         ArrayList<Dienstleistungsangebot> angebote = new ArrayList<>();
 
         try {

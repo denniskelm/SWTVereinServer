@@ -184,6 +184,9 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
     }
 
+    public boolean istSpender(String nutzerId) {
+         return rDB.istSpender(nutzerId);
+    }
 
 
     public Object[][] mitgliederDaten() {

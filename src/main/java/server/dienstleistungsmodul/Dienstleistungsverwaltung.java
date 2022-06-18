@@ -18,20 +18,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/*
-@author
-//TODO Raphael Kleebaum
-Jonny Schlutter
-Gabriel Kleebaum
-Mhd Esmail Kanaan
-//TODO Gia Huy Hans Tran
-Ole Björn Adelmann
-Bastian Reichert
-Dennis Kelm
+/**
+ * @author Raphael Kleebaum
+ * @author Jonny Schlutter
+ * @author Gabriel Kleebaum
+ * @author Mhd Esmail Kanaan
+ * @author Ole Adelmann
+ * @author Bastian Reichert
+ * @author Dennis Kelm
 */
-
-
-
 
 public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
@@ -39,10 +34,6 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
     private ArrayList<Dienstleistungsangebot> angebote;
     private ArrayList<Dienstleistungsgesuch> gesuche;
     private final DienstleistungsDB dlDB;
-
-
-
-
     public ArrayList<String> aidliste;//Angebote
     public ArrayList<String> gidliste;//Gesuche
 
@@ -54,11 +45,9 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
         return gesuche;
     }
 
-
     public ArrayList<String> getAidliste() {
         return aidliste;
     }
-
 
     public DienstleistungsDB getDlDB() {
         return dlDB;
@@ -98,7 +87,6 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     }
 
-
     // Für die Gui von Nöten
     public Object[] getAngeboteInformationen(String angebotID) throws NoSuchObjectException {
 
@@ -117,7 +105,6 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     // Für die Gui von Nöten
     public Object[] getGesucheInformationen(String gesucheID) throws NoSuchObjectException {
-
         Dienstleistungsgesuch g= fetchGesuch(gesucheID);
         Object[] info = new Object[6];
         info[0] = g.getTitel();

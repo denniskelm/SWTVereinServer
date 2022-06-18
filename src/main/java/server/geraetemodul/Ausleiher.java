@@ -4,6 +4,11 @@ import shared.communication.IAusleiher;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author Raphael Kleebaum
+ * @author Jonny Schlutter
+ */
+
 public class Ausleiher implements IAusleiher {
     private LocalDateTime reservierdatum;
     private LocalDateTime fristBeginn;

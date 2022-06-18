@@ -2,10 +2,9 @@ package server.dienstleistungsmodul;
 
 import server.users.Mitglied;
 
-/*
-@author
-Bastian Reichert
-*/
+/**
+ * @author Bastian Reichert
+ */
 public class AngebotAnfrage {
     public String anfrageID;
 

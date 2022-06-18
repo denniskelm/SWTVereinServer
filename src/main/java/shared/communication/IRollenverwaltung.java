@@ -23,6 +23,9 @@ public interface IRollenverwaltung extends Remote {
     Object[] gastHinzufuegen(String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, String telefonnummer, boolean spender) throws RemoteException;
     Object[] login(String email, String password) throws Exception;
     long getIdCounter() throws RemoteException;
+
+    boolean istSpender(String nutzerId) throws RemoteException;
+
     String getMitgliedsNamen(String MitgliedsID) throws RemoteException, Exception;
     String getMitgliedsMail(String MitgliedsID) throws RemoteException, Exception;
     int getStundenzahl(String mitgliedsID) throws RemoteException;
@@ -38,7 +41,7 @@ public interface IRollenverwaltung extends Remote {
     Object[][] mitarbeiterDaten() throws RemoteException;
     Object[][] gaesteDaten() throws RemoteException;
     Object[] gastDaten(String mitgliedsID) throws RemoteException;
-    boolean existiertEMail(String email);
+    boolean existiertEMail(String email) throws RemoteException;
     public String mahnungsIdErstellen() throws RemoteException;
 
 

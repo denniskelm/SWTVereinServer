@@ -1,15 +1,4 @@
 package server.db;
-/*
-@author
-Raphael Kleebaum
-//TODO Jonny Schlutter
-//TODO Gabriel Kleebaum
-//TODO Mhd Esmail Kanaan
-//TODO Gia Huy Hans Tran
-//TODO Ole Björn Adelmann
-//TODO Bastian Reichert
-//TODO Dennis Kelm
-*/
 
 import server.geraetemodul.Mahnung;
 import server.VereinssoftwareServer;
@@ -22,6 +11,10 @@ import java.util.ArrayList;
 
 import static server.users.Rolle.*;
 
+/**
+ * @author Raphael Kleebaum
+ * @author Ole Adelmann
+ */
 public class RollenDB extends Database {
 
     private final Connection conn;
@@ -124,6 +117,23 @@ public class RollenDB extends Database {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public boolean istSpender(String nutzerId) {
+        try {
+            PreparedStatement statement = conn.prepareStatement("SELECT  ist_spender FROM gast WHERE PersonenID = ?");
+            statement.setString(1, nutzerId);
+
+            ResultSet result = statement.executeQuery();
+
+            if(!result.next()) {
+                return false;
+            }
+
+            return result.getString("ist_spender").equals("Y");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void nutzerEintragAendern(String personenID, Personendaten attr, String wert) {

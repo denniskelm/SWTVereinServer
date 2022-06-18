@@ -1,8 +1,7 @@
 package server.dienstleistungsmodul;
-/*
-@author
-Bastian Reichert
-*/
+/**
+ * @author Bastian Reichert
+ */
 import server.VereinssoftwareServer;
 import server.db.AnfragenDB;
 import server.db.DienstleistungsDB;

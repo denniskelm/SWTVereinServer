@@ -6,6 +6,9 @@ import shared.communication.IAnfragenVerwaltung;
 
 import java.rmi.NoSuchObjectException;
 
+/**
+ * @author Bastian Reichert
+ */
 public class AnfragenVerwaltung implements IAnfragenVerwaltung {
 
     public Object[][] omniAngebotsAnfrageDaten(String nid) throws NoSuchObjectException {

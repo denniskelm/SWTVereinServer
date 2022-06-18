@@ -1,15 +1,9 @@
 package server.geraetemodul;
-/*
-@author
-Raphael Kleebaum
-Jonny Schlutter
-//TODO Gabriel Kleebaum
-Mhd Esmail Kanaan
-//TODO Gia Huy Hans Tran
-//TODO Ole Björn Adelmann
-//TODO Bastian Reichert
-//TODO Dennis Kelm
-*/
+/**
+ * @author Raphael Kleebaum
+ * @author Jonny Schlutter
+ * @author Mhd Esmail Kanaan
+ */
 
 import shared.communication.IGeraet;
 
