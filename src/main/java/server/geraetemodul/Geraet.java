@@ -159,7 +159,7 @@ public class Geraet implements IGeraet {
     }
 
     public Object[][] getHistorieListeAlsArray() {
-        Object[][] result = new Object[reservierungsliste.size()][4];
+        Object[][] result = new Object[historie.size()][4];
 
         for (int i = 0; i < historie.size(); i++) {
             result[i][0] = historie.get(i).getMitgliedsID();
