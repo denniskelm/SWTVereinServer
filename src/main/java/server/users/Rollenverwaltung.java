@@ -7,6 +7,12 @@ Jonny Schlutter
 Ole Björn Adelmann
 */
 
+/* Was macht diese Klasse ?
+   Die Rollenverwaltungsklasse zeigt  alle Nutzer der Software an.
+   Außerdem gibt es Methoden, um neue Nutzer zu erstellen, Nutzer eine andere Rolle zu geben oder auch um Nutzer eine
+   Mahnung zu vergeben, dies kann allerdings nur von Mitarbeitern oder Vostandsvorsitzenden getan werden.
+ */
+
 import server.VereinssoftwareServer;
 import server.geraetemodul.Mahnung;
 import server.db.RollenDB;
@@ -38,16 +44,16 @@ public class Rollenverwaltung implements IRollenverwaltung {
              vorsitze = rDB.getVorsitze();
              mahnungen = rDB.getMahnungenListe();
              IdCounter = rDB.getIdCounter();
+
+             listenBereinigen();
+
          } catch (SQLException e) {
              System.err.println("Verbindung zu Datenbank konnte nicht hergestellt werden!");
              throw new RuntimeException(e);
          }
 
-         //mitgliedHinzufuegen("Ehrenmann", "Stefan", "stefan.ehrenmann@t-online.de", "12345678", "Huglfingstr. 27", "M4657", "110", false, LocalDateTime.now());
-         //mitgliedHinzufuegen("Tran", "Huy", "huy@email.de", "1234", "Musterstr. 1", "ABC", "123", true, LocalDateTime.now().minusDays(3));
-         //mitgliedHinzufuegen("Kelm", "Dennis", "dennis@email.de", "2345", "Teststr. 4", "DEF", "234", false, LocalDateTime.now().minusDays(20));
      }
-
+     // Fügt einen Gast hinzu
      public Object[] gastHinzufuegen(String nachname, String vorname, String email, String password, String anschrift, String mitgliedsnr, String telefonnummer, boolean spender) {
          if (gaeste.size() >= 50000) throw new ArrayIndexOutOfBoundsException();
 
@@ -73,7 +79,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
          return result;
      }
-     
+     // Fügt ein Mitglied hinzu
      public void mitgliedHinzufuegen(String nachname, String vorname, String email, String password, String anschrift,
                                      String mitgliedsnr, String telefonnummer, boolean spender/*, Profilseite profilseite */,
                                      LocalDateTime mitglied_seit) {
@@ -114,24 +120,10 @@ public class Rollenverwaltung implements IRollenverwaltung {
         throw new NoSuchObjectException("Person mit ID: " + personenID + " nicht vorhanden.");
     }
 
-    public  ArrayList<Mitglied> getMitglieder() {
-        return mitglieder;
-    }
-
-
-    public ArrayList<Mitarbeiter> getMitarbeiter() {
-        return mitarbeiter;
-    }
-
-    public ArrayList<Vorsitz> getVorsitze() {
-        return vorsitze;
-    }
-
     public long getIdCounter() {
         return IdCounter;
     }
 
-    public Object[] gastListeAnzeigen() { return gaeste.toArray(); }
 
     public Object[] gastDaten(String mitgliedsID) {
         try {
@@ -155,14 +147,12 @@ public class Rollenverwaltung implements IRollenverwaltung {
     }
 
     public Object[][] gaesteDaten() {
-        Object[][] gaesteDaten = new Object[gaeste.size()][11];
-        for(int i =0; i < gaeste.size(); i++){
-            gaesteDaten[i] = mitgliedDaten(gaeste.get(i).getPersonenID());
+        Object[][] gaesteDaten = new Object[gaeste.size()][8];
+        for(int i = 0; i < gaeste.size(); i++){
+            gaesteDaten[i] = gastDaten(gaeste.get(i).getPersonenID());
         }
         return gaesteDaten;
     }
-
-    public Object[] mitgliedListeAnzeigen() { return mitglieder.toArray(); }
 
     public Object[] mitgliedDaten(String mitgliedsID){
         try {
@@ -187,33 +177,30 @@ public class Rollenverwaltung implements IRollenverwaltung {
             throw new RuntimeException(e);
         }
 
-
     }
 
     public Object[][] mitgliederDaten() {
          Object[][] mitgliederDaten = new Object[mitglieder.size()][11];
-         for(int i =0; i < mitglieder.size(); i++){
+         for(int i = 0; i < mitglieder.size(); i++){
              mitgliederDaten[i] = mitgliedDaten(mitglieder.get(i).getPersonenID());
          }
          return mitgliederDaten;
     }
 
-    public Object[] mitarbeiterListeAnzeigen() { return mitarbeiter.toArray(); }
 
     public Object[][] mitarbeiterDaten() {
         Object[][] mitarbeiterDaten = new Object[mitarbeiter.size()][11];
-        for(int i =0; i < mitarbeiter.size(); i++){
+
+        for(int i = 0; i < mitarbeiter.size(); i++){
             mitarbeiterDaten[i] = mitgliedDaten(mitarbeiter.get(i).getPersonenID());
         }
         return mitarbeiterDaten;
      }
 
-    public Object[] vorsitzListeAnzeigen() { return vorsitze.toArray(); }
-
     public Object[][] vorsitzDaten() {
         Object[][] vorsitzeDaten = new Object[vorsitze.size()][11];
-        for(int i =0; i < vorsitze.size(); i++){
-            vorsitzeDaten[i] = mitgliedDaten(mitglieder.get(i).getPersonenID());
+        for(int i = 0; i < vorsitze.size(); i++){
+            vorsitzeDaten[i] = mitgliedDaten(vorsitze.get(i).getPersonenID());
         }
         return vorsitzeDaten;
     }
@@ -257,6 +244,9 @@ public class Rollenverwaltung implements IRollenverwaltung {
     // Methode löscht die Person in der alten Rolle und erstellt eine Instanz der neuen Rolle der Person
     private void rolleAendernSwitch(Gast gast, Rolle rolle, LocalDateTime mitglied_seit) {
         Gast g;
+
+        nutzerAusAlterListeEntfernen(gast);
+
         switch (rolle) {
             case GAST:
                 g = new Gast(gast.getPersonenID(),
@@ -316,8 +306,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
                 vorsitze.add((Vorsitz) g);
                 break;
         }
-
-        nutzerAusAlterListeEntfernen(gast);
     }
 
     public void nutzereintragAendern(String mitgliedsID, Personendaten attr, String wert) throws NoSuchObjectException {
@@ -330,8 +318,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
         rDB.nutzerEintragAendern(mitgliedsID, attr, wert);
 
     }
-
-    public Object[] mahnungsverwaltungAnzeigen() { return mahnungen.toArray(); }
 
     private void nutzerAusAlterListeEntfernen(Gast mitglied) {
          //überprüft ob der Nutzer der Rolle Gast angehört und löscht dann diesen
@@ -476,9 +462,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
     }
 
-    public ArrayList<Gast> getGaeste() {
-        return gaeste;
-    }
 
     public String getMitgliedsNamen(String MitgliedsID) {
          Mitglied mitglied;
@@ -614,6 +597,66 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
         } catch (NoSuchObjectException e) {
             throw new RuntimeException(e);
+        }
+
+    }
+
+    // Entfernt Gäste aus gaeste, wenn Sie Mitlgieder sind etc.
+    private void listenBereinigen() {
+
+        for (Vorsitz v : vorsitze) {
+
+            for (int i = 0; i < mitarbeiter.size(); i++) {
+                if (mitarbeiter.get(i).getPersonenID().equals(v.getPersonenID())) {
+                    mitarbeiter.remove(i);
+                    break;
+                }
+            }
+
+            for (int i = 0; i < mitglieder.size(); i++) {
+                if (mitglieder.get(i).getPersonenID().equals(v.getPersonenID())) {
+                    mitglieder.remove(i);
+                    break;
+                }
+            }
+
+            for (int i = 0; i < gaeste.size(); i++) {
+                if (gaeste.get(i).getPersonenID().equals(v.getPersonenID())) {
+                    gaeste.remove(i);
+                    break;
+                }
+            }
+
+        }
+
+        for (Mitarbeiter m : mitarbeiter) {
+
+            for (int i = 0; i < mitglieder.size(); i++) {
+                if (mitglieder.get(i).getPersonenID().equals(m.getPersonenID())) {
+                    mitglieder.remove(i);
+                    break;
+                }
+            }
+
+            for (int i = 0; i < gaeste.size(); i++) {
+                if (gaeste.get(i).getPersonenID().equals(m.getPersonenID())) {
+                    gaeste.remove(i);
+                    break;
+                }
+            }
+
+        }
+
+        for (Mitglied m : mitglieder) {
+
+            for (int i = 0; i < gaeste.size(); i++) {
+                if (gaeste.get(i).getPersonenID().equals(m.getPersonenID())) {
+                    System.out.println("gfdgdf");
+                    gaeste.remove(i);
+                    break;
+                }
+            }
+
         }
 
     }

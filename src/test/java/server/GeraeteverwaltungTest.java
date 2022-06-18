@@ -193,7 +193,7 @@ class GeraeteverwaltungTest {
 
         Object newSPENDERNAME = "newSPENDERNAME";
         gv.geraeteDatenVerwalten("g00001", Geraetedaten.SPENDERNAME , newSPENDERNAME);
-        assertEquals(g.getGeraetName(),newNAME);
+        assertEquals(g.getSpenderName(),newSPENDERNAME);
 
         Object newLEIHFRIST = 20;
         gv.geraeteDatenVerwalten("g00001", Geraetedaten.LEIHFRIST , newLEIHFRIST);

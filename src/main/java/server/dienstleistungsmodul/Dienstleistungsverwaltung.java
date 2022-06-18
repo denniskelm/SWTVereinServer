@@ -42,6 +42,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
 
 
+
     public ArrayList<String> aidliste;//Angebote
     public ArrayList<String> gidliste;//Gesuche
 
@@ -51,6 +52,36 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     public ArrayList<Dienstleistungsgesuch> getGesucheArrayList() {
         return gesuche;
+    }
+
+
+    public ArrayList<String> getAidliste() {
+        return aidliste;
+    }
+
+
+    public DienstleistungsDB getDlDB() {
+        return dlDB;
+    }
+
+    public ArrayList<String> getGidliste() {
+        return gidliste;
+    }
+
+    public void setGesuche(ArrayList<Dienstleistungsgesuch> gesuche) {
+        this.gesuche = gesuche;
+    }
+
+    public void setAngebote(ArrayList<Dienstleistungsangebot> angebote) {
+        this.angebote = angebote;
+    }
+
+    public void setAidliste(ArrayList<String> aidliste) {
+        this.aidliste = aidliste;
+    }
+
+    public void setGidliste(ArrayList<String> gidliste) {
+        this.gidliste = gidliste;
     }
 
     public void reset() {
@@ -232,7 +263,7 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
             gesuche.remove(fetchGesuch(gesuch_ID));
         }
         catch (NoSuchObjectException e){
-            throw new RuntimeException();
+            return false;
         }
         gidliste.add(gesuch_ID);
         dlDB.gesuchLoeschen(gesuch_ID);
@@ -241,10 +272,10 @@ public class Dienstleistungsverwaltung implements IDienstleistungsverwaltung {
 
     public boolean angebotLoeschen(String angebots_ID) {
         try{
-            gesuche.remove(fetchAngebot(angebots_ID));
+            angebote.remove(fetchAngebot(angebots_ID));
         }
         catch (NoSuchObjectException e){
-            throw new RuntimeException();
+            return false;
         }
         aidliste.add(angebots_ID);
         dlDB.angebotLoeschen(angebots_ID);
