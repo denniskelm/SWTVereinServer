@@ -169,9 +169,11 @@ public class Anfragenliste implements IAnfragenliste {
     }
 
     public Object[][] omniGesuchsAnfrageDaten() throws NoSuchObjectException {
+
         Object[][] liste = new Object[gliste.size()][8];
 
         for(int i = 0; i < gliste.size(); i++) {
+
             liste[i] = getGAnfragenInfo(gliste.get(i).anfrageID);
         }
 
@@ -227,7 +229,17 @@ public class Anfragenliste implements IAnfragenliste {
 
         this.gaidliste.add(g.anfrageID);
         this.gliste.remove(g);
+
+
+
         aDB.removegAnfrage(g);
+
+        for (GesuchAnfrage ga : gliste) {
+            if (ga.gesuch==g.gesuch) {
+                this.gliste.remove(ga);
+                aDB.removegAnfrage(ga);
+            }
+        }
 
         if (!VereinssoftwareServer.dienstleistungsverwaltung.gesuchLoeschen(g.gesuch.getGesuch_ID()))return;
         this.nutzer.veraendereStundenkonto(g.stunden);
@@ -246,6 +258,13 @@ public class Anfragenliste implements IAnfragenliste {
         this.aaidliste.add(a.anfrageID);
         this.aliste.remove(a);
         aDB.removeaAnfrage(a);
+
+        for (AngebotAnfrage aa : aliste) {
+                if (aa.angebot == a.angebot){
+                    this.aliste.remove(aa);
+                    aDB.removeaAnfrage(aa);
+            }
+        }
 
         if (!VereinssoftwareServer.dienstleistungsverwaltung.angebotLoeschen(a.angebot.getAngebots_ID()))return;
         //VereinssoftwareServer.dienstleistungsverwaltung.aidliste.add(a.angebot.getAngebots_ID());
