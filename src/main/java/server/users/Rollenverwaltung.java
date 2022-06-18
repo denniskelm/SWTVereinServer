@@ -179,6 +179,8 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
     }
 
+
+
     public Object[][] mitgliederDaten() {
          Object[][] mitgliederDaten = new Object[mitglieder.size()][11];
          for(int i = 0; i < mitglieder.size(); i++){
@@ -521,7 +523,7 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
 
     public void mahnungErstellen(String mitgliedsID, String grund, LocalDateTime verfallsdatum) throws NoSuchObjectException {
-        String mahnungsID ="m" + mahnungen.size()+1;
+        String mahnungsID = mahnungsIdErstellen();
         Mahnung m = new Mahnung(mahnungsID, mitgliedsID, grund, verfallsdatum);
         mahnungen.add(m);
         rDB.mahnungErstellen(m);
@@ -535,6 +537,32 @@ public class Rollenverwaltung implements IRollenverwaltung {
             mit.getAnfragenliste().reset();
         }
 
+    }
+
+    public String mahnungsIdErstellen() {
+         if(mahnungen.get(mahnungen.size() + 1) == null && mahnungen.size() + 1 < 50000)
+             return getString(mahnungen.size() + 1);
+         else {
+             for(int i = 0; i < mahnungen.size(); i++){
+                 if(mahnungen.get(i) == null)
+                     getString(i);
+             }
+         }
+         return "wrongID";
+    }
+
+    private String getString(int number) {
+        if(number < 10)
+            return "m0000" + number;
+        else if(number < 100)
+            return "m000" + number;
+        else if(number < 1000)
+            return "m00" + number;
+        else if(number < 10000)
+            return "m0" + number;
+        else if(number < 50000)
+            return "m" + number;
+        return "wrongID";
     }
 
     public void mahnungLoeschen(String mahnungsID){
