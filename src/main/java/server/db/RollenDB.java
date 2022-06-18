@@ -133,7 +133,7 @@ public class RollenDB extends Database {
                         mitgliedDaten.getString("E-Mail"),
                         mitgliedDaten.getInt("Passwort"),
                         mitgliedDaten.getString("Anschrift"),
-                        mitgliedDaten.getString("MitlgiedsNr"),
+                        mitgliedDaten.getString("MitgliedsNr"),
                         mitgliedDaten.getString("Telefonnummer"),
                         mitgliedDaten.getString("ist_spender").equals("Y"),
                         mitglied_seit);
@@ -171,8 +171,20 @@ public class RollenDB extends Database {
 
         try {
             PreparedStatement prep = null;
-            if (attr != Personendaten.IST_GESPERRT && attr != Personendaten.RESERVIERUNGEN) { // muss in Mitglied geändert werden
-                prep = conn.prepareStatement(String.format("UPDATE gast SET %s = ? WHERE PersonenID = ?", attr.toString()));
+            if (attr != Personendaten.IST_GESPERRT && attr != Personendaten.RESERVIERUNGEN && attr != Personendaten.MITGLIED_SEIT) { // muss in Mitglied geändert werden
+                String spalte = switch(attr) {
+                    case PERSONENID -> "PersonenID";
+                    case NACHNAME -> "Nachname";
+                    case VORNAME -> "Vorname";
+                    case E_MAIL -> "E-Mail";
+                    case PASSWORD -> "Passwort";
+                    case ANSCHRIFT -> "Anschrift";
+                    case MITGLIEDSNR -> "MitgliedsNr";
+                    case TELEFONNUMMER -> "Telefonnummer";
+                    case SPENDER -> "ist_spender";
+                    default -> throw new NoSuchObjectException("Wert " + attr.toString() + " kann nicht gesetzt werden");
+                };
+                prep = conn.prepareStatement(String.format("UPDATE gast SET %s = ? WHERE PersonenID = ?", spalte));
             } else if (attr == Personendaten.IST_GESPERRT) {
                 prep = conn.prepareStatement("UPDATE mitglied SET ist_gesperrt = ? WHERE PersonenID = ?");
             }
@@ -188,6 +200,8 @@ public class RollenDB extends Database {
             prep.close();
 
         } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchObjectException e) {
             throw new RuntimeException(e);
         }
 
@@ -559,5 +573,7 @@ public class RollenDB extends Database {
 
         return mitgliedSeit.getTimestamp(1).toLocalDateTime();
     }
+
+
 
 }
