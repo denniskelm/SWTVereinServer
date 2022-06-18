@@ -14,6 +14,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * @author Bastian Reichert
+ * @author Gabriel Kleebaum
+ */
 public class AnfragenDB extends Database {
     private Connection conn;
 

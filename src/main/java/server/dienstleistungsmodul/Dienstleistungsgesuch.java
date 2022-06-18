@@ -1,7 +1,9 @@
 package server.dienstleistungsmodul;
 
-import server.users.Mitglied;
-
+/**
+ * @author Jonny Schlutter
+ * @author Ole Adelmann
+ */
 public class Dienstleistungsgesuch {
 
     private String gesuch_ID;
@@ -19,15 +21,8 @@ public class Dienstleistungsgesuch {
         this.kategorie = kategorie;
         this.suchenderID = suchenderID;
         this.imageUrl =imageUrl;
-
-        //TODO: mehr Parameter gegeben als erwartet
-        //String anfrage = "insert into  Dienstleitunsgesuch(angebots_ID, PersonenID, Titel, Beschreibung, Kategorie) values (" + gesuch_ID + ", " + suchenderID + ", " + titel + ", "+ beschreibung + ", " + kategorie + ", " + suchender + ");";
-        //(Temporärer) Fix
-        String anfrage = String.format("insert into Dienstleistungsgesuch(angebots_ID, PersonenID, Titel, Beschreibung, Kategorie) values \"%s\", \"%s\", \"%s\", \"%s\", \"%s\");", gesuch_ID, suchenderID, titel, beschreibung, kategorie);
     }
 
-
-    //Anmerkung : es kann sein dass die Getter Public sind, aber es macht fuer Esmail kein Sinn dass Setter auch public sind
     public String getGesuch_ID() {
         return gesuch_ID;
     }

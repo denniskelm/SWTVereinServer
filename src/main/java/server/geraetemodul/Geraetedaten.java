@@ -1,5 +1,8 @@
 package server.geraetemodul;
 
+/**
+ * @author Raphael Kleebaum
+ */
 public enum Geraetedaten {
     NAME,
     SPENDERNAME,

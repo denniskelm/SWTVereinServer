@@ -4,6 +4,10 @@ import server.users.Mitglied;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author Jonny Schlutter
+ * @author Ole Adelmann
+ */
 public class Dienstleistungsangebot {
 
     private String angebots_ID;
@@ -24,9 +28,6 @@ public class Dienstleistungsangebot {
         this.bis = bis;
         this.imageUrl = imageUrl;
         this.personenID = personen_ID;
-        String anfrage = "insert into  Dienstleitungsangebot(angebots_ID, personenID Titel, Beschreibung, Kategorie) values (" + angebots_ID + ", " + personen_ID + ", " + titel + ", "+ beschreibung + ", " + kategorie ;
-        //Sql Anfrage , QueryString
-
     }
 
     public String getAngebots_ID() {

@@ -1,15 +1,9 @@
 package server.geraetemodul;
-/*
-@author
-Raphael Kleebaum
-Jonny Schlutter
-//TODO Gabriel Kleebaum
-Mhd Esmail Kanaan
-//TODO Gia Huy Hans Tran
-//TODO Ole Björn Adelmann
-//TODO Bastian Reichert
-//TODO Dennis Kelm
-*/
+/**
+ * @author Raphael Kleebaum
+ * @author Jonny Schlutter
+ * @author Mhd Esmail Kanaan
+ */
 
 import shared.communication.IGeraet;
 
@@ -153,6 +147,19 @@ public class Geraet implements IGeraet {
             result[i][1] = reservierungsliste.get(i).getReservierdatum();
             result[i][2] = reservierungsliste.get(i).getFristBeginn();
             result[i][3] = reservierungsliste.get(i).isAbgegeben();
+        }
+
+        return result;
+    }
+
+    public Object[][] getHistorieListeAlsArray() {
+        Object[][] result = new Object[historie.size()][4];
+
+        for (int i = 0; i < historie.size(); i++) {
+            result[i][0] = historie.get(i).getMitgliedsID();
+            result[i][1] = historie.get(i).getReservierdatum();
+            result[i][2] = historie.get(i).getFristBeginn();
+            result[i][3] = historie.get(i).isAbgegeben();
         }
 
         return result;

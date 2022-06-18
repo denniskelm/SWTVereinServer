@@ -19,6 +19,9 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
+/**
+ * @author Raphael Kleebaum
+ */
 public class GeraeteDB extends Database {
     private final Connection conn;
 

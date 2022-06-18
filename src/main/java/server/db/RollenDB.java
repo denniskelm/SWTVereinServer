@@ -1,15 +1,4 @@
 package server.db;
-/*
-@author
-Raphael Kleebaum
-//TODO Jonny Schlutter
-//TODO Gabriel Kleebaum
-//TODO Mhd Esmail Kanaan
-//TODO Gia Huy Hans Tran
-//TODO Ole Björn Adelmann
-//TODO Bastian Reichert
-//TODO Dennis Kelm
-*/
 
 import server.geraetemodul.Mahnung;
 import server.VereinssoftwareServer;
@@ -22,6 +11,10 @@ import java.util.ArrayList;
 
 import static server.users.Rolle.*;
 
+/**
+ * @author Raphael Kleebaum
+ * @author Ole Adelmann
+ */
 public class RollenDB extends Database {
 
     private final Connection conn;
@@ -124,6 +117,23 @@ public class RollenDB extends Database {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public boolean istSpender(String nutzerId) {
+        try {
+            PreparedStatement statement = conn.prepareStatement("SELECT  ist_spender FROM gast WHERE PersonenID = ?");
+            statement.setString(1, nutzerId);
+
+            ResultSet result = statement.executeQuery();
+
+            if(!result.next()) {
+                return false;
+            }
+
+            return result.getString("ist_spender").equals("Y");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void nutzerEintragAendern(String personenID, Personendaten attr, String wert) {
@@ -410,11 +420,14 @@ public class RollenDB extends Database {
             return;
         }
 
+        String istGesperrt = "N";
+
+        if (!(gast instanceof Gast))
+            istGesperrt = ((Mitglied) gast).isGesperrt() ? "Y" : "N";
+
         // Wird für alles hierunter gebraucht
         if (gast.getClass() == GAST.getKlasse())
-            zuDBHinzufuegen(gast.getPersonenID(), mitglied_seit, "N", "mitglied");
-
-        // TODO wo wird das Stundenkonto gespeichert?
+            zuDBHinzufuegen(gast.getPersonenID(), mitglied_seit, istGesperrt, "mitglied");
 
         if (rolle == MITGLIED) {
             if (gast.getClass() == MITARBEITER.getKlasse())

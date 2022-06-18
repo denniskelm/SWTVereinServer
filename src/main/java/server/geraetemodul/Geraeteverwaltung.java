@@ -14,6 +14,7 @@ Jonny Schlutter
 import server.VereinssoftwareServer;
 import server.db.GeraeteDB;
 import server.users.Mitglied;
+import server.users.Personendaten;
 import server.users.Rollenverwaltung;
 import shared.communication.IGeraeteverwaltung;
 
@@ -54,6 +55,11 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         else geraeteID = "g" + (IdCounter);
 
         Geraet g = new Geraet(geraeteID, name, spender, leihfrist, kategorie, beschreibung, abholort, bild);
+        try {
+            VereinssoftwareServer.rollenverwaltung.nutzereintragAendern(spender, Personendaten.SPENDER, "true");
+        } catch (NoSuchObjectException e) {
+            throw new RuntimeException(e);
+        }
         geraete.add(g);
         gDB.geraetHinzufuegen(g);
         System.out.println("Geraet mit ID " +  g.getGeraeteID() + " hinzugefuegt. Anzahl Geraete: " +  geraete.size());
@@ -245,9 +251,8 @@ public class Geraeteverwaltung implements IGeraeteverwaltung {
         info[5] = g.getLeihfrist();
         info[6] = g.getLeihstatus().toString();
         info[7] = g.getGeraetAbholort();
-        info[8] = g.getHistorie();
+        info[8] = g.getHistorieListeAlsArray();
         info[9] = g.getReservierungsListeAlsArray();
-        System.out.println(g.getReservierungsliste().size());
         info[10] = g.getBild();
 
 

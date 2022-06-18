@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * @author Gabriel Kleebaum
+ */
 public abstract class Database {
     private final String HOST = "meta.informatik.uni-rostock.de",
         DATABASE = "vswt22",

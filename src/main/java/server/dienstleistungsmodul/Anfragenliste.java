@@ -1,8 +1,7 @@
 package server.dienstleistungsmodul;
-/*
-@author
-Bastian Reichert
-*/
+/**
+ * @author Bastian Reichert
+ */
 import server.VereinssoftwareServer;
 import server.db.AnfragenDB;
 import server.db.DienstleistungsDB;
@@ -169,9 +168,11 @@ public class Anfragenliste implements IAnfragenliste {
     }
 
     public Object[][] omniGesuchsAnfrageDaten() throws NoSuchObjectException {
+
         Object[][] liste = new Object[gliste.size()][8];
 
         for(int i = 0; i < gliste.size(); i++) {
+
             liste[i] = getGAnfragenInfo(gliste.get(i).anfrageID);
         }
 
@@ -225,9 +226,19 @@ public class Anfragenliste implements IAnfragenliste {
 
         if (g.nutzer.isGesperrt()) throw new NoPermissionException("Mitglied ist gesperrt.");
 
-        this.gaidliste.add(g.anfrageID);
-        this.gliste.remove(g);
-        aDB.removegAnfrage(g);
+        //this.gaidliste.add(g.anfrageID);
+        //this.gliste.remove(g);
+        //aDB.removegAnfrage(g);
+        int i =0;
+        while (i<gliste.size()) {
+            GesuchAnfrage ga=gliste.get(i);
+            System.out.println(ga.anfrageID + " mit: " + ga.gesuch.getGesuch_ID());
+            if (ga.gesuch.equals(g.gesuch)) {
+                this.gaidliste.add(ga.anfrageID);
+                this.gliste.remove(ga);
+                aDB.removegAnfrage(ga);
+            }else i++;
+        }
 
         if (!VereinssoftwareServer.dienstleistungsverwaltung.gesuchLoeschen(g.gesuch.getGesuch_ID()))return;
         this.nutzer.veraendereStundenkonto(g.stunden);
@@ -243,9 +254,19 @@ public class Anfragenliste implements IAnfragenliste {
         if (a.nutzer.isGesperrt()) throw new NoPermissionException("Mitglied ist gesperrt.");
 
 
-        this.aaidliste.add(a.anfrageID);
-        this.aliste.remove(a);
-        aDB.removeaAnfrage(a);
+        //this.aaidliste.add(a.anfrageID);
+        //this.aliste.remove(a);
+        //aDB.removeaAnfrage(a);
+
+        int i =0;
+        while (i<aliste.size()) {
+            AngebotAnfrage aa=aliste.get(i);
+                if (aa.angebot.equals(a.angebot)){
+                    this.aaidliste.add(aa.anfrageID);
+                    this.aliste.remove(aa);
+                    aDB.removeaAnfrage(aa);
+            }else i++;
+        }
 
         if (!VereinssoftwareServer.dienstleistungsverwaltung.angebotLoeschen(a.angebot.getAngebots_ID()))return;
         //VereinssoftwareServer.dienstleistungsverwaltung.aidliste.add(a.angebot.getAngebots_ID());
