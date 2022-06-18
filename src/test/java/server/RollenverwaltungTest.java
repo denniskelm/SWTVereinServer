@@ -16,20 +16,20 @@ Ole Adelmann
 
 class RollenverwaltungTest {
     public static Rollenverwaltung rv = new Rollenverwaltung();
-    public static int anzahlNutzer = rv.getGaeste().size() + rv.getMitglieder().size() + rv.getMitarbeiter().size() + rv.getVorsitze().size();
+    public static int anzahlNutzer = rv.gaesteDaten().length + rv.mitgliederDaten().length + rv.mitarbeiterDaten().length + rv.vorsitzDaten().length;
 
     @BeforeAll
     static void init() {
-        if (!rv.getGaeste().isEmpty())
+        if (rv.gaesteDaten().length > 0)
             anzahlNutzer--;
-        if (!rv.getMitglieder().isEmpty())
+        if (rv.mitgliederDaten().length > 0)
             anzahlNutzer--;
-        if (!rv.getMitarbeiter().isEmpty())
+        if (rv.mitarbeiterDaten().length > 0)
             anzahlNutzer--;
-        if (!rv.getVorsitze().isEmpty())
+        if (rv.vorsitzDaten().length > 0)
             anzahlNutzer--;
 
-        rv.gastHinzufuegen("Mustermann", "Max", "web.de@de.de", "hallo", "Am See 3", "123", "87772627", false);
+        rv.gastHinzufuegen("Mustermann", "Max", "web.de@de.de", "hallo", "Am See 3", "1235", "87772627", false);
         anzahlNutzer++;
         rv.mitgliedHinzufuegen("Musterfrau", "Maxi", "we.de@de.de", "hallo1", "Am See 32", "1234", "87772627", false, LocalDateTime.parse("2016-11-09T11:44:44.797"));
         anzahlNutzer++;
@@ -83,12 +83,12 @@ class RollenverwaltungTest {
 
         // Rolle von Gast zu Mitglied ändern
         rv.rolleAendern(konvertiereZuID(anzahlNutzer), Rolle.MITARBEITER);
-        Object[] mitglieder = rv.mitgliedListeAnzeigen();
+        Object[][] mitglieder = rv.mitgliederDaten();
         exist = false;
 
 
-        for (Object mitglied : mitglieder) {
-            if (((Mitglied) mitglied).getPersonenID().equals(konvertiereZuID(anzahlNutzer))) {
+        for (Object[] mitglied : mitglieder) {
+            if (mitglied[0].equals(konvertiereZuID(anzahlNutzer))) {
                 exist = true;
                 break;
             }
@@ -97,11 +97,11 @@ class RollenverwaltungTest {
 
         // Rolle von Mitglied zum Mitarbeiter aendern
         rv.rolleAendern(konvertiereZuID(anzahlNutzer - 2), Rolle.MITARBEITER);
-        Object[] mitarbeiter = rv.mitarbeiterListeAnzeigen();
+        Object[][] mitarbeiter = rv.mitarbeiterDaten();
         exist = false;
 
-        for (Object m : mitarbeiter) {
-            if (((Mitarbeiter) m).getPersonenID().equals(konvertiereZuID(anzahlNutzer - 2))) {
+        for (Object[] m : mitarbeiter) {
+            if (m[0].equals(konvertiereZuID(anzahlNutzer - 2))) {
                 exist = true;
                 break;
             }
@@ -110,11 +110,11 @@ class RollenverwaltungTest {
 
         // Rolle von Mitarbeiter zum Vorstand aendern
         rv.rolleAendern(konvertiereZuID(anzahlNutzer), Rolle.VORSITZ);
-        Object[] vorsitze = rv.vorsitzListeAnzeigen();
+        Object[][] vorsitze = rv.vorsitzDaten();
         exist = false;
 
-        for (Object vorsitz : vorsitze) {
-            if (((Vorsitz) vorsitz).getPersonenID().equals(konvertiereZuID(anzahlNutzer))) {
+        for (Object[] vorsitz : vorsitze) {
+            if (vorsitz[0].equals(konvertiereZuID(anzahlNutzer))) {
                 exist = true;
                 break;
             }
