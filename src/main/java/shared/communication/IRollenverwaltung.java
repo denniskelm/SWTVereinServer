@@ -56,7 +56,7 @@ public interface IRollenverwaltung extends Remote {
     public Object[][] gaesteDaten() throws RemoteException;
     public Object[] gastDaten(String mitgliedsID) throws RemoteException;
     public String mahnungsIdErstellen() throws RemoteException;
-    boolean existiertEMail(String email);
+    boolean existiertEMail(String email) throws RemoteException;
     public Rolle fetchRolle(String mitgliedsID) throws RemoteException;
     public void nutzerAusAlterListeEntfernen(String mitgliedsID, Rolle rolle) throws RemoteException;
 
