@@ -87,7 +87,13 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
          //naechste ID generieren
          IdCounter++;
-         String personenID = Long.toString(IdCounter);
+         String personenID;
+
+         if (IdCounter < 10) personenID = "p0000" + (IdCounter);
+         else if (IdCounter < 100) personenID = "p000" + (IdCounter);
+         else if (IdCounter < 1000) personenID = "p00" + (IdCounter);
+         else if (IdCounter < 10000) personenID = "p0" + (IdCounter);
+         else personenID = "p" + (IdCounter);
 
          Mitglied m = new Mitglied(personenID, nachname, vorname, email, password, anschrift, mitgliedsnr, telefonnummer, spender, mitglied_seit);
          mitglieder.add(m);
@@ -123,7 +129,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
     public long getIdCounter() {
         return IdCounter;
     }
-
 
     public Object[] gastDaten(String mitgliedsID) {
         try {
@@ -679,7 +684,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
             for (int i = 0; i < gaeste.size(); i++) {
                 if (gaeste.get(i).getPersonenID().equals(m.getPersonenID())) {
-                    System.out.println("gfdgdf");
                     gaeste.remove(i);
                     break;
                 }
@@ -687,6 +691,31 @@ public class Rollenverwaltung implements IRollenverwaltung {
 
         }
 
+    }
+
+    public boolean existiertEMail(String email) {
+
+         for (Gast g : gaeste) {
+             if (g.getEmail().equals(email))
+                 return true;
+         }
+
+         for (Mitglied m : mitglieder) {
+             if (m.getEmail().equals(email))
+                 return true;
+         }
+
+         for (Mitarbeiter m : mitarbeiter) {
+             if (m.getEmail().equals(email))
+                 return true;
+         }
+
+         for (Vorsitz v : vorsitze) {
+             if (v.getEmail().equals(email))
+                 return true;
+         }
+
+         return false;
     }
 
 }
