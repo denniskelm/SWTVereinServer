@@ -83,17 +83,19 @@ public class RollenDB extends Database {
 
             PreparedStatement prep = conn.prepareStatement("SELECT * FROM gast WHERE PersonenID = ?");
             prep.setString(1, personenID);
-            ResultSet mitgliedDaten = prep.executeQuery();
 
+            ResultSet mitgliedDaten = prep.executeQuery();
             mitgliedDaten.next();
 
             PreparedStatement getMitgliedSeit = conn.prepareStatement("SELECT Mitglied_seit FROM mitglied WHERE PersonenID = ?");
             getMitgliedSeit.setString(1, personenID);
 
             ResultSet mitgliedSeit = getMitgliedSeit.executeQuery();
-            mitgliedSeit.next();
 
-            mitglied_seit = mitgliedSeit.getTimestamp(1).toLocalDateTime();
+            if (mitgliedSeit.next())
+                mitglied_seit = mitgliedSeit.getTimestamp(1).toLocalDateTime();
+            else
+                mitglied_seit = LocalDateTime.now();
 
             // herausfinden welchen Rang er hat
             dbFound = getRolle(personenID);
