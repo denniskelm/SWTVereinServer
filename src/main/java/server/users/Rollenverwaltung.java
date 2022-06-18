@@ -399,8 +399,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
                     result[0] = m.getPersonenID();
                     result[1] = Rolle.VORSITZ;
 
-                    System.out.println("Antwort der Anmeldung: " + result[0] + " | " + result[1]);
-
                     return result;
                 }
                 else
@@ -414,8 +412,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
                     result = new Object[2];
                     result[0] = m.getPersonenID();
                     result[1] = Rolle.MITARBEITER;
-
-                    System.out.println("Antwort der Anmeldung: " + result[0] + " | " + result[1]);
 
                     return result;
                 }
@@ -431,8 +427,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
                     result[0] = m.getPersonenID();
                     result[1] = Rolle.MITGLIED;
 
-                    System.out.println("Antwort der Anmeldung: " + result[0] + " | " + result[1]);
-
                     return result;
                 }
                 else
@@ -446,8 +440,6 @@ public class Rollenverwaltung implements IRollenverwaltung {
                     result = new Object[2];
                     result[0] = m.getPersonenID();
                     result[1] = Rolle.GAST;
-
-                    System.out.println("Antwort der Anmeldung: " + result[0] + " | " + result[1]);
 
                     return result;
                 }

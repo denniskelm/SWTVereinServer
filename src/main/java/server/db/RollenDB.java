@@ -187,10 +187,14 @@ public class RollenDB extends Database {
                 prep = conn.prepareStatement(String.format("UPDATE gast SET %s = ? WHERE PersonenID = ?", spalte));
             } else if (attr == Personendaten.IST_GESPERRT) {
                 prep = conn.prepareStatement("UPDATE mitglied SET ist_gesperrt = ? WHERE PersonenID = ?");
+            } else if (attr == Personendaten.MITGLIED_SEIT) {
+                prep = conn.prepareStatement("UPDATE mitglied SET Mitglied_seit = ? WHERE PersonenID = ?");
             }
 
             if (attr.equals(Personendaten.PASSWORD))
                 prep.setInt(1, Integer.parseInt(wert));
+            else if (attr.equals(Personendaten.MITGLIED_SEIT))
+                prep.setTimestamp(1, Timestamp.valueOf(attr.toString()));
             else
                 prep.setString(1, wert);
 
