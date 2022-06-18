@@ -196,7 +196,7 @@ public class Anfragenliste implements IAnfragenliste {
         Mitglied anfragender=VereinssoftwareServer.rollenverwaltung.fetch(anfragenderID);
         String anfrageID=this.gaidliste.get(0);
         this.gaidliste.remove(0);
-        GesuchAnfrage g = new GesuchAnfrage(anfrageID, nutzer, gesuch, stunden);
+        GesuchAnfrage g = new GesuchAnfrage(anfrageID, anfragender, gesuch, stunden);
         if (gliste.size() <= 50){
             aDB.addgAnfrage(g);
             this.gliste.add(g);
